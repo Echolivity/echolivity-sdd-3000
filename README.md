@@ -50,3 +50,9 @@ python3 tools/verify_release.py    # clean-copy rebuild + determinism + audio re
 python3 tools/check_compat.py "tests/reference/ECHOLIVITY SDD-3000 v1.0.1.amxd" "dist/ECHOLIVITY SDD-3000.amxd"   # parameter/preset compatibility
 gcc -O2 -o bench tests/bench_engine.c -ldl && ./bench build/engine.so   # CPU grid (C build)
 ```
+
+## Licence
+
+ECHOLIVITY SDD-3000 is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License, version 3** (see `LICENSE`). It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Copyright (C) 2026 the ECHOLIVITY authors. Korg and SDD-3000 are trademarks of their respective owner; this project is not affiliated with or endorsed by Korg.
