@@ -1,7 +1,8 @@
-<p align="center"><img src="docs/brand/echolivity-sdd3000-banner.svg" alt="ECHOLIVITY SDD-3000" width="100%"></p>
 <p align="center"><strong>A digital delay for Ableton Live 12.</strong><br>Inspired by the character and workflow of the 1982 Korg SDD-3000.</p>
 <p align="center"><a href="dist/ECHOLIVITY%20SDD-3000.amxd">Download device</a> · <a href="docs/MANUAL.md">Manual</a> · <a href="docs/INSTALL.md">Installation</a> · <a href="CHANGELOG.md">Changelog</a> · <a href="docs/validation/RELEASE_DECISION.md">Release decision</a></p>
-<p align="center"><img src="docs/ui_preview.png" alt="ECHOLIVITY SDD-3000 device interface" width="900"></p>
+## The device
+
+<p align="center"><img src="docs/ui_preview.png" alt="ECHOLIVITY SDD-3000 Max for Live device interface" width="900"></p>
 
 > **v1.0.2-rc5 · CONDITIONAL PASS**
 >

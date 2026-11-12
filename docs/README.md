@@ -1,8 +1,6 @@
-<p align="center"><img src="brand/echolivity-sdd3000-banner.svg" alt="ECHOLIVITY SDD-3000" width="100%"></p>
+# Documentation
 
 <p align="center"><a href="../README.md">Project home</a> · <a href="MANUAL.md">Manual</a> · <a href="INSTALL.md">Install</a> · <a href="validation/RELEASE_DECISION.md">Release decision</a></p>
-
-# Documentation index
 
 ## Use the device
 - [Installation](INSTALL.md)
@@ -23,4 +21,4 @@
 - [Engineering changes](ENGINEERING_CHANGES.md)
 - [Research notes](RESEARCH_NOTES.md)
 - [Musical evaluation](validation/MUSICAL_EVALUATION.md)
-- [Visual identity](brand/README.md)
+- [Presentation notes](brand/README.md)
