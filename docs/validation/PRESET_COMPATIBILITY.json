@@ -1,0 +1,36 @@
+{
+ "old": "ECHOLIVITY SDD-3000 v1.0.1.amxd",
+ "new": "ECHOLIVITY SDD-3000.amxd",
+ "checks": [
+  {
+   "check": "every old parameter still present; only the rc4/rc5 EXT-loop parameters added",
+   "pass": true,
+   "detail": "158 old, 162 new; missing: []; added: ['Ext Return', 'FB Route', 'Loop Cal', 'Loop Comp']"
+  },
+  {
+   "check": "identical definitions (type, range, enum, initial, visibility, units, object, scripting name)",
+   "pass": true,
+   "detail": "147/158 identical; 11 Sync Division parameters extended 0-10 -> 0-12 (rc5 triplets appended, old indices unchanged)"
+  },
+  {
+   "check": "other attributes: only Modulation Mode / recall Order differ (intended in 1.0.2-rc3)",
+   "pass": true,
+   "detail": "157 parameters differ only in ['parameter_modmode', 'parameter_order']"
+  },
+  {
+   "check": "Push/Configure banks: the existing banks unchanged",
+   "pass": true,
+   "detail": "3 old banks identical; 1 added"
+  },
+  {
+   "check": "automatable / stored-only split",
+   "pass": true,
+   "detail": "42 automatable + 120 stored-only"
+  },
+  {
+   "check": "factory programs in the device == presets/factory_programs.json",
+   "pass": true,
+   "detail": "120/120 stored values match"
+  }
+ ]
+}

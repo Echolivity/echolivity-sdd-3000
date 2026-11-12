@@ -1,0 +1,102 @@
+[
+ {
+  "check": "container",
+  "pass": true,
+  "detail": "ampf/aaaa, meta, ptch length 523654 = file size - 32, NUL-terminated, JSON parses, amxdtype audio effect"
+ },
+ {
+  "check": "gen~ code == src/gen/echolivity_core.genexpr",
+  "pass": true,
+  "detail": "39477 chars, sha256 673f01ac1b240de3..."
+ },
+ {
+  "check": "GenExpr subset rules (tools/gen2c.py)",
+  "pass": true,
+  "detail": "gen2c: 39 params, 119 histories, 320 locals, 8 outs -> /tmp/echolivity_check.c -- gen~ compilation itself NOT VERIFIED"
+ },
+ {
+  "check": "parameter count",
+  "pass": true,
+  "detail": "162 parameters: 42 automatable + 120 stored-only (program memory)"
+ },
+ {
+  "check": "parameter names unique",
+  "pass": true,
+  "detail": "162 unique long names"
+ },
+ {
+  "check": "'parameters' table matches objects",
+  "pass": true,
+  "detail": "162 entries"
+ },
+ {
+  "check": "initial values inside ranges / enum sizes",
+  "pass": true,
+  "detail": "all 158 OK"
+ },
+ {
+  "check": "Push / Configure banks",
+  "pass": true,
+  "detail": "4 banks of 8 slots, all names resolve or are '-'"
+ },
+ {
+  "check": "controls -> gen~ Params (name, connection, range)",
+  "pass": true,
+  "detail": "36 controls verified"
+ },
+ {
+  "check": "gen~ Params without a panel control",
+  "pass": true,
+  "detail": "['p_cal', 'p_hf_comp', 'p_tempo']: p_cal is sent by the CAL button (rc5), p_tempo is fed by live.observer, p_hf_comp is an internal engineering switch (default on)"
+ },
+ {
+  "check": "tempo sync chain",
+  "pass": true,
+  "detail": "live.thisdevice -> 'path live_set' -> live.path -> live.observer('property tempo') -> p_tempo -> gen~"
+ },
+ {
+  "check": "audio routing incl. EXT loop (rc4)",
+  "pass": true,
+  "detail": "plugin~ 1 2 3 4 -> gen~ in1-4 (3/4 = EXT return); gen~ out1/2 -> plugout~ 1/2, out6/7 -> plugout~ 3/4 (EXT send) -- Live routing NOT VERIFIED"
+ },
+ {
+  "check": "program memory: 10 slots x 12 fields, factory values, write & recall wiring",
+  "pass": true,
+  "detail": "120 stored-only slots match presets/factory_programs.json; every slot is written by its gate outlet and recalls into its control"
+ },
+ {
+  "check": "send/receive pairs",
+  "pass": true,
+  "detail": "['---edit', '---editclr', '---recall', '---ropen', '---wbang', '---write', '---wslot']"
+ },
+ {
+  "check": "initialisation pushes every stored control value to gen~",
+  "pass": true,
+  "detail": "live.thisdevice -> [t b b b b b]: outlet 2 bangs 38 objects; momentary buttons deliberately excluded"
+ },
+ {
+  "check": "LFO Mod mapping: Modulation Mode Additive on all continuous dials only",
+  "pass": true,
+  "detail": "14 continuous controls (13 dials + RETURN) with parameter_modmode 3; enum/stored-only: none -- Live behaviour NOT VERIFIED"
+ },
+ {
+  "check": "D-1: program logic closed during the start-up sequence; Program recalled first",
+  "pass": true,
+  "detail": "[t b b b b b] outlet 3 -> '0' -> [gate 1] (before outlet 2 re-outputs Program), outlet 0 -> '1'; Program parameter_order 0, other 161 parameters order 1 -- Live behaviour NOT VERIFIED"
+ },
+ {
+  "check": "UI-1: backing panels in the background layer, LEDs/segments in front",
+  "pass": true,
+  "detail": "20 static panels background 1; 43 driven panels foreground -- confirmed visually in Live 12 by the owner"
+ },
+ {
+  "check": "presentation layout",
+  "pass": true,
+  "detail": "42 controls inside 169 px, no overlapping controls"
+ },
+ {
+  "check": "distributed .amxd == fresh build from source",
+  "pass": true,
+  "detail": "sha256 6129b1d209dea14464481a01885471dd63dff62bc7ffd2d6671b9b1952b9f65b"
+ }
+]

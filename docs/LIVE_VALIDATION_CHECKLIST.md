@@ -1,0 +1,29 @@
+# Ableton Live 12 validation checklist — OUTSTANDING (v1.0.2-rc5)
+
+None of these checks has been performed; they are required before 1.0.2 final (see `docs/OUTSTANDING_ISSUES.md`, OI-1 to OI-3). Record the result, Live/Max version, OS and audio buffer size for each item.
+
+**Setup:** Live 12 (note the bundled Max version), audio buffer 256 samples. Test files: `audio_examples/00_dry_source.wav` and `audio_examples/regression/*.wav`.
+
+| ID | Check | Procedure | Pass criterion | Result |
+|---|---|---|---|---|
+| L-1 | Load + gen~ compile | Drag `dist/ECHOLIVITY SDD-3000.amxd` onto an audio track. Open it in Max (wrench) and look at the Max Console. | No gen~ or object errors. Display shows `0  380`. | |
+| L-2 | Audio I/O, stereo routing | Play the dry source. Step OUT MODE through MONO / STEREO A / STEREO B / TRUE ST. In TRUE ST, pan the source hard left. | Echoes audible. STEREO A left = dry. STEREO B mono-sum cancels the wet. TRUE ST: no echo on the right. | |
+| L-3 | Engine matches the renders | Program 1–9 on the dry source; compare by ear with `01…09` in `audio_examples/`. | Same character | |
+| L-4 | Automation | Draw automation for Delay Time, Feedback (0→8), High Cut, Hold, Bypass; play back. Then record knob moves into an automation lane. | Follows automation, no clicks; recorded lane replays | |
+| L-5 | MIDI mapping | MIDI-map HOLD, BYPASS, FEEDBACK, PROG ▲/▼ (Ctrl/Cmd-M). | Controller operates them | |
+| L-5b | **LFO Mod mapping (rc3)** | Add Live's LFO after the device. With **Mod on**, Map each of the 13 continuous knobs in turn (TIME, FEEDBACK, BALANCE, INPUT, OUTPUT, INTENSITY, FREQUENCY, ENV SENS, ENV REL, WIDTH, Preamp DRIVE/TONE/TRIM). Then, with **Mod off**, Map LOW CUT and PROGRAM. Press WRITE while modulated; save and reopen the Set. | Mod: every knob accepts the mapping (no error), the ring shows modulation, the knob's own value doesn't move. Mod off: LOW CUT steps. WRITE stores the knob's own value. Mapping survives reopening. | |
+| L-6 | Tempo sync | SYNC on, DIV 1/8 at 120 BPM; display shows 250. Automate tempo 90→140 BPM. | Display and echo spacing follow the tempo with no clicks | |
+| L-5c | **EXT regeneration loop (rc4)** | Track A: ECHOLIVITY, FB ROUTE EXT, RETURN 5, TIME 400, play short stabs. Track B: Audio From = track A → ECHOLIVITY 3/4, Monitor In, a reverb or EQ on it; Audio To = track A → ECHOLIVITY 3/4. Then try BOTH, RETURN 0 and 9, and toggle FB ROUTE while playing. Save and reopen the Set. | Live offers ECHOLIVITY 3/4 in both choosers and accepts the loop. EXT: repeats pass through track B's effects; RETURN 0 = one echo only. BOTH: longer tails. No clicks when switching; routing survives reopening. Note any extra delay per repeat. | |
+| L-5d | **CAL / LOOP COMP (rc5)** | Set up L-5c (EXT). Note the repeat timing against a click track with SYNC on, DIV 1/4. Press **CAL**. Repeat with a different buffer size. Then press CAL with nothing routed back. | CAL writes a value into COMP ms close to the buffer latency; repeats now sit on the beat. The main output stays click-free during CAL. With nothing routed back COMP ms stays unchanged. | |
+| L-6b | **Triplets (rc5)** | SYNC on, 120 BPM: DIV 1/8T → display 167; 1/16T → 83; 1/32T → 42. Open a Set saved with rc4 that used 3/8 → it now shows 1/4D with the same timing. | Display and timing match; old Sets recall the same division. | |
+| L-7 | Programs / WRITE / .adv | Edit program 3, WRITE to slot 9, switch programs, save an .adv preset, delete the device, load the preset. Also hot-load the .adv onto a running device. | Stored values return, edit dot behaves, slot 9 kept. Note any wrong recall on hot-load (OI-5). | |
+| L-7a | **D-1 reproduction** (`.adv` hot-load) | New device, stay in **M**. Set TIME 500 and FEEDBACK 6. Save an `.adv`. Set TIME 200 and FEEDBACK 2. Hot-load the `.adv` onto the *same* device (browser → hot-swap). | TIME 500 / FEEDBACK 6. **Defect if TIME 380 / FEEDBACK 3** (stale manual snapshot). Repeat in program 3 with an unsaved edit. | |
+| L-7b | **D-2 reproduction** (re-select) | New device, stay in **M**, set TIME 500, then click **M** again. Repeat in program 3 with an unsaved edit. | TIME stays 500. **Defect if it jumps to 380.** Note what happens in program 3. | |
+| L-8 | Set save / reopen | Save the Set with non-default settings and an edited program; close and reopen. | Every parameter and all programs restored; no ramps at load | |
+| L-9 | HOLD in Live | Play a pad, HOLD on, play over it, HOLD off. Test at TIME 120, 380 and 1023 ms; re-engage HOLD 0.3 s after releasing. | Loop holds; release click-free; ≤ ~79 ms gap only at TIME > 944 ms; compare with `audio_examples/regression/hold_*_v1.0.2.wav` | |
+| L-10 | BYPASS | BYPASS on/off during echoes. | Direct only, loop cleared, no click | |
+| L-11 | Sample-rate change | Change Live's sample rate 48 → 96 → 44.1 kHz while the device is running. | Delay time stays correct (display, ear); no noise burst | |
+| L-12 | Invalid input recovery | Put a device that can output NaN before ECHOLIVITY (or a Max for Live test device sending `nan`). | ECHOLIVITY keeps working once valid audio returns; no reload needed | |
+| L-13 | CPU | 1 and 8 instances (TRUE ST, modulation on) at 44.1 / 48 / 88.2 / 96 kHz × buffer 64 / 128 / 256 / 512 / 1024: static, while automating TIME/FEEDBACK/BALANCE, and with HOLD + FEEDBACK 10. Read Live's CPU meter; watch for dropouts. | Record the values; no dropouts; compare the trend with `docs/validation/PERFORMANCE_REPORT.md` | |
+| L-14 | Latency | Read the device's reported latency (PDC; *not* the audio buffer latency). Null-test the dry path (BALANCE 0, PRE off) against the source on a parallel track. | Reported latency 0 samples; dry path nulls | |
+| L-15 | Interface | Compare with `docs/ui_preview.png`. | Layout readable; no overlapping controls | |

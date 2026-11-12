@@ -1,0 +1,31 @@
+{
+ "note": "ECHOLIVITY SDD-3000 factory programs. Fields are those the original stored per program (delay time + REGENERATION + MODULATION + EFFECT), plus three ECHOLIVITY extensions (time_mode, sync, division). Frequency/Intensity/Feedback/Balance use the hardware 0-10 scales. 'source' marks settings taken from the 1982 owner's manual application chart (OM).",
+ "fields": ["time_ms", "feedback", "fb_inv", "lowcut", "highcut", "waveform", "intensity", "frequency", "balance", "time_mode", "sync", "division"],
+ "enums": {
+  "lowcut": ["FLAT", "125 Hz", "250 Hz", "500 Hz"],
+  "highcut": ["FLAT", "8 kHz", "4 kHz", "2 kHz"],
+  "waveform": ["TRI", "SQUARE", "RND", "ENV"],
+  "division": ["1/32", "1/16", "1/12", "1/8", "1/6", "3/16", "1/4", "1/3", "3/8", "1/2", "1/1"]
+ },
+ "manual": {"time_ms": 380, "feedback": 3, "fb_inv": 0, "lowcut": 0, "highcut": 0, "waveform": 0, "intensity": 0, "frequency": 3, "balance": 5, "time_mode": 0, "sync": 0, "division": 8},
+ "programs": [
+  {"slot": 1, "name": "Classic Echo", "source": "OM 'natural echo' advice (highs decay faster than lows)",
+   "values": {"time_ms": 380, "feedback": 4.5, "fb_inv": 0, "lowcut": 1, "highcut": 2, "waveform": 0, "intensity": 0.6, "frequency": 1.0, "balance": 4.5, "time_mode": 0, "sync": 0, "division": 8}},
+  {"slot": 2, "name": "Short Slap", "source": "OM slapback: 123 ms, FB 3, LOW 125 Hz, INT 0, LB 3",
+   "values": {"time_ms": 123, "feedback": 3, "fb_inv": 0, "lowcut": 1, "highcut": 0, "waveform": 0, "intensity": 0, "frequency": 0, "balance": 3, "time_mode": 0, "sync": 0, "division": 8}},
+  {"slot": 3, "name": "Dub Regeneration", "source": "ECHOLIVITY (uses modern tempo sync, dotted 1/8)",
+   "values": {"time_ms": 375, "feedback": 6.6, "fb_inv": 0, "lowcut": 2, "highcut": 3, "waveform": 0, "intensity": 0.5, "frequency": 0.8, "balance": 5, "time_mode": 0, "sync": 1, "division": 5}},
+  {"slot": 4, "name": "Metallic Flange", "source": "OM flanging: 3-5 ms, FB 5, INV on, LOW 125 Hz, TRI, INT 6, FREQ 3, LB 5",
+   "values": {"time_ms": 4, "feedback": 5, "fb_inv": 1, "lowcut": 1, "highcut": 0, "waveform": 0, "intensity": 6, "frequency": 3, "balance": 5, "time_mode": 0, "sync": 0, "division": 8}},
+  {"slot": 5, "name": "Wide Doubling", "source": "OM doubling: 33 ms, FB 4, INV on, HIGH 4 kHz, TRI, INT 3, FREQ 2, LB 4 (use OUT MODE: STEREO A)",
+   "values": {"time_ms": 33, "feedback": 4, "fb_inv": 1, "lowcut": 0, "highcut": 2, "waveform": 0, "intensity": 3, "frequency": 2, "balance": 4, "time_mode": 0, "sync": 0, "division": 8}},
+  {"slot": 6, "name": "Vibrato", "source": "ECHOLIVITY: effect-only short delay, triangle ~4.5 Hz",
+   "values": {"time_ms": 5, "feedback": 0, "fb_inv": 0, "lowcut": 0, "highcut": 0, "waveform": 0, "intensity": 4, "frequency": 7.6, "balance": 10, "time_mode": 0, "sync": 0, "division": 8}},
+  {"slot": 7, "name": "Random Drift", "source": "ECHOLIVITY: smoothed RND at ~0.7 Hz, low intensity (OM: keep RND intensity low)",
+   "values": {"time_ms": 260, "feedback": 4.5, "fb_inv": 0, "lowcut": 1, "highcut": 2, "waveform": 2, "intensity": 0.6, "frequency": 4.0, "balance": 4.5, "time_mode": 0, "sync": 0, "division": 8}},
+  {"slot": 8, "name": "Infinite Hold", "source": "OM HOLD: full 1023 ms, flat filters. Press HOLD to freeze (HOLD is not stored, as on the original)",
+   "values": {"time_ms": 1023, "feedback": 6.8, "fb_inv": 0, "lowcut": 0, "highcut": 0, "waveform": 0, "intensity": 0, "frequency": 3, "balance": 5, "time_mode": 0, "sync": 0, "division": 8}},
+  {"slot": 9, "name": "Rhythmic Modulation", "source": "OM 'echo with pitch shift' (SQUARE, low INT), synced dotted 1/8",
+   "values": {"time_ms": 250, "feedback": 4, "fb_inv": 0, "lowcut": 1, "highcut": 1, "waveform": 1, "intensity": 1.2, "frequency": 5.3, "balance": 5, "time_mode": 0, "sync": 1, "division": 5}}
+ ]
+}
