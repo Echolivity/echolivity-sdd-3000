@@ -148,16 +148,16 @@ Notes:
 
 ## Automation and MIDI
 
-Every panel control is a Live parameter. It can be automated, MIDI-mapped (Ctrl/Cmd-M), key-mapped and macro-mapped. Push / Configure banks: **Delay**, **Character**, **Modern**. The hidden program-memory slots are "stored only", so they're saved but don't clutter the automation lists.
+Every panel control is a Live parameter. It can be automated, MIDI-mapped (Ctrl/Cmd-M), key-mapped and macro-mapped. Push / Configure banks: **Delay**, **Character**, **Modern** and **Ext Loop** (rc4/rc5). The hidden program-memory slots are "stored only", so they're saved but don't clutter the automation lists.
 
 ### LFO and modulators (v1.0.2-rc3)
 
-The 13 continuous knobs accept Live's LFO, Shaper and other modulators in **Mod** mode (the cyan button): TIME, FEEDBACK, BALANCE, INPUT LEVEL, OUTPUT GAIN, INTENSITY, FREQUENCY, ENV SENS, ENV RELEASE, WIDTH, and Preamp DRIVE, TONE, TRIM. They use *Additive* modulation: the modulator swings the knob around wherever you set it, without moving the knob itself, so automation, presets and **WRITE** keep the knob's own setting.
+The 14 continuous controls accept Live's LFO, Shaper and other modulators in **Mod** mode (the cyan button): the 13 knobs TIME, FEEDBACK, BALANCE, INPUT LEVEL, OUTPUT GAIN, INTENSITY, FREQUENCY, ENV SENS, ENV RELEASE, WIDTH and Preamp DRIVE, TONE, TRIM, plus RETURN (rc4). LOOP COMP is a latency value and is deliberately not modulatable. The owner has confirmed LFO mapping in Mod mode in Live 12; the Shaper and other modulators haven't been tested. They use *Additive* modulation: the modulator swings the knob around wherever you set it, without moving the knob itself, so automation, presets and **WRITE** keep the knob's own setting.
 
 Stepped controls (switches, tabs, menus such as LOW/HIGH CUT, WAVEFORM, DIVISION, HOLD, PROGRAM) can't be modulated in Mod mode; Live never allows that for stepped parameters. Map them with the modulator's Mod button **off**: they then jump between steps.
 
 Tips:
-- **TIME** follows the TIME CHANGE switch. In *glide* an LFO gives tape-style pitch wobble, but the delay time follows at a limited speed (like the hardware's clock), so it **lags a fast LFO**. In *crossfade* it gives choppy, stepped re-timing. For a classic chorus/flange, use the device's own MODULATION section instead; it works on the memory clock, as the hardware did.
+- **TIME** follows the TIME CHANGE switch. In *glide* an LFO gives tape-style pitch wobble, but the delay time follows with about 120 ms of smoothing (a modern feature, not part of the hardware), so it **lags a fast LFO**. In *crossfade* it gives choppy, stepped re-timing. For a classic chorus/flange, use the device's own MODULATION section instead; it works on the memory clock, as the hardware did.
 - **What you see:** in Mod mode the knob and its number stay where you set them (e.g. "456 ms"); only the ring shows the LFO. That's how Live displays Additive modulation.
 - **INTENSITY at long delay times:** pitch movement grows with delay time. At TIME 380 ms, INTENSITY 0.5 already gives about ±23 cents, so subtle tape-style wow sits in the first ~0.2 of the knob. Use Live's fine adjustment (hold Shift while dragging) or MIDI-map it with a narrow range.
 - **FEEDBACK** with an LFO gives swelling and fading dub tails. Keep the depth moderate near 10.

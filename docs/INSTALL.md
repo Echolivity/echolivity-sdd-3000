@@ -4,8 +4,8 @@
 
 ## Install
 
-1. Unzip the package anywhere.
-2. Copy `ECHOLIVITY SDD-3000.amxd` into your User Library, for example:
+1. Download `ECHOLIVITY SDD-3000.amxd` (from `dist/`, or unzip a release package first).
+2. Copy it into your User Library, for example:
    - Windows: `C:\Users\<you>\Documents\Ableton\User Library\Presets\Audio Effects\Max Audio Effect\`
    - macOS: `~/Music/Ableton/User Library/Presets/Audio Effects/Max Audio Effect/`
 3. In Live's browser, open **User Library → Presets → Audio Effects → Max Audio Effect** and drag **ECHOLIVITY SDD-3000** onto an audio track or return track.
@@ -14,10 +14,10 @@ You can also drag the .amxd straight from Explorer/Finder onto a track.
 
 ## First run
 
-- Expected (not verified in Live by the developer): the display shows `0  380` and the TIME dial reads 380 ms.
-- Replacing an earlier version: save your Set first. Parameters, programs and presets are compatible (no parameter was added, removed or renamed in 1.0.2).
+- Expected: the display shows `0  380` and the TIME dial reads 380 ms.
+- Replacing an earlier version: save your Set first. No parameter was removed or renamed. 1.0.2-rc4/rc5 added four parameters (FB Route, Ext Return, Loop Comp, Loop Cal) and two sync divisions (1/16T, 1/32T, appended so existing division settings recall unchanged); see `docs/validation/PRESET_COMPATIBILITY_REPORT.md`. Reopening older Sets in Live hasn't been validated yet.
 - Play audio. The HEADROOM LEDs should move and you should hear echoes.
-- If the device loads but stays silent, open it in Max (the wrench icon) and check the Max Console for gen~ errors. Please report the message. Loading in Live has not been verified by the developer; see `docs/TEST_REPORT.md`.
+- If the device loads but stays silent, open it in Max (the wrench icon) and check the Max Console for gen~ errors. Please report the message. Loading in Live 12 Suite on Windows has been confirmed by the owner (rc4); macOS and other Live versions are untested. See `docs/validation/LIVE_INTEGRATION_REPORT.md`.
 
 ## Updating
 

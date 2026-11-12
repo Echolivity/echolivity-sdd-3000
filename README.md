@@ -1,65 +1,77 @@
+# ECHOLIVITY SDD-3000
+
 <p align="center"><strong>A digital delay for Ableton Live 12.</strong><br>Inspired by the character and workflow of the 1982 Korg SDD-3000.</p>
+
 <p align="center"><a href="dist/ECHOLIVITY%20SDD-3000.amxd">Download device</a> · <a href="docs/MANUAL.md">Manual</a> · <a href="docs/INSTALL.md">Installation</a> · <a href="CHANGELOG.md">Changelog</a> · <a href="docs/validation/RELEASE_DECISION.md">Release decision</a></p>
-## Hardware-inspired concept
 
 <p align="center"><img src="docs/echolivity-sdd3000-concept.jpg" alt="ECHOLIVITY SDD-3000 hardware-inspired rack delay concept render" width="900"></p>
-<p align="center"><em>A visual concept inspired by classic rack delays; not an image of actual ECHOLIVITY hardware.</em></p>
+
+<p align="center"><em>Hardware-inspired concept render. ECHOLIVITY is software only; this is not a product photo or an image of the device's interface.</em></p>
 
 > **v1.0.2-rc5 · CONDITIONAL PASS**
 >
-> This is a release candidate, **not a production-ready release**. Automated DSP and static checks are documented, and selected workflows have been tested by the owner in Live 12. Full release validation remains outstanding. Read the [release decision](docs/validation/RELEASE_DECISION.md) before relying on this build in a critical session.
+> This is a release candidate, **not a production-ready release**. Automated DSP and static checks pass (one known minor limitation), and selected workflows have been tested by the owner in Live 12 on Windows. Full Live validation is still outstanding, including the controls new in rc5. Read the [release decision](docs/validation/RELEASE_DECISION.md) before relying on this build in a critical session.
 
 ## The instrument
 
-ECHOLIVITY SDD-3000 is a Max for Live digital delay for Ableton Live 12, built around the sound, signal flow and performance workflow of a classic digital rack unit. An independently implemented Gen~ DSP engine brings together converter character, clock modulation, feedback filtering and hands-on regeneration, with modern routing and Live integration.
+ECHOLIVITY SDD-3000 is a Max for Live digital delay for Ableton Live 12, built around the sound, signal flow and performance workflow of a classic digital rack unit. An independently written gen~ DSP engine models converter character, clock modulation, feedback filtering and hands-on regeneration, and adds modern routing and Live integration.
 
 ### Delay and modulation
 
-- **0–1023 ms delay time** with original-style 1 ms steps or continuous adjustment.
-- **Ableton tempo sync** with straight, dotted and triplet divisions, including 1/16T and 1/32T.
-- **Two time-change behaviours:** click-free crossfade or tape-style glide.
-- **Four modulation shapes:** TRI, SQR, RND and ENV.
-- Memory-clock modulation for chorus, flanging, vibrato, pitch-stepped echoes, random drift and envelope-driven Doppler effects.
-- Adjustable modulation intensity and frequency (0.1–15 Hz), plus envelope sensitivity and release.
+- **0–1023 ms delay time**, in original-style 1 ms steps or continuously.
+- **Tempo sync** to Live: straight (1/32–1/1), dotted (1/8D, 1/4D) and triplet (1/32T, 1/16T, 1/8T, 1/4T, 1/2T) divisions. Synced times are limited to 1023 ms.
+- **Two time-change behaviours:** a 25 ms crossfade, or a glide that bends pitch like tape.
+- **Four modulation shapes** acting on the memory clock: TRI, SQR, RND and ENV. Uses include flanging, vibrato and doubling (TRI), stepped jumps (SQR), random drift (RND) and envelope-driven pitch bends (ENV).
+- **INTENSITY** up to 2:1 (the delay shortens to half), **FREQUENCY** 0.1–15 Hz, and ENV sensitivity (±24 dB) and release (20 ms–5 s).
 
 ### Regeneration and tone
 
-- **Internal, external or combined feedback routing.**
-- Feedback control with phase inversion, self-oscillation and HOLD for looping a captured phrase.
-- **LOW and HIGH filters inside the regeneration path**, so repeats progressively change tone.
-- HARD converter clipping or SOFT loop saturation.
-- Input ranges (−30 / −10 / +4), input level and headroom metering.
-- Switchable preamp character stage with DRIVE, TONE and TRIM controls, plus drive compensation.
-- Optional 13-bit converter character or CLEAN mode.
+- **Feedback routing:** internal (INT), external (EXT) or both combined (BOTH).
+- **FEEDBACK** with polarity **INV**. Above 7 the loop builds up to self-oscillation, which the converter keeps bounded.
+- **HOLD** freezes the last ~1 s of memory and repeats it indefinitely, while new input is not recorded.
+- **LOW (125 / 250 / 500 Hz) and HIGH (8 / 4 / 2 kHz) filters inside the regeneration path**, so each repeat changes tone. LOW cut can use a gentle −3 dB/oct slope or a 6 dB/oct slope.
+- **HARD** (converter clipping) or **SOFT** loop saturation. In sustained oscillation the two measure close to each other.
+- **Input ranges** −30 / −10 / +4, LEVEL, and a **HEADROOM** meter showing input plus feedback. The converter starts to clip at the red +3, so set LEVEL by the meter.
+- **Preamp character stage** (an approximation) with DRIVE, TONE, TRIM and drive compensation; it can be switched off.
+- **13-bit gain-ranged converter** character, or **CLEAN**.
 
 ### External effects loop
 
-Send the regeneration signal out of Live and return it through another track's effects chain. Reverb, filters, EQ, distortion and other processors can become part of the feedback path, so every repeat is processed again.
+Send the repeats through another Live track's effects (reverb, filters, EQ, distortion…) and back into the delay, so every repeat is processed again.
 
-- Dedicated stereo send on outputs 3/4 and return on inputs 3/4.
-- INT / EXT / BOTH routing modes and adjustable RETURN level.
-- **CAL measures the external round-trip latency; LOOP COMP applies the compensation** so repeats stay aligned with the selected delay time or synced division.
-- Manual compensation adjustment is also available.
+- **Send** on the device's outputs 3/4 and **return** on its inputs 3/4, routed with Live's track Input/Output choosers.
+- **INT / EXT / BOTH** modes and a **RETURN** level (same scale as FEEDBACK).
+- Each pass through the other track adds Live's routing latency. **CAL** sends one click around the loop and measures that delay; **LOOP COMP** (0–250 ms, also settable by hand) then shortens the internal delay so repeats land on TIME or the synced division.
+- **Limits:**
+  - LOOP COMP applies in EXT only, not in BOTH.
+  - Re-run CAL after changing the buffer size or the effects on the loop track.
+  - Delay times shorter than the loop latency can't be fully compensated.
+- Routing has been confirmed by the owner in Live. CAL and LOOP COMP are tested in simulation only so far; see the [manual](docs/MANUAL.md#external-regeneration-loop-v102-rc4) for setup and troubleshooting.
 
 ### Stereo and output
 
-- **Four output modes:** MONO, STEREO A, STEREO B and TRUE ST (independent left/right delays).
-- Dry/wet BALANCE, stereo WIDTH, output GAIN and WET ONLY.
-- Output phase inversion and selectable output attenuation.
-- Soft output saturation and a safety curve for excessive levels.
+- **Four output modes:**
+  - **MONO**
+  - **STEREO A** (direct / mix)
+  - **STEREO B** (mix / inverted mix): widest, but the echoes partly cancel in mono
+  - **TRUE ST**: separate left and right delay paths sharing the same settings
+- **BALANCE** (dry/wet), **WIDTH** (0–200 %, no effect when both channels are identical), output **GAIN** (−24 to +12 dB) and **WET ONLY**.
+- Output **INV** flips the echo's polarity against the direct signal (sum ↔ difference). Output range −20 / −10 / +4.
+- Output-amp clipping when the character stage is on, plus an always-on safety ceiling (transparent below +6 dBFS, never above +12 dBFS).
 
 ### Programs and performance
 
-- Nine factory programs, plus a Manual setting.
-- Program recall, edit indication and WRITE to store settings.
-- Programs and device settings persist with Live Sets and Ableton device presets.
-- HOLD, BYPASS, feedback and other controls are ready for hands-on MIDI performance.
+- **Nine factory programs** plus the manual setting **M**.
+- **Program recall**, an edit indicator, and **WRITE** to store your own.
+- **What a program stores:** TIME, FEEDBACK, INV, LOW, HIGH, WAVE, INTENSITY, FREQUENCY and BALANCE, plus time mode, sync and division. Input, output and HOLD settings aren't stored.
+- Programs are kept with the Live Set and in device presets. Reopening a Set and recalling presets haven't been validated in Live yet.
+- **HOLD** and **BYPASS** for performance; BYPASS also clears the loop.
 
 ### Ableton Live integration
 
-- Panel controls exposed as Live parameters for automation, MIDI mapping, key mapping and macro mapping.
-- Dedicated Delay, Character and Modern parameter banks for Push / Configure.
-- Live LFO, Shaper and other modulators can modulate 13 continuous controls in additive Mod mode.
+- All 42 panel controls are Live parameters, available for automation and MIDI, key and macro mapping. Hands-on checks in Live are still partial.
+- **Push / Configure banks:** Delay, Character, Modern and Ext Loop.
+- **14 continuous controls accept Live's modulators in Mod mode** (Additive: the knob keeps its own value): the 13 knobs plus RETURN. Mapping Live's LFO in Mod mode has been confirmed by the owner. Stepped controls (switches, tabs, menus) can only be mapped with Mod off.
 
 This is an independent homage, **not** a component-level replica or an official Korg product. See the [user manual](docs/MANUAL.md) for the complete control reference, signal flow and operating details.
 
@@ -105,14 +117,14 @@ These renders are demonstrations, not a substitute for testing the device in you
 | [Musical evaluation](docs/validation/MUSICAL_EVALUATION.md) | Musical listening tests, measurements and proposals |
 | [Research notes](docs/RESEARCH_NOTES.md) | Hardware research and documented distinctions |
 | [Output protection](docs/OUTPUT_PROTECTION.md) | Output saturation and protection behaviour |
-| [Visual identity](docs/brand/README.md) | Project palette and asset usage |
+| [Presentation notes](docs/brand/README.md) | Guidance for project imagery |
 | [Documentation index](docs/README.md) | Central guide index |
 
 ## Validation snapshot
 
 | Check | Current result |
 |---|---|
-| Engine tests (C build of exact gen~ code) | 50 PASS · 1 known-limitation FAIL · 51 total |
+| Engine tests (C build of the exact gen~ code; not Live) | 50 PASS · 1 known-limitation FAIL (D-3) · 51 total |
 | Static device checks | 20/20 PASS (static inspection) |
 | Reproducibility | 8/8 PASS |
 | Ableton Live / Max runtime | Selected owner checks PASS; remaining items outstanding |
