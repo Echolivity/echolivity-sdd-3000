@@ -11,15 +11,57 @@
 
 ## The instrument
 
-A Max for Live delay built around the sound-shaping and performance workflow of a classic digital rack delay: delay time, regeneration, filtering, modulation and hands-on control. The project combines an independently implemented DSP engine with a native Max for Live interface.
+ECHOLIVITY SDD-3000 is a Max for Live digital delay for Ableton Live 12, built around the sound, signal flow and performance workflow of a classic digital rack unit. An independently implemented Gen~ DSP engine brings together converter character, clock modulation, feedback filtering and hands-on regeneration, with modern routing and Live integration.
 
-- **Internal and external regeneration paths** — route the feedback loop internally or through external hardware / Live routing.
-- **Tempo sync and triplet divisions** — musical divisions alongside time-based operation.
-- **Modulation and movement** — LFO, envelope response, vibrato and drift.
-- **Feedback tone shaping** — shape repeats inside the regeneration path.
-- **Performance controls** — HOLD, program memory and hands-on feedback behaviour.
+### Delay and modulation
 
-This is an independent homage, **not** a component-level replica or an official Korg product.
+- **0–1023 ms delay time** with original-style 1 ms steps or continuous adjustment.
+- **Ableton tempo sync** with straight, dotted and triplet divisions, including 1/16T and 1/32T.
+- **Two time-change behaviours:** click-free crossfade or tape-style glide.
+- **Four modulation shapes:** TRI, SQR, RND and ENV.
+- Memory-clock modulation for chorus, flanging, vibrato, pitch-stepped echoes, random drift and envelope-driven Doppler effects.
+- Adjustable modulation intensity and frequency (0.1–15 Hz), plus envelope sensitivity and release.
+
+### Regeneration and tone
+
+- **Internal, external or combined feedback routing.**
+- Feedback control with phase inversion, self-oscillation and HOLD for looping a captured phrase.
+- **LOW and HIGH filters inside the regeneration path**, so repeats progressively change tone.
+- HARD converter clipping or SOFT loop saturation.
+- Input ranges (−30 / −10 / +4), input level and headroom metering.
+- Switchable preamp character stage with DRIVE, TONE and TRIM controls, plus drive compensation.
+- Optional 13-bit converter character or CLEAN mode.
+
+### External effects loop
+
+Send the regeneration signal out of Live and return it through another track's effects chain. Reverb, filters, EQ, distortion and other processors can become part of the feedback path, so every repeat is processed again.
+
+- Dedicated stereo send on outputs 3/4 and return on inputs 3/4.
+- INT / EXT / BOTH routing modes and adjustable RETURN level.
+- **CAL measures the external round-trip latency; LOOP COMP applies the compensation** so repeats stay aligned with the selected delay time or synced division.
+- Manual compensation adjustment is also available.
+
+### Stereo and output
+
+- **Four output modes:** MONO, STEREO A, STEREO B and TRUE ST (independent left/right delays).
+- Dry/wet BALANCE, stereo WIDTH, output GAIN and WET ONLY.
+- Output phase inversion and selectable output attenuation.
+- Soft output saturation and a safety curve for excessive levels.
+
+### Programs and performance
+
+- Nine factory programs, plus a Manual setting.
+- Program recall, edit indication and WRITE to store settings.
+- Programs and device settings persist with Live Sets and Ableton device presets.
+- HOLD, BYPASS, feedback and other controls are ready for hands-on MIDI performance.
+
+### Ableton Live integration
+
+- Panel controls exposed as Live parameters for automation, MIDI mapping, key mapping and macro mapping.
+- Dedicated Delay, Character and Modern parameter banks for Push / Configure.
+- Live LFO, Shaper and other modulators can modulate 13 continuous controls in additive Mod mode.
+
+This is an independent homage, **not** a component-level replica or an official Korg product. See the [user manual](docs/MANUAL.md) for the complete control reference, signal flow and operating details.
 
 ## Download and install
 
