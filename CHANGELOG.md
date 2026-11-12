@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased — hardware-reference validation (no device, DSP, preset or parameter change)
+
+- **Evidence base:** `docs/validation/HARDWARE_REFERENCE.md` contains a specification matrix from the re-read 1982 service manual (page-cited, with confidence levels and explicit UNKNOWNs), the reference-model design, a feature classification matrix (SPECIFICATION VERIFIED / DSP VERIFIED / AUDIO MEASURED / LISTENING EVALUATED / HARDWARE UNVERIFIED) and the discrepancies found.
+- **Reference models:** `tests/hwref/reference_models.py`, written from the documents only, with no constants taken from the implementation.
+- **Suite:** `tests/hwref/hw_validation.py` runs deterministically in about 30 s using impulse, stepped and sustained sine, log sweep, white noise, multitone, percussion and high-level stimuli. It writes `docs/validation/HARDWARE_VALIDATION.{json,md}` and adds section 10 to `docs/TEST_REPORT.md`. Result: 28 consistent, 5 inconsistent, 8 reported, 1 not comparable.
+- **Discrepancies found (not fixed; each needs an approved DSP task):**
+  - **HW-1:** in-band alias images from the 64 kHz clock emulation; total distortion + noise is 0.28 % against 0.03 % typical.
+  - **HW-2:** the HIGH cut uses a bilinear filter at the host rate, so it falls 3 dB further than an analog first-order filter at 16 kHz for the 8 kHz setting.
+  - **HW-3:** −3.34 dB at 17 kHz at a 48 kHz host, against a −3 dB limit.
+  - **HW-4:** no analog noise floor (by design).
+- **Optional physical measurement:** `tools/loopback_measure.py` and `docs/validation/HARDWARE_MEASUREMENT.md` cover the interface loopback workflow and a secondary-reference procedure for commercial emulations. The analysis is self-tested in the suite. It hasn't been run on real equipment yet.
+- The existing engine tests, static checks and their expected results are unchanged.
+
 ## 1.0.2-rc5 — 2026-11-12 — owner's Live 12 results; triplets; LOOP COMP / CAL; console fix
 
 ### Fixed

@@ -26,6 +26,18 @@ No critical defect has been **reproduced**. However, every mandatory Ableton Liv
 | Latency | PDC 0 declared; direct path 0 samples (C build) |
 | Reproducibility | see `docs/TEST_REPORT.md` section 7 |
 
+## Hardware-reference validation (added after rc5; device unchanged)
+
+Against the 1982 Korg documentation, not an original unit (`HARDWARE_REFERENCE.md`): 28 measurements consistent, 5 inconsistent, 9 without a usable documented reference.
+
+- **HW-1 (significant):** the clock-domain conversion creates in-band alias images, for example a 1 kHz image only 10 dB below a 17 kHz tone at a 48 kHz host. Total distortion + noise at 1 kHz is 0.28 % against the SM's 0.03 % typical.
+  - Not a functional defect, and the existing engine and static results don't change.
+  - It is the largest measured deviation from the documented hardware, and it could colour bright material.
+  - **Recommendation:** listen for it (cymbals and hats through long feedback) and decide on a resampler investigation before a production release.
+- **HW-2 and HW-3 (minor):** the HIGH cut's top-octave slope, and 17 kHz response marginally beyond −3 dB at 48 / 96 kHz.
+
+Every feature remains **HARDWARE UNVERIFIED**: no original unit was available. The decision stays **CONDITIONAL PASS**.
+
 ## Owner's Live 12 results (rc3/rc4)
 
 Load, panel, sound without clicks, HOLD, program memory, LFO Mod mapping, external loop routing and 8 instances without dropouts: **PASS** (`LIVE_INTEGRATION_REPORT.md`). Found and fixed: UI-1 (blank panel, rc4), UI-2 (console flood, rc5). Still open: D-1 `.adv` hot-load (L-7a), automation, Set reopen, sample-rate change, and the new rc5 items.

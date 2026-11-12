@@ -83,3 +83,21 @@ Nothing else differs. There is no difference in delay timing, feedback, filters,
 | CPU increase | C build: no measurable change (−12 % … +15 %, noise on a shared VM) |
 | Behaviour while HOLD is engaged changes | A/B: HOLD-engage scenario bit-identical; engage code path unchanged |
 | Memory overrun from the new pointer logic | bounds counter on every access = 0 in all tests (incl. 30 s stress at 22.05–192 kHz) |
+
+---
+
+## Addendum: hardware-reference validation methodology (after rc5)
+
+No implementation change. Validation now has a third, independent axis besides the engine regression suite and static checks: the software against the **1982 documentation**. Its parts are:
+
+- reference models: `tests/hwref/reference_models.py`
+- suite: `tests/hwref/hw_validation.py`
+- evidence and method: `docs/validation/HARDWARE_REFERENCE.md`
+
+The suite found three implementation characteristics that the regression suite couldn't see, because it compares against the implementation's own history and measures only fundamentals:
+- in-band alias images from the 64 kHz → host-rate conversion (HW-1);
+- warping of the bilinear HIGH cut at the host rate (HW-2);
+- a marginal 17 kHz response at 48 / 96 kHz (HW-3).
+
+Fixing any of them would change the sound and the bit-identical baselines, so each needs a separate, approved task with listening.
+

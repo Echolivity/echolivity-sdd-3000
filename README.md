@@ -116,6 +116,7 @@ These renders are demonstrations, not a substitute for testing the device in you
 | [Engineering changes](docs/ENGINEERING_CHANGES.md) | Implementation changes and root-cause notes |
 | [Musical evaluation](docs/validation/MUSICAL_EVALUATION.md) | Musical listening tests, measurements and proposals |
 | [Research notes](docs/RESEARCH_NOTES.md) | Hardware research and documented distinctions |
+| [Hardware reference](docs/validation/HARDWARE_REFERENCE.md) | 1982 specification matrix, reference models, measured consistency and open discrepancies |
 | [Output protection](docs/OUTPUT_PROTECTION.md) | Output saturation and protection behaviour |
 | [Presentation notes](docs/brand/README.md) | Guidance for project imagery |
 | [Documentation index](docs/README.md) | Central guide index |
@@ -127,6 +128,7 @@ These renders are demonstrations, not a substitute for testing the device in you
 | Engine tests (C build of the exact gen~ code; not Live) | 50 PASS · 1 known-limitation FAIL (D-3) · 51 total |
 | Static device checks | 20/20 PASS (static inspection) |
 | Reproducibility | 8/8 PASS |
+| Hardware-reference suite (against the 1982 Korg documentation, not an original unit) | 28 consistent · 5 inconsistent · 9 without a documented reference — see [hardware reference](docs/validation/HARDWARE_REFERENCE.md) |
 | Ableton Live / Max runtime | Selected owner checks PASS; remaining items outstanding |
 | Release decision | **Conditional pass — not production-ready** |
 
@@ -143,6 +145,7 @@ python3 tests/run_tests.py
 python3 tools/inspect_amxd.py
 python3 tools/make_report.py
 python3 tools/verify_release.py
+python3 tests/hwref/hw_validation.py   # optional: hardware-reference suite (~30 s)
 ~~~
 
 The test runner exits non-zero on an unexpected failure. One known pre-existing limitation (D-3) remains documented; do not interpret a known failure as a clean all-pass result.

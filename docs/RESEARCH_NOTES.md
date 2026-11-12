@@ -9,6 +9,8 @@ ECHOLIVITY is an independent homage to the 1982 Korg SDD-3000 rack delay. It is 
 
 Approximations are approximations. Nothing in sections B or C should be read as exact hardware emulation.
 
+**Update (hardware-reference validation round):** the service-manual spec sheet and check & adjustment pages were re-read from the owner's scan. "SM p.1" = PDF p.3, "SM p.15" = PDF p.17. The scan also gives figures not used before: dynamic range 94 dB (effect) / 110 dB (direct), S/N 88 / 95 dB, total distortion 0.03 % / 0.005 % typical at 1 kHz (all A-weighted where stated), and a modulated clock range of 40–78 kHz. The evidence-graded specification matrix, independent reference models and measured consistency are in `docs/validation/HARDWARE_REFERENCE.md`; that file supersedes the "Measured characteristics" table below where they differ.
+
 ## Sources (in order of authority)
 
 | # | Source | Used for |

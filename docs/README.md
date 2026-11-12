@@ -21,4 +21,7 @@
 - [Engineering changes](ENGINEERING_CHANGES.md)
 - [Research notes](RESEARCH_NOTES.md)
 - [Musical evaluation](validation/MUSICAL_EVALUATION.md)
+- [Hardware reference: specification matrix, method and results](validation/HARDWARE_REFERENCE.md)
+- [Hardware-reference results table](validation/HARDWARE_VALIDATION.md)
+- [Optional interface / plug-in measurement workflow](validation/HARDWARE_MEASUREMENT.md)
 - [Presentation notes](brand/README.md)
