@@ -1,58 +1,116 @@
-# ECHOLIVITY SDD-3000 — v1.0.2-rc5 (release candidate)
+# ECHOLIVITY SDD-3000
 
-**Release candidate — CONDITIONAL PASS, not production-ready.** rc5 adds triplet sync divisions and LOOP COMP / CAL for the external loop, fixes the Max Console flood (UI-2), and records the owner's first Live 12 results. rc4 fixed a blank panel in Live 12 (UI-1) and added an **external regeneration loop** (FB ROUTE / RETURN, device in/out 3-4). rc3 added LFO "Mod" mapping on the 13 continuous knobs and the D-1 preset hot-load fix; DSP, sound, presets and interface are unchanged. Ableton Live validation is still outstanding. Start with `docs/validation/RELEASE_DECISION.md`.
+<p align="center">
+  <strong>A digital delay for Ableton Live 12.</strong><br>
+  Inspired by the character and workflow of the 1982 Korg SDD-3000.
+</p>
 
-A Max for Live digital delay for Ableton Live 12, modelled on the 1982 Korg SDD-3000 rack. *Independent homage; not an official Korg product and not a component-level replica.*
+<p align="center">
+  <a href="https://github.com/Echolivity/echolivity-sdd-3000/releases">Releases</a> ·
+  <a href="docs/MANUAL.md">Manual</a> ·
+  <a href="docs/INSTALL.md">Installation</a> ·
+  <a href="docs/validation/RELEASE_DECISION.md">Release decision</a>
+</p>
 
-| Path | Contents |
+<p align="center">
+  <img src="docs/ui_preview.png" alt="ECHOLIVITY SDD-3000 interface preview" width="820">
+</p>
+
+> **Current build: v1.0.2-rc5 — conditional pass.**
+> This is a release candidate, **not a production-ready release**. The DSP and static checks are documented, but full Ableton Live validation remains outstanding. Read the [release decision](docs/validation/RELEASE_DECISION.md) before using this build in a critical session.
+
+## At a glance
+
+| | |
 |---|---|
-| `dist/ECHOLIVITY SDD-3000.amxd` | **The device.** Single self-contained file. Drop it into Live. |
-| `docs/INSTALL.md` | Installation |
-| `docs/MANUAL.md` | User manual |
-| `docs/TEST_REPORT.md` | Test and validation report: PASS / FAIL / NOT VERIFIED (engine, static, runtime, performance, audio comparison) |
-| `docs/ENGINEERING_CHANGES.md` | Engineering change report for 1.0.2 (root causes, fixes, every intentional sonic difference) |
-| `docs/OUTSTANDING_ISSUES.md` | Outstanding issues |
-| `docs/LIVE_VALIDATION_CHECKLIST.md` | Manual Ableton Live validation steps (not yet performed) |
-| `docs/measurements/` | CPU benchmark and regression-audio measurements |
-| `docs/validation/MUSICAL_EVALUATION.md` | Musical evaluation (dub material, measured): findings, strengths, proposals; audio in `audio_examples/musical_eval/` |
-| `docs/validation/` | Final validation round: release decision, Live integration report (BLOCKED), DSP regression, CPU/latency, preset compatibility, defects, blocked tests |
-| `docs/OUTPUT_PROTECTION.md` | Exact behaviour of the output soft-saturation curves |
-| `docs/STATIC_CHECKS.json`, `docs/TEST_RESULTS.json` | Machine-readable check results |
-| `docs/RESEARCH_NOTES.md` | Authentic vs. inferred vs. modern, with sources |
-| `docs/ui_preview.png` | Interface layout preview |
-| `CHANGELOG.md` | Changelog |
-| `presets/factory_programs.json` | Factory program bank (also built into the device) |
-| `audio_examples/` | 19 WAV files: the dry source (`00_dry_source.wav`) + 18 rendered demos (01–13, 14a, 14b, 15–17) |
-| `audio_examples/regression/` | 8 WAV files: v1.0.1 vs v1.0.2-rc1 on identical input (HOLD release ×2, release + re-engage, invalid input) |
-| `src/gen/echolivity_core.genexpr` | gen~ DSP source (exactly what is inside the device) |
-| `src/max/ECHOLIVITY_SDD-3000.maxpat` | The device patcher as plain JSON |
-| `tools/` | Generators: `make_gen.py` (DSP), `gen2c.py` (GenExpr→C for testing), `fit_hfcomp.py`, `build_amxd.py`, `make_report.py`; checks: `inspect_amxd.py`, `analyse_output_protection.py`, `verify_release.py` |
-| `SHA256SUMS.txt` | Checksums of every file in the release |
-| `docs/baseline/` | Baseline hashes of earlier releases (v1.0 core files; v1.0.1 files unchanged in 1.0.2) |
-| `tests/` | Engine validation suite, example renderer, C benchmark (`bench_engine.c`), v1.0.1 reference DSP (`reference/`) |
+| **Format** | Max for Live Audio Effect |
+| **Host** | Ableton Live 12 |
+| **Inspiration** | Korg SDD-3000 (1982) |
+| **Build** | v1.0.2-rc5 |
+| **Status** | Conditional pass · Live validation outstanding |
+| **License** | GPL-3.0 |
 
-## Rebuilding and testing (developers)
+## Get the device
 
-Requirements: Python 3.9+ with numpy and scipy, and a C compiler (`gcc`, or set `CC`). Tested on Linux. Running the test tools on Windows (MinGW-w64) or macOS (clang) is expected to work but is NOT VERIFIED.
+**[Download the self-contained Max for Live device](dist/ECHOLIVITY%20SDD-3000.amxd)**
 
-```
-python3 tools/make_gen.py          # regenerate the GenExpr (byte-identical to the shipped file)
-python3 tools/build_amxd.py        # rebuild the .amxd (byte-identical to the shipped device)
-python3 tests/run_tests.py         # 51 engine tests (incl. A/B vs v1.0.1); creates build/ automatically
-python3 tools/inspect_amxd.py      # 20 static device checks
-python3 tools/make_report.py       # regenerate docs/TEST_REPORT.md
-python3 tools/verify_release.py    # clean-copy rebuild + determinism + audio re-render + checksums
-```
+1. Download the .amxd file.
+2. Drag it onto an audio track in Ableton Live 12.
+3. Consult the [installation guide](docs/INSTALL.md) and [user manual](docs/MANUAL.md) for setup and operation.
 
-`tests/run_tests.py` exits non-zero on any unexpected failure. In rc5 one known-limitation test is reported as FAIL (D-3, pre-existing start-up behaviour); the other 43 must pass.
+## What’s new in rc5
 
-```
-python3 tools/check_compat.py "tests/reference/ECHOLIVITY SDD-3000 v1.0.1.amxd" "dist/ECHOLIVITY SDD-3000.amxd"   # parameter/preset compatibility
-gcc -O2 -o bench tests/bench_engine.c -ldl && ./bench build/engine.so   # CPU grid (C build)
-```
+- Triplet divisions added to sync.
+- LOOP COMP and CAL controls added for the external loop.
+- Max Console message flood fixed (UI-2).
+- First owner-run Live 12 results recorded.
 
-## Licence
+Recent history:
+- **rc4:** fixed a blank panel in Live 12 (UI-1) and added an external regeneration loop via FB ROUTE / RETURN, using device inputs and outputs 3–4.
+- **rc3:** added LFO “Mod” mapping on the 13 continuous knobs and fixed D-1 preset hot-loading.
 
-ECHOLIVITY SDD-3000 is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License, version 3** (see `LICENSE`). It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the [changelog](CHANGELOG.md) and [engineering change report](docs/ENGINEERING_CHANGES.md) for details.
 
-Copyright (C) 2026 the ECHOLIVITY authors. Korg and SDD-3000 are trademarks of their respective owner; this project is not affiliated with or endorsed by Korg.
+## Project documentation
+
+| Start here | What it covers |
+|---|---|
+| [User manual](docs/MANUAL.md) | Controls, operation and signal flow |
+| [Installation](docs/INSTALL.md) | Installing and loading the device |
+| [Release decision](docs/validation/RELEASE_DECISION.md) | Current release status and go/no-go rationale |
+| [Live validation checklist](docs/LIVE_VALIDATION_CHECKLIST.md) | Manual checks still required in Ableton Live |
+| [Test report](docs/TEST_REPORT.md) | Engine, static, runtime, performance and audio-comparison results |
+| [Outstanding issues](docs/OUTSTANDING_ISSUES.md) | Known limitations and unresolved defects |
+| [Musical evaluation](docs/validation/MUSICAL_EVALUATION.md) | Evaluation using dub material, with findings and proposals |
+| [Engineering changes](docs/ENGINEERING_CHANGES.md) | Root causes, fixes and intentional sonic differences |
+| [Research notes](docs/RESEARCH_NOTES.md) | Historical details: authentic, inferred and modern |
+| [Output protection](docs/OUTPUT_PROTECTION.md) | Output soft-saturation behaviour |
+| [Changelog](CHANGELOG.md) | Version history |
+
+## For developers
+
+The repository includes the GenExpr DSP source, Max patcher, build scripts, test suite, presets, measurements and audio examples.
+
+**Requirements:** Python 3.9+ with NumPy and SciPy, plus a C compiler (gcc, or set CC). The documented toolchain has been tested on Linux. Windows (MinGW-w64) and macOS (clang) are not verified.
+
+From the repository root:
+
+~~~bash
+python3 tools/make_gen.py
+python3 tools/build_amxd.py
+python3 tests/run_tests.py
+python3 tools/inspect_amxd.py
+python3 tools/make_report.py
+python3 tools/verify_release.py
+~~~
+
+The test runner reports 51 engine tests, including A/B checks against v1.0.1. In rc5, one known-limitation test is reported as FAIL (D-3, pre-existing start-up behaviour); the other 43 are expected to pass. See the [test report](docs/TEST_REPORT.md) and [release decision](docs/validation/RELEASE_DECISION.md) for the precise status and interpretation.
+
+Additional checks:
+
+~~~bash
+python3 tools/check_compat.py "tests/reference/ECHOLIVITY SDD-3000 v1.0.1.amxd" "dist/ECHOLIVITY SDD-3000.amxd"
+gcc -O2 -o bench tests/bench_engine.c -ldl && ./bench build/engine.so
+~~~
+
+### Repository map
+
+- dist/ — packaged Max for Live device.
+- src/gen/ — GenExpr DSP source.
+- src/max/ — Max patcher in JSON form.
+- presets/ — factory program bank.
+- tests/ — engine tests, renderer, benchmark and reference DSP.
+- tools/ — generators, build utilities, reports and verification.
+- audio_examples/ — rendered demonstrations and regression audio.
+- docs/measurements/ and docs/validation/ — measurements and validation evidence.
+- SHA256SUMS.txt — release file checksums.
+
+## Project status and caveat
+
+This project is an independent homage. It is **not** an official Korg product, is not endorsed by Korg, and is not a component-level replica. Korg and SDD-3000 are trademarks of their respective owner.
+
+## License
+
+Released under the **GNU General Public License v3.0**. See [LICENSE](LICENSE). The software is provided without warranty, including without implied warranty of merchantability or fitness for a particular purpose.
+
+Copyright © 2026 the ECHOLIVITY authors.
