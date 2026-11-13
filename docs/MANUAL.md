@@ -104,7 +104,12 @@ Setting it up with Live's track choosers (any Live 12 version):
 4. Set track B's **Audio To** to track A and, below it, choose ECHOLIVITY's **3/4** input.
 5. Play. RETURN, track B's fader and the effects on track B together set how long the repeats last.
 
-*Status:* the SEND/RTN menus have been tested only against a simulated Live Object Model (`tests/max/test_fb_route_chooser.js`). Native confirmation in Live 12 is still pending.
+*Status:* confirmed by the owner in Ableton Live 12.4.6:
+- the menus list Live's sources and destinations;
+- the EXT loop runs from them;
+- they follow changes made in Live;
+- the routing survives save and reopen;
+- track renames, additions and deletions update the menus.
 
 Notes:
 - Each pass through track B adds Live's routing latency: at least one audio buffer, plus any latency of the effects on track B. Without compensation the repeats arrive late, by 46 ms per repeat at a 2048-sample buffer. Use **CAL** (below).

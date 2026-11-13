@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.0.2-rc6 — 2026-11-13 — SEND / RTN routing menus (owner request)
+
+### Added
+- **SEND and RTN menus** (PROGRAM area, under WRITE/TO): choose where the regeneration send (device outputs 3/4) goes and where the return (device inputs 3/4) comes from, from the device itself. The left menu picks the track; the right menu picks the channel or tap point (Track In; Pre FX / Post FX / Post Mixer).
+  - The menus list exactly what Live offers, including return tracks, Ext. In/Out and Main as a return source.
+  - They follow routing changes made anywhere in Live.
+  - Implemented with a `v8.codebox` (`src/max/fb_route_chooser.js`) driving the Live Object Model's DeviceIO routing. **Requires Live 12.2+ (Max 9).**
+  - The routing is Live's own state and is saved with the Set. It is not part of ECHOLIVITY presets or programs.
+  - Live's track choosers keep working as before.
+- The WRITE help text that sat in that space moved to the manual.
+
+### Unchanged
+- DSP: the gen~ code is byte-identical to rc5.
+- Parameters: 162/162, Push banks and the 120 factory-program values are identical, so old Sets and presets load unchanged.
+
+### Validation
+- **Owner, Ableton Live 12.4.6:** all 7 checks passed.
+  1. The device loads with a clean Max console.
+  2. Both menus list Live's destinations and sources.
+  3. The full EXT loop works from the menus (3-Audio, Track In / Post FX).
+  4. The menus follow routing changes made in Live.
+  5. The routing survives save, close and reopen, and plays immediately.
+  6. Renaming, adding and deleting tracks update the menus.
+  7. INT mode and factory programs behave as before.
+
+  Record: `docs/validation/RC6_SEND_RTN_LIVE_TEST.md`.
+- Offline: mock Live Object Model logic test `tests/max/test_fb_route_chooser.js`, 10/10. Engine tests 50/51 (unchanged; one known limitation). Static device checks 20/20. Deterministic rebuild.
+
 ## Unreleased — hardware-reference validation (no device, DSP, preset or parameter change)
 
 - **Evidence base:** `docs/validation/HARDWARE_REFERENCE.md` contains a specification matrix from the re-read 1982 service manual (page-cited, with confidence levels and explicit UNKNOWNs), the reference-model design, a feature classification matrix (SPECIFICATION VERIFIED / DSP VERIFIED / AUDIO MEASURED / LISTENING EVALUATED / HARDWARE UNVERIFIED) and the discrepancies found.
