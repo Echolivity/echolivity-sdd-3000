@@ -1,6 +1,8 @@
 # HW-1 Root-Cause Investigation — Clock-Domain Conversion Spurs
 
 Baseline: `dfd851bef49ed81f9aac37edc25a4702f9ba7ed7` (v1.0.2-rc5 + hardware-reference validation).
+> **Update (remediation phase):** the recommendation below (candidate B) has been superseded. Candidate B fails the TIME-0 latency and timing contracts. The remediation architecture is **candidate D**: continuous-time analog-prototype conversion with a TIME-0 error-feedforward path. See `HW1_ARCHITECTURE_DECISION.md` and `HW1_REMEDIATION_REPORT.md` (recommendation: request further investigation, because native validation is still pending). HW-1 remains open.
+
 Status: **investigation and recommendation only.** The production DSP, the device interface, the presets and the downloadable device are unchanged. HW-1 is **not fixed**, and the release status is unchanged.
 
 All numbers below were measured in this repository with the C-compiled engine (`tools/gen2c.py`) or the isolated numpy model in `experiments/hw1/`. Nothing here was measured on real hardware or inside Live/Max.

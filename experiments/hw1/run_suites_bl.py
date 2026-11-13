@@ -11,7 +11,10 @@ sys.path.insert(0, os.path.join(ROOT, "tests"))
 sys.path.insert(0, os.path.join(ROOT, "tests", "hwref"))
 import engine
 engine.build()
-BL = os.path.join(HERE, "build", "engine_bl.so")
+# usage: run_suites_bl.py [candidate.so tag]   (default: candidate B -> tag "bl", as in the investigation)
+BL = os.path.abspath(sys.argv[1]) if len(sys.argv) > 2 else os.path.join(HERE, "build", "engine_bl.so")
+TAG = sys.argv[2] if len(sys.argv) > 2 else "bl"
+del sys.argv[1:]
 PROD = engine.SO
 OUT = os.path.join(HERE, "results")
 
@@ -35,8 +38,8 @@ def hw_suite(so):
     import importlib, hw_validation
     importlib.reload(hw_validation)
     hw_validation.build = lambda: None
-    hw_validation.OUT_JSON = os.path.join(OUT, "hwref_" + ("bl" if so == BL else "prod") + ".json")
-    hw_validation.OUT_MD = os.path.join(OUT, "hwref_" + ("bl" if so == BL else "prod") + ".md")
+    hw_validation.OUT_JSON = os.path.join(OUT, "hwref_" + (TAG if so == BL else "prod") + ".json")
+    hw_validation.OUT_MD = os.path.join(OUT, "hwref_" + (TAG if so == BL else "prod") + ".md")
     hw_validation.RES.clear()
     hw_validation.main()
     return {r["area"] + ": " + r["name"]: r for r in hw_validation.RES}
@@ -52,7 +55,7 @@ def main():
             continue
         if a["pass"] != b["pass"] or a.get("detail") != b.get("detail"):
             diff.append(dict(test=k, production_pass=a["pass"], candidate_pass=b["pass"],
-                             production=str(a.get("detail"))[:400], candidate=str(b.get("detail"))[:400]))
+                             production=str(a.get("detail")), candidate=str(b.get("detail"))))
     hp = hw_suite(PROD)
     hb = hw_suite(BL)
     hdiff = [dict(measurement=k, production=hp[k]["verdict"], candidate=hb[k]["verdict"],
@@ -63,7 +66,7 @@ def main():
                hw_suite=dict(production={v: sum(r["verdict"] == v for r in hp.values()) for v in ("CONSISTENT", "INCONSISTENT", "REPORTED", "NOT COMPARABLE")},
                              candidate={v: sum(r["verdict"] == v for r in hb.values()) for v in ("CONSISTENT", "INCONSISTENT", "REPORTED", "NOT COMPARABLE")},
                              differences=hdiff))
-    json.dump(res, open(os.path.join(OUT, "suites_production_vs_candidate.json"), "w"), indent=1)
+    json.dump(res, open(os.path.join(OUT, "suites_production_vs_candidate.json" if TAG == "bl" else f"suites_production_vs_{TAG}.json"), "w"), indent=1)
     print(json.dumps({k: {kk: vv for kk, vv in v.items() if kk != "differences"} for k, v in res.items()}, indent=1))
     for d in diff:
         print("ENGINE", d["test"], d["production_pass"], "->", d["candidate_pass"], "|", d["candidate"][:200])

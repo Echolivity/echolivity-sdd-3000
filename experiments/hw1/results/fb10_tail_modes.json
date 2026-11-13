@@ -1,0 +1,146 @@
+{
+ "RND INT10 true stereo (the t_feedback_extreme case): production": {
+  "L": [
+   0.0,
+   -0.0006,
+   0.0008
+  ],
+  "R": [
+   -0.0001,
+   0.0,
+   0.0002
+  ]
+ },
+ "RND INT10 true stereo (the t_feedback_extreme case): candidate_D": {
+  "L": [
+   0.0063,
+   0.0058,
+   0.0058
+  ],
+  "R": [
+   -0.0001,
+   0.0,
+   0.0004
+  ]
+ },
+ "RND INT10 mono: production": {
+  "L": [
+   -0.0001,
+   0.0,
+   0.0002
+  ],
+  "R": [
+   -0.0001,
+   0.0,
+   0.0002
+  ]
+ },
+ "RND INT10 mono: candidate_D": {
+  "L": [
+   -0.0002,
+   0.0,
+   0.0004
+  ],
+  "R": [
+   -0.0002,
+   0.0,
+   0.0004
+  ]
+ },
+ "SQUARE INT10 true stereo: production": {
+  "L": [
+   -0.0081,
+   -0.0055,
+   -0.0054
+  ],
+  "R": [
+   0.0004,
+   -0.0,
+   0.0005
+  ]
+ },
+ "SQUARE INT10 true stereo: candidate_D": {
+  "L": [
+   -0.0024,
+   0.0016,
+   0.0002
+  ],
+  "R": [
+   0.0001,
+   0.0,
+   0.0006
+  ]
+ },
+ "TRI INT10 true stereo: production": {
+  "L": [
+   -0.0027,
+   -0.0004,
+   -0.0004
+  ],
+  "R": [
+   0.0001,
+   0.0,
+   0.0002
+  ]
+ },
+ "TRI INT10 true stereo: candidate_D": {
+  "L": [
+   -0.0018,
+   -0.002,
+   0.0012
+  ],
+  "R": [
+   -0.0001,
+   0.0002,
+   0.0005
+  ]
+ },
+ "no modulation, true stereo: production": {
+  "L": [
+   -0.0032,
+   -0.0034,
+   -0.0036
+  ],
+  "R": [
+   -0.0003,
+   0.0002,
+   0.0001
+  ]
+ },
+ "no modulation, true stereo: candidate_D": {
+  "L": [
+   0.0009,
+   0.0009,
+   0.0004
+  ],
+  "R": [
+   -0.0002,
+   0.0002,
+   0.0008
+  ]
+ },
+ "RND INT5 true stereo: production": {
+  "L": [
+   0.0012,
+   0.0018,
+   0.0027
+  ],
+  "R": [
+   -0.0001,
+   0.0002,
+   0.0003
+  ]
+ },
+ "RND INT5 true stereo: candidate_D": {
+  "L": [
+   0.0003,
+   0.0003,
+   0.0013
+  ],
+  "R": [
+   -0.0001,
+   0.0003,
+   0.0005
+  ]
+ }
+}

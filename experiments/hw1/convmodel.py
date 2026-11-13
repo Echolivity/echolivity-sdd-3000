@@ -240,3 +240,120 @@ def run_candidate(name, x, fs, fv=64000.0, mod=None, quant=None, taps=32, fc_hz=
         y, D2 = out_bandlimited(q, t, n, taps=taps, fc_hz=fc_hz, fs=fs)
         return y
     raise ValueError(name)
+
+
+# ================================================================ candidate D (remediation phase)
+# Continuous-time minimum-phase conversion: an analog-prototype low-pass H(s) = sum r_i/(s - p_i)
+# (strictly proper, simple poles) is applied in continuous time on both sides and sampled exactly
+# at the (possibly modulated) tick / host instants. Cost is O(order) per tick, there is no kernel
+# table, and the latency is the filter's group delay (tens of microseconds), not half a FIR.
+#   input : x_c(t) = sum_n x[n] h(t - n);  per pole a host-rate one-pole state s_i[n], and
+#           x_c(t_k) = sum_i s_i[floor t_k] * exp(p_i (t_k - floor t_k))
+#   output: the ZOH staircase (authentic DAC) filtered by H: y(t) = q(t) + sum_i z_i(t),
+#           z_i(t) = sum_k dq_k * (r_i/p_i) * exp(p_i (t - t_k))   (step response 1 + sum r/p e^{pt})
+def analog_proto(order=7, rp=0.05, rs=90.0, fp_hz=21000.0, kind="ellip", extra_poles_hz=()):
+    """extra_poles_hz: additional real poles (Hz) cascaded to raise the asymptotic roll-off;
+    a strictly proper elliptic only falls at 20 dB/decade above its last zero, and the
+    impulse-train input sums every far image."""
+    w = 2 * np.pi * fp_hz
+    if kind == "ellip":
+        z, p, k = signal.ellip(order, rp, rs, 1.0, analog=True, output="zpk")
+    elif kind == "butter":
+        z, p, k = signal.butter(order, 1.0, analog=True, output="zpk")
+    elif kind == "bessel":
+        z, p, k = signal.bessel(order, 1.0, analog=True, output="zpk", norm="mag")
+    elif kind == "cheby2":
+        z, p, k = signal.cheby2(order, rs, 1.0, analog=True, output="zpk")
+    for fx in extra_poles_hz:
+        px = -fx / fp_hz
+        p = np.concatenate([p, [px]]); k = k * (-px)
+    r = np.array([k * np.prod(p[i] - z) / np.prod(np.delete(p[i] - p, i)) for i in range(len(p))])
+    # keep one of each conjugate pair (Im >= 0); weight 2 for pairs, 1 for real poles
+    keep = p.imag >= -1e-12
+    wgt = np.where(np.abs(p.imag) > 1e-9, 2.0, 1.0)[keep]
+    return p[keep] * w, r[keep] * w, wgt          # rad/s, rad/s
+
+
+def _per_sample(proto, fs):
+    p, r, wgt = proto
+    return p / fs, r / fs, wgt
+
+
+def in_analog(x, t, proto, fs):
+    p, r, wgt = _per_sample(proto, fs)
+    m0 = np.floor(t).astype(int)
+    tau = t - m0
+    out = np.zeros(len(t))
+    for pi, ri, wi in zip(p, r, wgt):
+        s = signal.lfilter([ri], [1, -np.exp(pi)], x.astype(complex))
+        out += wi * np.real(s[np.clip(m0, 0, len(x) - 1)] * np.exp(pi * tau))
+    return out
+
+
+def out_analog(q, t, n_host, proto, fs):
+    p, r, wgt = _per_sample(proto, fs)
+    dq = np.diff(np.concatenate([[0.0], q]))
+    n_of = np.ceil(t).astype(int)                       # tick in (n-1, n] is seen at host n
+    n_of = np.clip(n_of, 0, n_host - 1)
+    y = np.zeros(n_host)
+    # current staircase value at each host instant
+    idx = np.searchsorted(t, np.arange(n_host), side="right") - 1
+    y += np.where(idx >= 0, q[np.clip(idx, 0, len(q) - 1)], 0.0)
+    for pi, ri, wi in zip(p, r, wgt):
+        u = np.zeros(n_host, complex)
+        np.add.at(u, n_of, dq * (ri / pi) * np.exp(pi * (n_of - t)))
+        z = signal.lfilter([1.0], [1, -np.exp(pi)], u)
+        y += wi * np.real(z)
+    return y
+
+
+def run_D(x, fs, fv=64000.0, mod=None, quant=None, proto=None):
+    proto = proto or analog_proto()
+    n = len(x)
+    fv_arr = np.full(n, fv) if mod is None else mod
+    t = tick_times_mod(fv_arr, fs)
+    t = t[(t > 0) & (t < n - 1)]
+    q = in_analog(x, t, proto, fs)
+    q = quant(q) if quant else q
+    return out_analog(q, t, n, proto, fs)
+
+
+def run_B_minphase(x, fs, taps=16, fc_hz=None, quant=None, mod=None, fv=64000.0):
+    """Minimum-phase FIR variant of B (homomorphic): kernel sampled finely, made min-phase,
+    used causally on both sides (no look-ahead)."""
+    fc_hz = fc_hz or (19000.0 if fs < 46000 else 20000.0)
+    P = 64
+    h = bl_kernel(taps, fc_hz / fs)
+    u = (np.arange(taps * P) - taps * P / 2) / P
+    hl = h(u)
+    hm = signal.minimum_phase(np.concatenate([hl, np.zeros(len(hl))]), method="homomorphic", n_fft=1 << 16)[:taps * P]
+    hm *= hl.sum() / hm.sum()
+    def kern(v):                                        # v >= 0 in host samples
+        v = np.asarray(v) * P
+        i = np.floor(v).astype(int)
+        f = v - i
+        ok = (i >= 0) & (i < len(hm) - 1)
+        out = np.zeros(v.shape)
+        out[ok] = hm[i[ok]] * (1 - f[ok]) + hm[i[ok] + 1] * f[ok]
+        return out / P
+    n = len(x)
+    fv_arr = np.full(n, fv) if mod is None else mod
+    t = tick_times_mod(fv_arr, fs)
+    t = t[(t > 0) & (t < n - 1)]
+    m0 = np.floor(t).astype(int)
+    qv = np.zeros(len(t)); nm = np.zeros(len(t))
+    for j in range(0, taps + 1):
+        idx = m0 - j
+        c = kern(t - idx)
+        qv += c * x[np.clip(idx, 0, n - 1)] * (idx >= 0)
+        nm += c
+    qv /= np.maximum(nm, 1e-9)
+    qv = quant(qv) if quant else qv
+    d = hold_durations(t)
+    y = np.zeros(n + taps + 2); w = np.zeros(n + taps + 2)
+    base = np.ceil(t).astype(int)
+    for j in range(0, taps + 1):
+        nn = base + j
+        c = kern(nn - t) * d
+        np.add.at(y, np.clip(nn, 0, len(y) - 1), c * qv)
+    return y[:n]

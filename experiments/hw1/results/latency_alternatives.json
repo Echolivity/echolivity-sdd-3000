@@ -1,0 +1,296 @@
+{
+ "production": {
+  "worst_spur": {
+   "44100": {
+    "tone_hz": 20000,
+    "spur_hz": 4200.0,
+    "db": -17.6
+   },
+   "48000": {
+    "tone_hz": 20000,
+    "spur_hz": 12000.0,
+    "db": -11.9
+   },
+   "96000": {
+    "tone_hz": 20000,
+    "spur_hz": 44000.0,
+    "db": -8.2
+   }
+  },
+  "ops_per_sample_est": 5,
+  "passband_48k_re_1k": {
+   "1000": 0.0,
+   "10000": -1.99,
+   "15000": -4.3,
+   "17000": -5.33,
+   "20000": -6.72
+  },
+  "timing_48k": {
+   "peak_ms": 0.0,
+   "centroid_ms": -0.0006,
+   "gd_1k_ms": 0.0028,
+   "gd_10k_ms": 0.0012,
+   "gd_17k_ms": -0.0017
+  },
+  "modulated_17k_48k_db": -16.1
+ },
+ "B_linear_32": {
+  "worst_spur": {
+   "44100": {
+    "tone_hz": 20000,
+    "spur_hz": 100.0,
+    "db": -114.7
+   },
+   "48000": {
+    "tone_hz": 20000,
+    "spur_hz": 4000.0,
+    "db": -117.6
+   },
+   "96000": {
+    "tone_hz": 20000,
+    "spur_hz": 44000.0,
+    "db": -106.2
+   }
+  },
+  "ops_per_sample_est": 256,
+  "passband_48k_re_1k": {
+   "1000": 0.0,
+   "10000": -0.0,
+   "15000": -0.0,
+   "17000": -0.54,
+   "20000": -12.04
+  },
+  "timing_48k": {
+   "peak_ms": 0.6667,
+   "centroid_ms": 0.6667,
+   "gd_1k_ms": 0.6667,
+   "gd_10k_ms": 0.6667,
+   "gd_17k_ms": 0.6667
+  },
+  "modulated_17k_48k_db": -127.4
+ },
+ "B_linear_16": {
+  "worst_spur": {
+   "44100": {
+    "tone_hz": 18000,
+    "spur_hz": 1900.0,
+    "db": -106.3
+   },
+   "48000": {
+    "tone_hz": 20000,
+    "spur_hz": 4000.0,
+    "db": -101.6
+   },
+   "96000": {
+    "tone_hz": 20000,
+    "spur_hz": 44000.0,
+    "db": -105.9
+   }
+  },
+  "ops_per_sample_est": 128,
+  "passband_48k_re_1k": {
+   "1000": 0.0,
+   "10000": -0.0,
+   "15000": -1.11,
+   "17000": -3.49,
+   "20000": -12.04
+  },
+  "timing_48k": {
+   "peak_ms": 0.3333,
+   "centroid_ms": 0.3333,
+   "gd_1k_ms": 0.3333,
+   "gd_10k_ms": 0.3333,
+   "gd_17k_ms": 0.3333
+  },
+  "modulated_17k_48k_db": -116.1
+ },
+ "B_linear_12": {
+  "worst_spur": {
+   "44100": {
+    "tone_hz": 16000,
+    "spur_hz": 3900.0,
+    "db": -107.8
+   },
+   "48000": {
+    "tone_hz": 20000,
+    "spur_hz": 4000.0,
+    "db": -98.1
+   },
+   "96000": {
+    "tone_hz": 20000,
+    "spur_hz": 44000.0,
+    "db": -51.2
+   }
+  },
+  "ops_per_sample_est": 96,
+  "passband_48k_re_1k": {
+   "1000": 0.0,
+   "10000": -0.14,
+   "15000": -2.36,
+   "17000": -4.97,
+   "20000": -12.01
+  },
+  "timing_48k": {
+   "peak_ms": 0.25,
+   "centroid_ms": 0.25,
+   "gd_1k_ms": 0.25,
+   "gd_10k_ms": 0.25,
+   "gd_17k_ms": 0.25
+  },
+  "modulated_17k_48k_db": -111.3
+ },
+ "B_minphase_16": {
+  "worst_spur": {
+   "44100": {
+    "tone_hz": 20000,
+    "spur_hz": 100.0,
+    "db": -50.5
+   },
+   "48000": {
+    "tone_hz": 19000,
+    "spur_hz": 3000.0,
+    "db": -44.1
+   },
+   "96000": {
+    "tone_hz": 20000,
+    "spur_hz": 12000.0,
+    "db": -40.5
+   }
+  },
+  "ops_per_sample_est": 128,
+  "passband_48k_re_1k": {
+   "1000": 0.0,
+   "10000": -0.01,
+   "15000": -0.57,
+   "17000": -1.76,
+   "20000": -5.97
+  },
+  "timing_48k": {
+   "peak_ms": 0.0625,
+   "centroid_ms": 0.0707,
+   "gd_1k_ms": 0.0562,
+   "gd_10k_ms": 0.0656,
+   "gd_17k_ms": 0.096
+  },
+  "modulated_17k_48k_db": -50.7
+ },
+ "D_ellip5": {
+  "worst_spur": {
+   "44100": {
+    "tone_hz": 2000,
+    "spur_hz": 21900.0,
+    "db": -48.7
+   },
+   "48000": {
+    "tone_hz": 5000,
+    "spur_hz": 21000.0,
+    "db": -49.6
+   },
+   "96000": {
+    "tone_hz": 20000,
+    "spur_hz": 44000.0,
+    "db": -55.0
+   }
+  },
+  "ops_per_sample_est": 93.12,
+  "passband_48k_re_1k": {
+   "1000": 0.0,
+   "10000": -0.71,
+   "15000": -1.61,
+   "17000": -2.09,
+   "20000": -2.84
+  },
+  "timing_48k": {
+   "peak_ms": 0.0625,
+   "centroid_ms": 0.0757,
+   "gd_1k_ms": 0.0634,
+   "gd_10k_ms": 0.0683,
+   "gd_17k_ms": 0.0846
+  },
+  "modulated_17k_48k_db": -56.9
+ },
+ "D_ellip7": {
+  "worst_spur": {
+   "44100": {
+    "tone_hz": 20000,
+    "spur_hz": 4200.0,
+    "db": -92.0
+   },
+   "48000": {
+    "tone_hz": 20000,
+    "spur_hz": 12000.0,
+    "db": -94.1
+   },
+   "96000": {
+    "tone_hz": 19000,
+    "spur_hz": 45000.0,
+    "db": -101.4
+   }
+  },
+  "ops_per_sample_est": 139.68,
+  "passband_48k_re_1k": {
+   "1000": 0.0,
+   "10000": -0.85,
+   "15000": -1.99,
+   "17000": -2.46,
+   "20000": -3.45
+  },
+  "timing_48k": {
+   "peak_ms": 0.1042,
+   "centroid_ms": 0.1099,
+   "gd_1k_ms": 0.0906,
+   "gd_10k_ms": 0.0998,
+   "gd_17k_ms": 0.1306
+  },
+  "modulated_17k_48k_db": -92.1
+ },
+ "D_ellip9": {
+  "worst_spur": {
+   "44100": {
+    "tone_hz": 20000,
+    "spur_hz": 100.0,
+    "db": -100.2
+   },
+   "48000": {
+    "tone_hz": 20000,
+    "spur_hz": 4000.0,
+    "db": -95.7
+   },
+   "96000": {
+    "tone_hz": 20000,
+    "spur_hz": 12000.0,
+    "db": -98.1
+   }
+  },
+  "ops_per_sample_est": 139.68,
+  "passband_48k_re_1k": {
+   "1000": 0.0,
+   "10000": -0.62,
+   "15000": -1.31,
+   "17000": -1.78,
+   "20000": -2.44
+  },
+  "timing_48k": {
+   "peak_ms": 0.125,
+   "centroid_ms": 0.1428,
+   "gd_1k_ms": 0.1053,
+   "gd_10k_ms": 0.12,
+   "gd_17k_ms": 0.1744
+  },
+  "modulated_17k_48k_db": -99.5
+ },
+ "_notes": {
+  "model": "isolated conversion core (convmodel.py), quantiser off for the spur sweep (12-bit harmonics of a -40 dB tone would dominate), no host-rate filters/emphasis",
+  "D_chosen": {
+   "order": 7,
+   "rp": 0.05,
+   "rs": 90.0,
+   "fp_hz": 21000.0,
+   "extra_poles_hz": [
+    50000.0,
+    70000.0
+   ]
+  },
+  "timing": "peak and centroid of the core impulse response; gd = group delay from its transfer function"
+ }
+}
