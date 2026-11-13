@@ -602,8 +602,39 @@ def build():
     plabel([1070, 69, 24, 12], "TO", C_LEG, 7.5)
     preview["controls"].append(({"kind": "numbox", "rect": [1094, 66, 34, 18], "init": 1,
                                  "modern": False, "sn": "TO"}, C_LEG))
-    plabel([1010, 88, 196, 20], "WRITE stores the panel into slot TO.\nM = manual (live panel)",
-           [0.55, 0.55, 0.55, 1], 6.5, 0)
+    # rc6: FB ROUTE chooser - pick the regeneration SEND destination (device outputs 3/4) and RETURN
+    # source (device inputs 3/4) from the panel. A v8.codebox (src/max/fb_route_chooser.js, Live 12.2+ /
+    # Max 9) lists the DeviceIO routing types/channels Live offers and applies the choice; the routing is
+    # Live's own state, so the menus are plain umenus, not Live parameters (their contents change with the
+    # Set). Replaces the WRITE help text (now in the manual).
+    route_js = open(os.path.join(ROOT, "src", "max", "fb_route_chooser.js")).read()
+    v8 = P.add({"maxclass": "v8.codebox", "code": route_js, "filename": "none", "numinlets": 1,
+                "numoutlets": 4, "outlettype": ["", "", "", ""], "fontface": 0, "fontname": "<Monospaced>",
+                "fontsize": 10.0}, [1300, 300, 600, 400])
+    P.link(td, 0, v8, 0)
+    route_rows = (("SEND", 87, ("sendtype", "sendchan"),
+                   ("Regeneration SEND (device outputs 3/4): destination track",
+                    "Regeneration SEND: destination channel")),
+                  ("RTN", 99, ("rettype", "retchan"),
+                   ("Regeneration RETURN (device inputs 3/4): source track",
+                    "Regeneration RETURN: tap point on the source track")))
+    k = 0
+    for lab, y, cmds, hints in route_rows:
+        plabel([1010, y, 28, 11], lab, C_MOD, 6.5)
+        for (x, w), cmd, hint in zip(((1036, 102), (1140, 54)), cmds, hints):
+            um = P.add({"maxclass": "umenu", "numinlets": 1, "numoutlets": 3, "outlettype": ["int", "", ""],
+                        "items": ["-"], "parameter_enable": 0, "presentation": 1,
+                        "presentation_rect": [x, y, w, 11], "fontname": "Arial Bold", "fontsize": 6.5,
+                        "bgcolor": C_BTN, "textcolor": C_LEG, "color": C_MOD, "arrow": 1,
+                        "annotation": hint, "hint": hint, "varname": f"fbroute_{cmd}"},
+                       [1300 + 140 * k, 760, w, 20])
+            P.link(v8, k, um, 0)
+            pre = P.obj(f"prepend {cmd}", 1, 1)
+            P.link(um, 0, pre, 0)
+            P.link(pre, 0, v8, 0)
+            preview["controls"].append(({"kind": "menu", "rect": [x, y, w, 11], "enum": ["-"], "init": 0,
+                                         "sn": cmd}, C_LEG))
+            k += 1
 
     # tab -> [t i i]: first the logic (with OLD prev), then prev/pcur/display update
     t_p = P.obj("t i i", 1, 2)

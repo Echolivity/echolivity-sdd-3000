@@ -39,7 +39,8 @@ ECHOLIVITY SDD-3000 is a Max for Live digital delay for Ableton Live 12, built a
 
 Send the repeats through another Live track's effects (reverb, filters, EQ, distortion…) and back into the delay, so every repeat is processed again.
 
-- **Send** on the device's outputs 3/4 and **return** on its inputs 3/4, routed with Live's track Input/Output choosers.
+- **Send** on the device's outputs 3/4 and **return** on its inputs 3/4.
+- **Choosing the tracks:** use the **SEND** / **RTN** menus on the panel (rc6, Live 12.2+), or Live's track Input/Output choosers. The SEND/RTN menus are not yet confirmed natively in Live; see the manual.
 - **INT / EXT / BOTH** modes and a **RETURN** level (same scale as FEEDBACK).
 - Each pass through the other track adds Live's routing latency. **CAL** sends one click around the loop and measures that delay; **LOOP COMP** (0–250 ms, also settable by hand) then shortens the internal delay so repeats land on TIME or the synced division.
 - **Limits:**

@@ -85,12 +85,26 @@ The device has an extra stereo **output 3/4 (send)** and **input 3/4 (return)**:
 - **Send (out 3/4)** always carries the regeneration signal, after LOW/HIGH, at unity gain, in every FB ROUTE mode.
 - **Return (in 3/4)** is used only in EXT and BOTH, scaled by RETURN.
 
-Setting it up in Live:
+**SEND / RTN menus (rc6, needs Live 12.2+ with Max 9).** The two rows under WRITE in the PROGRAM area choose the loop's routing from the device itself:
+- **SEND:** the destination of output 3/4. The left menu picks the track; the right menu picks the channel Live offers for it.
+- **RTN:** the source of input 3/4. The left menu picks the track; the right menu picks the tap point (for example Pre FX, Post FX or Post Mixer).
+
+The menus list exactly what Live offers at that moment and follow changes made anywhere, including in Live's own track choosers. The routing is Live's own state; the menus don't store it themselves, so it isn't saved with ECHOLIVITY presets or programs. In older Live versions the menus read "(needs Live 12.2+)", and the track choosers below still work.
+
+Setting it up from the device:
+1. Put ECHOLIVITY on a track (say track A). Set **FB ROUTE** to **EXT** and **RETURN** to about 5.
+2. Create an audio track for the loop (track B) and load the effects you want on it. Set its **Monitor** to **In**.
+3. In ECHOLIVITY, set **SEND** to track B and **RTN** to track B (Post FX, or Post Mixer to include its fader).
+4. Play. RETURN, track B's fader and the effects on track B together set how long the repeats last.
+
+Setting it up with Live's track choosers (any Live 12 version):
 1. Put ECHOLIVITY on a track (say track A). Set **FB ROUTE** to **EXT** and **RETURN** to about 5.
 2. Create an audio track for the loop (track B) and load the effects you want on it.
 3. On track B, set **Audio From** to track A and, in the chooser below it, choose ECHOLIVITY's **3/4** output. Set **Monitor** to **In**.
 4. Set track B's **Audio To** to track A and, below it, choose ECHOLIVITY's **3/4** input.
 5. Play. RETURN, track B's fader and the effects on track B together set how long the repeats last.
+
+*Status:* the SEND/RTN menus have been tested only against a simulated Live Object Model (`tests/max/test_fb_route_chooser.js`). Native confirmation in Live 12 is still pending.
 
 Notes:
 - Each pass through track B adds Live's routing latency: at least one audio buffer, plus any latency of the effects on track B. Without compensation the repeats arrive late, by 46 ms per repeat at a 2048-sample buffer. Use **CAL** (below).
@@ -128,7 +142,7 @@ Notes:
 - **M** is manual (the live panel). **1–9** are stored programs. ▲/▼ step through them and can be MIDI-mapped to footswitches.
 - A program stores TIME, FEEDBACK, INV, LOW, HIGH, WAVE, INTENSITY, FREQUENCY and BALANCE (as on the original), plus 1ms/CONT, SYNC and DIV. Input, output, HOLD and output INV are not stored.
 - Moving a control after recalling a program lights the **dot** next to the program digit. The edit lasts until you change program.
-- **WRITE** stores the current panel into slot **TO**. TO follows the selected program, so WRITE on a recalled program overwrites it.
+- **WRITE** stores the current panel into slot **TO**. TO follows the selected program, so WRITE on a recalled program overwrites it. **M** is the manual (live panel) slot. (Until rc5 this was printed under WRITE; that space now holds the SEND/RTN routing menus.)
 - The M panel is remembered when you leave it and restored when you return.
 - All programs are saved with your Live Set and in Live device presets (.adv). To restore the factory bank, load a fresh instance of the device.
 
