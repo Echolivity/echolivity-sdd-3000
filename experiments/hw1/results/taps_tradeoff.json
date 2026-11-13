@@ -1,0 +1,188 @@
+[
+ {
+  "host": 44100,
+  "taps": 8,
+  "fc_hz": 19000.0,
+  "worst_audible_spur_db": -73.9,
+  "at_input_hz": 14000,
+  "spur_hz": 10200.0,
+  "g15k_db": -5.1,
+  "g17k_db": -7.9,
+  "latency_ms": 0.181
+ },
+ {
+  "host": 44100,
+  "taps": 12,
+  "fc_hz": 19000.0,
+  "worst_audible_spur_db": -107.8,
+  "at_input_hz": 16000,
+  "spur_hz": 3900.0,
+  "g15k_db": -3.06,
+  "g17k_db": -6.49,
+  "latency_ms": 0.272
+ },
+ {
+  "host": 44100,
+  "taps": 16,
+  "fc_hz": 19000.0,
+  "worst_audible_spur_db": -108.9,
+  "at_input_hz": 17000,
+  "spur_hz": 2900.0,
+  "g15k_db": -1.67,
+  "g17k_db": -5.14,
+  "latency_ms": 0.363
+ },
+ {
+  "host": 44100,
+  "taps": 24,
+  "fc_hz": 19000.0,
+  "worst_audible_spur_db": -128.7,
+  "at_input_hz": 17000,
+  "spur_hz": 2900.0,
+  "g15k_db": -0.35,
+  "g17k_db": -3.06,
+  "latency_ms": 0.544
+ },
+ {
+  "host": 44100,
+  "taps": 32,
+  "fc_hz": 19000.0,
+  "worst_audible_spur_db": -129.5,
+  "at_input_hz": 10000,
+  "spur_hz": 9900.0,
+  "g15k_db": -0.04,
+  "g17k_db": -1.67,
+  "latency_ms": 0.726
+ },
+ {
+  "host": 44100,
+  "taps": "production",
+  "worst_audible_spur_db": -19.2,
+  "at_input_hz": 17000,
+  "spur_hz": 7200.0
+ },
+ {
+  "host": 48000,
+  "taps": 8,
+  "fc_hz": 20000.0,
+  "worst_audible_spur_db": -53.9,
+  "at_input_hz": 17000,
+  "spur_hz": 15000.0,
+  "g15k_db": -4.42,
+  "g17k_db": -6.81,
+  "latency_ms": 0.167
+ },
+ {
+  "host": 48000,
+  "taps": 12,
+  "fc_hz": 20000.0,
+  "worst_audible_spur_db": -104.0,
+  "at_input_hz": 12000,
+  "spur_hz": 4000.0,
+  "g15k_db": -2.36,
+  "g17k_db": -4.97,
+  "latency_ms": 0.25
+ },
+ {
+  "host": 48000,
+  "taps": 16,
+  "fc_hz": 20000.0,
+  "worst_audible_spur_db": -109.9,
+  "at_input_hz": 14000,
+  "spur_hz": 2000.0,
+  "g15k_db": -1.11,
+  "g17k_db": -3.49,
+  "latency_ms": 0.333
+ },
+ {
+  "host": 48000,
+  "taps": 24,
+  "fc_hz": 20000.0,
+  "worst_audible_spur_db": -120.2,
+  "at_input_hz": 14000,
+  "spur_hz": 2000.0,
+  "g15k_db": -0.14,
+  "g17k_db": -1.53,
+  "latency_ms": 0.5
+ },
+ {
+  "host": 48000,
+  "taps": 32,
+  "fc_hz": 20000.0,
+  "worst_audible_spur_db": -126.8,
+  "at_input_hz": 17000,
+  "spur_hz": 1000.0,
+  "g15k_db": -0.0,
+  "g17k_db": -0.54,
+  "latency_ms": 0.667
+ },
+ {
+  "host": 48000,
+  "taps": "production",
+  "worst_audible_spur_db": -13.7,
+  "at_input_hz": 17000,
+  "spur_hz": 15000.0
+ },
+ {
+  "host": 96000,
+  "taps": 8,
+  "fc_hz": 20000.0,
+  "worst_audible_spur_db": -103.0,
+  "at_input_hz": 17000,
+  "spur_hz": 15000.0,
+  "g15k_db": -5.31,
+  "g17k_db": -6.9,
+  "latency_ms": 0.083
+ },
+ {
+  "host": 96000,
+  "taps": 12,
+  "fc_hz": 20000.0,
+  "worst_audible_spur_db": -114.9,
+  "at_input_hz": 12000,
+  "spur_hz": 20000.0,
+  "g15k_db": -5.56,
+  "g17k_db": -7.66,
+  "latency_ms": 0.125
+ },
+ {
+  "host": 96000,
+  "taps": 16,
+  "fc_hz": 20000.0,
+  "worst_audible_spur_db": -106.6,
+  "at_input_hz": 17000,
+  "spur_hz": 15000.0,
+  "g15k_db": -4.43,
+  "g17k_db": -6.84,
+  "latency_ms": 0.167
+ },
+ {
+  "host": 96000,
+  "taps": 24,
+  "fc_hz": 20000.0,
+  "worst_audible_spur_db": -121.3,
+  "at_input_hz": 12000,
+  "spur_hz": 20000.0,
+  "g15k_db": -2.36,
+  "g17k_db": -4.97,
+  "latency_ms": 0.25
+ },
+ {
+  "host": 96000,
+  "taps": 32,
+  "fc_hz": 20000.0,
+  "worst_audible_spur_db": -124.2,
+  "at_input_hz": 17000,
+  "spur_hz": 15000.0,
+  "g15k_db": -1.11,
+  "g17k_db": -3.49,
+  "latency_ms": 0.333
+ },
+ {
+  "host": 96000,
+  "taps": "production",
+  "worst_audible_spur_db": -19.1,
+  "at_input_hz": 17000,
+  "spur_hz": 15000.0
+ }
+]

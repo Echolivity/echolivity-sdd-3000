@@ -1,0 +1,1056 @@
+{
+ "spurs": [
+  {
+   "host": 44100,
+   "f_in": 100,
+   "production": {
+    "worst_audible_spur_db": -78.8,
+    "spur_hz": 19800.0,
+    "wanted_db": -0.01
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -150.0,
+    "spur_hz": 12900.0,
+    "wanted_db": -0.01
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 1000,
+   "production": {
+    "worst_audible_spur_db": -56.4,
+    "spur_hz": 18900.0,
+    "wanted_db": -0.09
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -129.3,
+    "spur_hz": 13800.0,
+    "wanted_db": -0.12
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 3000,
+   "production": {
+    "worst_audible_spur_db": -44.4,
+    "spur_hz": 16900.0,
+    "wanted_db": -0.46
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -117.5,
+    "spur_hz": 15800.0,
+    "wanted_db": -0.63
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 5000,
+   "production": {
+    "worst_audible_spur_db": -38.1,
+    "spur_hz": 19200.0,
+    "wanted_db": -0.55
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -112.9,
+    "spur_hz": 17800.0,
+    "wanted_db": -0.92
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 8000,
+   "production": {
+    "worst_audible_spur_db": -30.0,
+    "spur_hz": 16200.0,
+    "wanted_db": -0.47
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -108.5,
+    "spur_hz": 4800.0,
+    "wanted_db": -0.88
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 10000,
+   "production": {
+    "worst_audible_spur_db": -26.7,
+    "spur_hz": 14200.0,
+    "wanted_db": -0.57
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -107.9,
+    "spur_hz": 2800.0,
+    "wanted_db": -0.73
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 12000,
+   "production": {
+    "worst_audible_spur_db": -24.0,
+    "spur_hz": 12200.0,
+    "wanted_db": -0.91
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -107.5,
+    "spur_hz": 13600.0,
+    "wanted_db": -0.55
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 14000,
+   "production": {
+    "worst_audible_spur_db": -21.5,
+    "spur_hz": 10200.0,
+    "wanted_db": -1.53
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -105.3,
+    "spur_hz": 17300.0,
+    "wanted_db": -0.42
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 15000,
+   "production": {
+    "worst_audible_spur_db": -20.3,
+    "spur_hz": 9200.0,
+    "wanted_db": -1.94
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -103.8,
+    "spur_hz": 2200.0,
+    "wanted_db": -0.49
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 16000,
+   "production": {
+    "worst_audible_spur_db": -18.7,
+    "spur_hz": 3900.0,
+    "wanted_db": -2.44
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -100.6,
+    "spur_hz": 3200.0,
+    "wanted_db": -0.88
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 17000,
+   "production": {
+    "worst_audible_spur_db": -16.6,
+    "spur_hz": 2900.0,
+    "wanted_db": -3.05
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -97.7,
+    "spur_hz": 4200.0,
+    "wanted_db": -1.96
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 18000,
+   "production": {
+    "worst_audible_spur_db": -14.4,
+    "spur_hz": 1900.0,
+    "wanted_db": -3.96
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -94.6,
+    "spur_hz": 5200.0,
+    "wanted_db": -4.28
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 19000,
+   "production": {
+    "worst_audible_spur_db": -12.0,
+    "spur_hz": 900.0,
+    "wanted_db": -5.85
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -90.6,
+    "spur_hz": 6200.0,
+    "wanted_db": -8.96
+   }
+  },
+  {
+   "host": 44100,
+   "f_in": 20000,
+   "production": {
+    "worst_audible_spur_db": -8.0,
+    "spur_hz": 100.0,
+    "wanted_db": -11.89
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -84.0,
+    "spur_hz": 7200.0,
+    "wanted_db": -19.44
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 100,
+   "production": {
+    "worst_audible_spur_db": -74.2,
+    "spur_hz": 16100.0,
+    "wanted_db": -0.01
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -156.0,
+    "spur_hz": 126.0,
+    "wanted_db": -0.01
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 1000,
+   "production": {
+    "worst_audible_spur_db": -53.4,
+    "spur_hz": 17000.0,
+    "wanted_db": -0.09
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -134.9,
+    "spur_hz": 17000.0,
+    "wanted_db": -0.1
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 3000,
+   "production": {
+    "worst_audible_spur_db": -41.3,
+    "spur_hz": 19000.0,
+    "wanted_db": -0.47
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -131.6,
+    "spur_hz": 13000.0,
+    "wanted_db": -0.53
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 5000,
+   "production": {
+    "worst_audible_spur_db": -38.6,
+    "spur_hz": 11000.0,
+    "wanted_db": -0.67
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -129.2,
+    "spur_hz": 11000.0,
+    "wanted_db": -0.76
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 8000,
+   "production": {
+    "worst_audible_spur_db": -155.9,
+    "spur_hz": 8026.0,
+    "wanted_db": -1.05
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -155.9,
+    "spur_hz": 8026.0,
+    "wanted_db": -0.73
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 10000,
+   "production": {
+    "worst_audible_spur_db": -27.5,
+    "spur_hz": 6000.0,
+    "wanted_db": -1.07
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -118.2,
+    "spur_hz": 6000.0,
+    "wanted_db": -0.61
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 12000,
+   "production": {
+    "worst_audible_spur_db": -20.3,
+    "spur_hz": 20000.0,
+    "wanted_db": -1.49
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -130.6,
+    "spur_hz": 4000.0,
+    "wanted_db": -0.47
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 14000,
+   "production": {
+    "worst_audible_spur_db": -16.2,
+    "spur_hz": 2000.0,
+    "wanted_db": -2.12
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -111.7,
+    "spur_hz": 2000.0,
+    "wanted_db": -0.37
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 15000,
+   "production": {
+    "worst_audible_spur_db": -13.6,
+    "spur_hz": 1000.0,
+    "wanted_db": -2.5
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -116.2,
+    "spur_hz": 1000.0,
+    "wanted_db": -0.44
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 16000,
+   "production": {
+    "worst_audible_spur_db": -155.9,
+    "spur_hz": 16026.0,
+    "wanted_db": -1.59
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -155.9,
+    "spur_hz": 16026.0,
+    "wanted_db": -0.81
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 17000,
+   "production": {
+    "worst_audible_spur_db": -10.2,
+    "spur_hz": 1000.0,
+    "wanted_db": -3.43
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -114.0,
+    "spur_hz": 1000.0,
+    "wanted_db": -1.79
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 18000,
+   "production": {
+    "worst_audible_spur_db": -9.5,
+    "spur_hz": 2000.0,
+    "wanted_db": -4.01
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -107.4,
+    "spur_hz": 2000.0,
+    "wanted_db": -3.8
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 19000,
+   "production": {
+    "worst_audible_spur_db": -9.0,
+    "spur_hz": 3000.0,
+    "wanted_db": -4.75
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -114.8,
+    "spur_hz": 3000.0,
+    "wanted_db": -7.34
+   }
+  },
+  {
+   "host": 48000,
+   "f_in": 20000,
+   "production": {
+    "worst_audible_spur_db": -8.4,
+    "spur_hz": 4000.0,
+    "wanted_db": -5.91
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -116.0,
+    "spur_hz": 4000.0,
+    "wanted_db": -13.1
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 100,
+   "production": {
+    "worst_audible_spur_db": -162.0,
+    "spur_hz": 126.0,
+    "wanted_db": -0.01
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -162.0,
+    "spur_hz": 126.0,
+    "wanted_db": -0.01
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 1000,
+   "production": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 1026.0,
+    "wanted_db": -0.03
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 1026.0,
+    "wanted_db": -0.03
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 3000,
+   "production": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 3026.0,
+    "wanted_db": -0.13
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 3026.0,
+    "wanted_db": -0.13
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 5000,
+   "production": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 5026.0,
+    "wanted_db": -0.23
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 5026.0,
+    "wanted_db": -0.18
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 8000,
+   "production": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 7974.0,
+    "wanted_db": -0.45
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 7974.0,
+    "wanted_db": -0.21
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 10000,
+   "production": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 10026.0,
+    "wanted_db": -0.72
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 10026.0,
+    "wanted_db": -0.26
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 12000,
+   "production": {
+    "worst_audible_spur_db": -25.0,
+    "spur_hz": 20000.0,
+    "wanted_db": -1.14
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -145.5,
+    "spur_hz": 20000.0,
+    "wanted_db": -0.37
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 14000,
+   "production": {
+    "worst_audible_spur_db": -22.4,
+    "spur_hz": 18000.0,
+    "wanted_db": -1.74
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -141.8,
+    "spur_hz": 18000.0,
+    "wanted_db": -0.63
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 15000,
+   "production": {
+    "worst_audible_spur_db": -21.2,
+    "spur_hz": 17000.0,
+    "wanted_db": -2.12
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -156.2,
+    "spur_hz": 17000.0,
+    "wanted_db": -0.92
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 16000,
+   "production": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 16026.0,
+    "wanted_db": -1.96
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -161.9,
+    "spur_hz": 16026.0,
+    "wanted_db": -1.55
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 17000,
+   "production": {
+    "worst_audible_spur_db": -18.5,
+    "spur_hz": 15000.0,
+    "wanted_db": -3.1
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -151.0,
+    "spur_hz": 15000.0,
+    "wanted_db": -2.83
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 18000,
+   "production": {
+    "worst_audible_spur_db": -17.1,
+    "spur_hz": 14000.0,
+    "wanted_db": -3.72
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -134.9,
+    "spur_hz": 14000.0,
+    "wanted_db": -5.16
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 19000,
+   "production": {
+    "worst_audible_spur_db": -15.6,
+    "spur_hz": 13000.0,
+    "wanted_db": -4.44
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -143.6,
+    "spur_hz": 13000.0,
+    "wanted_db": -8.98
+   }
+  },
+  {
+   "host": 96000,
+   "f_in": 20000,
+   "production": {
+    "worst_audible_spur_db": -14.0,
+    "spur_hz": 12000.0,
+    "wanted_db": -5.27
+   },
+   "candidate_B": {
+    "worst_audible_spur_db": -133.2,
+    "spur_hz": 12000.0,
+    "wanted_db": -14.71
+   }
+  }
+ ],
+ "conditions": [
+  {
+   "condition": "default character, nominal level",
+   "f_in": 10000,
+   "production": -20.1,
+   "candidate_B": -27.4
+  },
+  {
+   "condition": "default character, nominal level",
+   "f_in": 17000,
+   "production": -8.4,
+   "candidate_B": -11.2
+  },
+  {
+   "condition": "feedback 5 @ 50 ms",
+   "f_in": 10000,
+   "production": -29.5,
+   "candidate_B": -116.6
+  },
+  {
+   "condition": "feedback 5 @ 50 ms",
+   "f_in": 17000,
+   "production": -1.4,
+   "candidate_B": -104.5
+  },
+  {
+   "condition": "modulation INT 2 TRI",
+   "f_in": 10000,
+   "production": -26.2,
+   "candidate_B": -103.2
+  },
+  {
+   "condition": "modulation INT 2 TRI",
+   "f_in": 17000,
+   "production": -11.4,
+   "candidate_B": -94.6
+  }
+ ],
+ "thd": {
+  "production": {
+   "thd_pct": 0.0041,
+   "thdn_pct": 0.2843
+  },
+  "candidate_B": {
+   "thd_pct": 0.0078,
+   "thdn_pct": 0.0087
+  }
+ },
+ "timing": [
+  {
+   "host": 44100,
+   "time_ms": 0,
+   "production": 0.0219,
+   "candidate_B": 0.5004
+  },
+  {
+   "host": 44100,
+   "time_ms": 1,
+   "production": 1.0215,
+   "candidate_B": 1.0009
+  },
+  {
+   "host": 44100,
+   "time_ms": 10,
+   "production": 10.0219,
+   "candidate_B": 10.0015
+  },
+  {
+   "host": 44100,
+   "time_ms": 100,
+   "production": 100.0219,
+   "candidate_B": 100.0015
+  },
+  {
+   "host": 44100,
+   "time_ms": 500,
+   "production": 500.0219,
+   "candidate_B": 500.0015
+  },
+  {
+   "host": 44100,
+   "time_ms": 1023,
+   "production": 1023.0227,
+   "candidate_B": 1023.0176
+  },
+  {
+   "host": 48000,
+   "time_ms": 0,
+   "production": 0.0218,
+   "candidate_B": 0.5027
+  },
+  {
+   "host": 48000,
+   "time_ms": 1,
+   "production": 1.0218,
+   "candidate_B": 1.0027
+  },
+  {
+   "host": 48000,
+   "time_ms": 10,
+   "production": 10.0218,
+   "candidate_B": 10.0027
+  },
+  {
+   "host": 48000,
+   "time_ms": 100,
+   "production": 100.0218,
+   "candidate_B": 100.0027
+  },
+  {
+   "host": 48000,
+   "time_ms": 500,
+   "production": 500.0218,
+   "candidate_B": 500.0027
+  },
+  {
+   "host": 48000,
+   "time_ms": 1023,
+   "production": 1023.0218,
+   "candidate_B": 1023.0027
+  },
+  {
+   "host": 96000,
+   "time_ms": 0,
+   "production": 0.0302,
+   "candidate_B": 0.5164
+  },
+  {
+   "host": 96000,
+   "time_ms": 1,
+   "production": 1.0302,
+   "candidate_B": 1.0164
+  },
+  {
+   "host": 96000,
+   "time_ms": 10,
+   "production": 10.0302,
+   "candidate_B": 10.0164
+  },
+  {
+   "host": 96000,
+   "time_ms": 100,
+   "production": 100.0302,
+   "candidate_B": 100.0164
+  },
+  {
+   "host": 96000,
+   "time_ms": 500,
+   "production": 500.0302,
+   "candidate_B": 500.0164
+  },
+  {
+   "host": 96000,
+   "time_ms": 1023,
+   "production": 1023.0302,
+   "candidate_B": 1023.0164
+  }
+ ],
+ "feedback_period_ms": {
+  "production": [
+   50.042,
+   50.042,
+   50.042,
+   50.042,
+   50.042
+  ],
+  "candidate_B": [
+   50.042,
+   50.021,
+   50.021,
+   50.021,
+   50.042
+  ]
+ },
+ "modulation": {
+  "production": {
+   "min_ms": 201.15,
+   "max_ms": 399.04,
+   "ratio": 0.5041
+  },
+  "candidate_B": {
+   "min_ms": 201.4,
+   "max_ms": 399.04,
+   "ratio": 0.5047
+  }
+ },
+ "response": {
+  "44100": {
+   "production": {
+    "20": -0.17,
+    "50": 0.05,
+    "100": 0.08,
+    "500": 0.07,
+    "2000": -0.2,
+    "5000": -0.46,
+    "8000": -0.38,
+    "10000": -0.48,
+    "12500": -0.95,
+    "15000": -1.85,
+    "16000": -2.34,
+    "17000": -2.96,
+    "18000": -3.86,
+    "19000": -5.76
+   },
+   "candidate_B": {
+    "20": -0.15,
+    "50": 0.07,
+    "100": 0.1,
+    "500": 0.09,
+    "2000": -0.26,
+    "5000": -0.8,
+    "8000": -0.77,
+    "10000": -0.61,
+    "12500": -0.39,
+    "15000": -0.37,
+    "16000": -0.77,
+    "17000": -1.84,
+    "18000": -4.16,
+    "19000": -8.85
+   }
+  },
+  "48000": {
+   "production": {
+    "20": -0.17,
+    "50": 0.05,
+    "100": 0.08,
+    "500": 0.07,
+    "2000": -0.2,
+    "5000": -0.58,
+    "8000": -0.95,
+    "10000": -0.98,
+    "12500": -1.54,
+    "15000": -2.41,
+    "16000": -1.5,
+    "17000": -3.34,
+    "18000": -3.92,
+    "19000": -4.65
+   },
+   "candidate_B": {
+    "20": -0.16,
+    "50": 0.06,
+    "100": 0.09,
+    "500": 0.07,
+    "2000": -0.22,
+    "5000": -0.66,
+    "8000": -0.63,
+    "10000": -0.51,
+    "12500": -0.34,
+    "15000": -0.34,
+    "16000": -0.71,
+    "17000": -1.69,
+    "18000": -3.7,
+    "19000": -7.24
+   }
+  },
+  "96000": {
+   "production": {
+    "20": -0.24,
+    "50": -0.02,
+    "100": 0.01,
+    "500": 0.02,
+    "2000": -0.05,
+    "5000": -0.2,
+    "8000": -0.42,
+    "10000": -0.7,
+    "12500": -1.25,
+    "15000": -2.1,
+    "16000": -1.93,
+    "17000": -3.08,
+    "18000": -3.69,
+    "19000": -4.41
+   },
+   "candidate_B": {
+    "20": -0.24,
+    "50": -0.02,
+    "100": 0.01,
+    "500": 0.02,
+    "2000": -0.05,
+    "5000": -0.15,
+    "8000": -0.18,
+    "10000": -0.23,
+    "12500": -0.39,
+    "15000": -0.9,
+    "16000": -1.53,
+    "17000": -2.8,
+    "18000": -5.13,
+    "19000": -8.95
+   }
+  }
+ },
+ "cpu": {
+  "production": [
+   "48000 Hz, block 128, 1 instance: 4.0% of one core"
+  ],
+  "candidate_B": [
+   "48000 Hz, block 128, 1 instance: 8.0% of one core"
+  ]
+ },
+ "musical_foldown": [
+  {
+   "program": "P1 Classic Echo",
+   "production": {
+    "energy_below_4k_db": -13.0
+   },
+   "candidate_B": {
+    "energy_below_4k_db": -15.0
+   }
+  },
+  {
+   "program": "P2 Short Slap",
+   "production": {
+    "energy_below_4k_db": -20.0
+   },
+   "candidate_B": {
+    "energy_below_4k_db": -25.2
+   }
+  },
+  {
+   "program": "P3 Dub Regeneration",
+   "production": {
+    "energy_below_4k_db": -8.7
+   },
+   "candidate_B": {
+    "energy_below_4k_db": -9.3
+   }
+  },
+  {
+   "program": "P4 Metallic Flange",
+   "production": {
+    "energy_below_4k_db": -23.1
+   },
+   "candidate_B": {
+    "energy_below_4k_db": -22.9
+   }
+  },
+  {
+   "program": "P5 Wide Doubling",
+   "production": {
+    "energy_below_4k_db": -15.1
+   },
+   "candidate_B": {
+    "energy_below_4k_db": -15.1
+   }
+  },
+  {
+   "program": "P6 Vibrato",
+   "production": {
+    "energy_below_4k_db": -25.5
+   },
+   "candidate_B": {
+    "energy_below_4k_db": -24.9
+   }
+  },
+  {
+   "program": "P7 Random Drift",
+   "production": {
+    "energy_below_4k_db": -13.0
+   },
+   "candidate_B": {
+    "energy_below_4k_db": -14.6
+   }
+  },
+  {
+   "program": "P8 Infinite Hold",
+   "production": {
+    "energy_below_4k_db": -18.2
+   },
+   "candidate_B": {
+    "energy_below_4k_db": -23.0
+   }
+  },
+  {
+   "program": "P9 Rhythmic Modulation",
+   "production": {
+    "energy_below_4k_db": -19.3
+   },
+   "candidate_B": {
+    "energy_below_4k_db": -18.8
+   }
+  }
+ ],
+ "musical_character": [
+  {
+   "program": "P1 Classic Echo",
+   "max_abs_band_diff_31Hz_8k_db": 0.05,
+   "band_diff_10k_12k5_16k_db": [
+    0.0,
+    0.1,
+    0.0
+   ]
+  },
+  {
+   "program": "P2 Short Slap",
+   "max_abs_band_diff_31Hz_8k_db": 0.11,
+   "band_diff_10k_12k5_16k_db": [
+    0.2,
+    0.4,
+    0.4
+   ]
+  },
+  {
+   "program": "P3 Dub Regeneration",
+   "max_abs_band_diff_31Hz_8k_db": 0.04,
+   "band_diff_10k_12k5_16k_db": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "program": "P4 Metallic Flange",
+   "max_abs_band_diff_31Hz_8k_db": 0.36,
+   "band_diff_10k_12k5_16k_db": [
+    1.0,
+    1.5,
+    1.3
+   ]
+  },
+  {
+   "program": "P5 Wide Doubling",
+   "max_abs_band_diff_31Hz_8k_db": 0.36,
+   "band_diff_10k_12k5_16k_db": [
+    0.1,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "program": "P6 Vibrato",
+   "max_abs_band_diff_31Hz_8k_db": 0.54,
+   "band_diff_10k_12k5_16k_db": [
+    0.6,
+    1.5,
+    2.6
+   ]
+  },
+  {
+   "program": "P7 Random Drift",
+   "max_abs_band_diff_31Hz_8k_db": 0.03,
+   "band_diff_10k_12k5_16k_db": [
+    0.0,
+    0.1,
+    0.0
+   ]
+  },
+  {
+   "program": "P8 Infinite Hold",
+   "max_abs_band_diff_31Hz_8k_db": 0.22,
+   "band_diff_10k_12k5_16k_db": [
+    0.8,
+    2.0,
+    2.6
+   ]
+  },
+  {
+   "program": "P9 Rhythmic Modulation",
+   "max_abs_band_diff_31Hz_8k_db": 0.14,
+   "band_diff_10k_12k5_16k_db": [
+    0.1,
+    0.3,
+    0.2
+   ]
+  }
+ ]
+}

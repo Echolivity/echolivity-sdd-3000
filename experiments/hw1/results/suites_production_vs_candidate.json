@@ -1,0 +1,410 @@
+{
+ "engine_suite": {
+  "production_pass": 50,
+  "candidate_pass": 30,
+  "total": 51,
+  "differences": [
+   {
+    "test": "delay time accuracy @ 44100 Hz",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "worst error 1.6 us over 1..1023 ms (system latency 0.022 ms)",
+    "candidate": "worst error 499.1 us over 1..1023 ms (system latency 0.502 ms)"
+   },
+   {
+    "test": "delay time accuracy @ 48000 Hz",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "worst error 0.0 us over 1..1023 ms (system latency 0.022 ms)",
+    "candidate": "worst error 500.0 us over 1..1023 ms (system latency 0.503 ms)"
+   },
+   {
+    "test": "delay time accuracy @ 88200 Hz",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "worst error 6.6 us over 1..1023 ms (system latency 0.032 ms)",
+    "candidate": "worst error 499.6 us over 1..1023 ms (system latency 0.515 ms)"
+   },
+   {
+    "test": "delay time accuracy @ 96000 Hz",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "worst error 0.0 us over 1..1023 ms (system latency 0.030 ms)",
+    "candidate": "worst error 500.0 us over 1..1023 ms (system latency 0.516 ms)"
+   },
+   {
+    "test": "delay time accuracy @ 192000 Hz",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "worst error 0.0 us over 1..1023 ms (system latency 0.031 ms)",
+    "candidate": "worst error 500.0 us over 1..1023 ms (system latency 0.520 ms)"
+   },
+   {
+    "test": "authentic 1 ms stepping",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "100.4 ms requested -> authentic 100.000 ms, continuous 100.398 ms",
+    "candidate": "100.4 ms requested -> authentic 99.500 ms, continuous 99.903 ms"
+   },
+   {
+    "test": "tempo sync divisions",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "120 BPM 1/8=250.00, 3/8=750.00 ms; 100 BPM 1/4=600.00 ms; 60 BPM 1/1 clamped to 1023.00 ms",
+    "candidate": "120 BPM 1/8=249.50, 3/8=749.50 ms; 100 BPM 1/4=599.50 ms; 60 BPM 1/1 clamped to 1022.50 ms"
+   },
+   {
+    "test": "effect frequency response",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "20 Hz -0.26 dB, 50 Hz -0.04 dB, 100 Hz -0.01 dB, 1000 Hz -0.09 dB, 5000 Hz -0.67 dB, 10000 Hz -1.06 dB, 15000 Hz -2.21 dB, 17000 Hz -2.86 dB, 20000 Hz -4.97 dB",
+    "candidate": "20 Hz -0.26 dB, 50 Hz -0.04 dB, 100 Hz -0.01 dB, 1000 Hz -0.10 dB, 5000 Hz -0.75 dB, 10000 Hz -0.61 dB, 15000 Hz -0.44 dB, 17000 Hz -1.78 dB, 20000 Hz -13.09 dB"
+   },
+   {
+    "test": "feedback decay per repeat",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "FB 2.0: -10.97 dB/repeat (expected -10.88); FB 3.5: -6.11 dB/repeat (expected -6.02); FB 5.0: -3.01 dB/repeat (expected -2.92); FB 6.5: -0.74 dB/repeat (expected -0.64)",
+    "candidate": "FB 2.0: -10.98 dB/repeat (expected -10.88); FB 3.5: -6.12 dB/repeat (expected -6.02); FB 5.0: -3.02 dB/repeat (expected -2.92); FB 6.5: -0.74 dB/repeat (expected -0.64)"
+   },
+   {
+    "test": "regeneration filter responses",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "HIGH 8000 Hz: -3.01 dB at fc, -8.38 dB at 2fc; HIGH 4000 Hz: -2.97 dB at fc, -7.44 dB at 2fc; HIGH 2000 Hz: -2.97 dB at fc, -7.04 dB at 2fc; LOW 125 Hz: -2.97 dB at fc, slope 2.92 dB/oct below; LOW 250 Hz: -2.94 dB at fc, slope 2.84 dB/oct below; LOW 500 Hz: -2.94 dB at fc, slope 2.88 dB/oct below; LOW 500 Hz alt -6 dB/oct: -2.97 dB at fc, slope 5.30 dB/oct",
+    "candidate": "HIGH 8000 Hz: -3.01 dB at fc, -10.00 dB at 2fc; HIGH 4000 Hz: -2.97 dB at fc, -7.44 dB at 2fc; HIGH 2000 Hz: -2.97 dB at fc, -7.04 dB at 2fc; LOW 125 Hz: -2.97 dB at fc, slope 2.92 dB/oct below; LOW 250 Hz: -2.94 dB at fc, slope 2.84 dB/oct below; LOW 500 Hz: -2.94 dB at fc, slope 2.88 dB/oct below; LOW 500 Hz alt -6 dB/oct: -2.97 dB at fc, slope 5.30 dB/oct"
+   },
+   {
+    "test": "filters act inside the feedback loop",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "4000 Hz burst: filtered/flat per repeat -7.1 -14.2 -21.4 -28.5 -35.7 dB; 125 Hz burst: filtered/flat per repeat -8.5 -17.0 -25.5 -33.9 -42.4 dB",
+    "candidate": "4000 Hz burst: filtered/flat per repeat -7.1 -14.2 -21.3 -28.4 -35.6 dB; 125 Hz burst: filtered/flat per repeat -8.5 -17.0 -25.5 -33.9 -42.3 dB"
+   },
+   {
+    "test": "modulation depth (delay shortening)",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "INT 10: 200.0 ms of 400 ms (50.0%, expected 50.0%); INT 5: 266.7 ms of 400 ms (66.7%, expected 66.7%); INT 2: 333.3 ms of 400 ms (83.3%, expected 83.3%)",
+    "candidate": "INT 10: 199.7 ms of 400 ms (49.9%, expected 50.0%); INT 5: 266.3 ms of 400 ms (66.6%, expected 66.7%); INT 2: 332.9 ms of 400 ms (83.2%, expected 83.3%)"
+   },
+   {
+    "test": "HOLD (infinite repeat)",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "loop period 1008.0 ms, level spread over 4 loops 0.00 dB, new input leakage -240 dB, seam jump 1.27x of 99.9th pct step",
+    "candidate": "loop period 1008.0 ms, level spread over 4 loops 0.00 dB, new input leakage -240 dB, seam jump 1.18x of 99.9th pct step"
+   },
+   {
+    "test": "parameter changes are click-free",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "[metric self-check: -60 dB step scores 222x]; delay time 380->120 ms (crossfade): 1.13x; delay time 380->120 ms (glide): 2.11x; feedback 2->8: 0.98x; regen INV: 0.22x; LOW FLAT->500: 0.91x; HIGH FLAT->2k: 0.94x; HIGH 8k->2k: 0.82x; balance 2->9: 0.97x; output INV: 1.16x; input ATT +4 -> -10: 0.06x; output mode MONO->STEREO B: 0.97x; HOLD on: 0.70x; BYPASS on: 0.98x; waveform TRI->SQUARE (INT 3): 1",
+    "candidate": "[metric self-check: -60 dB step scores 222x]; delay time 380->120 ms (crossfade): 1.61x; delay time 380->120 ms (glide): 1.84x; feedback 2->8: 0.80x; regen INV: 0.12x; LOW FLAT->500: 0.83x; HIGH FLAT->2k: 0.24x; HIGH 8k->2k: 0.38x; balance 2->9: 0.78x; output INV: 3.05x <-- CLICK; input ATT +4 -> -10: 0.01x; output mode MONO->STEREO B: 0.82x; HOLD on: 0.09x; BYPASS on: 0.78x; waveform TRI->SQUARE "
+   },
+   {
+    "test": "no uncontrolled runaway / DC accumulation",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "FB 10 sat=hard: peak -14.0 dBFS, DC 1.2e-03, finite=True; FB 10 sat=soft: peak -14.3 dBFS, DC 9.9e-05, finite=True",
+    "candidate": "FB 10 sat=hard: peak -13.6 dBFS, DC 1.1e-03, finite=True; FB 10 sat=soft: peak -14.2 dBFS, DC 8.7e-05, finite=True"
+   },
+   {
+    "test": "service-manual feedback check",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "FB 10 / 50 ms / 500 Hz+2 kHz: sustained oscillation -18 dBFS after 5 s; no input -> output exactly 0 (0.0); 8 ms flat FB 6.8 decays (-81 dBFS)",
+    "candidate": "FB 10 / 50 ms / 500 Hz+2 kHz: sustained oscillation -18 dBFS after 5 s; no input -> output exactly 0 (0.0); 8 ms flat FB 6.8 decays (-76 dBFS)"
+   },
+   {
+    "test": "13-bit gain-ranged converter",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "13-bit vs clean at nominal: noise 77.1 dB below signal; -26 dB signal: noise 62.3 dB below signal (gain-ranged 13-bit)",
+    "candidate": "13-bit vs clean at nominal: noise 77.0 dB below signal; -26 dB signal: noise 61.8 dB below signal (gain-ranged 13-bit)"
+   },
+   {
+    "test": "CPU (C build of the gen~ code, 48 kHz stereo)",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "21x real-time on this machine's single core (~4.76% of one core; includes Python block overhead)",
+    "candidate": "11x real-time on this machine's single core (~8.85% of one core; includes Python block overhead)"
+   },
+   {
+    "test": "feedback 10 stability across all loop options",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "flat: peak -13.8 dBFS, tail DC 8.1e-05; {'fb_inv': 1}: peak -13.8 dBFS, tail DC 1.8e-04; {'lowcut': 3, 'highcut': 3}: peak -15.6 dBFS, tail DC 9.2e-05; {'lowcut': 0, 'highcut': 0, 'lc_slope': 1}: peak -13.7 dBFS, tail DC 5.2e-04; {'loop_sat': 1}: peak -14.1 dBFS, tail DC 2.4e-04; {'converter': 1}: peak -13.8 dBFS, tail DC 4.4e-05; {'waveform': 1, 'intensity': 10, 'frequency': 10}: peak -13.8 dBFS,",
+    "candidate": "flat: peak -13.4 dBFS, tail DC 4.7e-04; {'fb_inv': 1}: peak -13.4 dBFS, tail DC 3.0e-04; {'lowcut': 3, 'highcut': 3}: peak -15.8 dBFS, tail DC 7.4e-05; {'lowcut': 0, 'highcut': 0, 'lc_slope': 1}: peak -13.4 dBFS, tail DC 2.1e-04; {'loop_sat': 1}: peak -14.1 dBFS, tail DC 1.7e-04; {'converter': 1}: peak -13.4 dBFS, tail DC 2.5e-04; {'waveform': 1, 'intensity': 10, 'frequency': 10}: peak -13.5 dBFS,"
+   },
+   {
+    "test": "parameter changes during active playback",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "per-vector random automation 20 s: finite=True, peak -5.2 dBFS, bounds errors 0; ramp feedback 0->9: 0.15x; ramp balance 0->10: 1.01x; ramp intensity 0->10: 1.10x; ramp in_level 2->8: 0.55x; ramp drive 0->24: 1.09x; ramp width 0->2: 0.99x; ramp out_gain -24->12: 0.92x",
+    "candidate": "per-vector random automation 20 s: finite=True, peak -4.8 dBFS, bounds errors 0; ramp feedback 0->9: 0.15x; ramp balance 0->10: 1.02x; ramp intensity 0->10: 1.04x; ramp in_level 2->8: 0.62x; ramp drive 0->24: 1.02x; ramp width 0->2: 0.96x; ramp out_gain -24->12: 0.90x"
+   },
+   {
+    "test": "HOLD engage transition",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "T=5 ms: 1.00x; T=120 ms: 1.00x; T=380 ms: 0.73x; T=1008 ms: 1.09x; T=1023 ms: 0.83x",
+    "candidate": "T=5 ms: 1.82x; T=120 ms: 1.00x; T=380 ms: 0.07x; T=1008 ms: 1.00x; T=1023 ms: 0.80x"
+   },
+   {
+    "test": "BYPASS transitions and residual wet signal",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "wet residual after BYPASS on: 50 ms -43 dBFS, 100 ms -72 dBFS, 150 ms -101 dBFS, 300 ms -192 dBFS; BYPASS on during playback: 0.76x; BYPASS off during playback: 0.01x; after >1.023 s bypassed, release outputs no stale echo (peak -240 dBFS)",
+    "candidate": "wet residual after BYPASS on: 50 ms -43 dBFS, 100 ms -72 dBFS, 150 ms -101 dBFS, 300 ms -192 dBFS; BYPASS on during playback: 0.90x; BYPASS off during playback: 0.02x; after >1.023 s bypassed, release outputs no stale echo (peak -240 dBFS)"
+   },
+   {
+    "test": "host sample-rate change (state kept)",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "48000->96000 Hz without reset: delay 250.012 ms, finite=True; 96000->44100 Hz without reset: delay 250.017 ms, finite=True; 44100->192000 Hz without reset: delay 250.010 ms, finite=True; 192000->48000 Hz without reset: delay 250.017 ms, finite=True",
+    "candidate": "48000->96000 Hz without reset: delay 249.516 ms, finite=True; 96000->44100 Hz without reset: delay 249.519 ms, finite=True; 44100->192000 Hz without reset: delay 249.517 ms, finite=True; 192000->48000 Hz without reset: delay 249.518 ms, finite=True"
+   },
+   {
+    "test": "huge finite input sample (1e30)",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "output stays finite and below the ceiling (peak -1.8 dBFS), recovers",
+    "candidate": "output stays finite and below the ceiling (peak -0.9 dBFS), recovers"
+   },
+   {
+    "test": "non-finite audio input (NaN / +inf / -inf)",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "single NaN: all outputs finite, level after 1.4 s within 0.00 dB of clean; single +inf: all outputs finite, level after 1.4 s within 0.00 dB of clean; single -inf: all outputs finite, level after 1.4 s within 0.00 dB of clean; 1000 NaN samples: all outputs finite, level after 1.4 s within 0.00 dB of clean; 1000 alternating +-inf/NaN: all outputs finite, level after 1.4 s within 0.32 dB of clean; i",
+    "candidate": "single NaN: all outputs finite, level after 1.4 s within 0.00 dB of clean; single +inf: all outputs finite, level after 1.4 s within 0.10 dB of clean; single -inf: all outputs finite, level after 1.4 s within 0.10 dB of clean; 1000 NaN samples: all outputs finite, level after 1.4 s within 0.07 dB of clean; 1000 alternating +-inf/NaN: all outputs finite, level after 1.4 s within 8.10 dB of clean; i"
+   },
+   {
+    "test": "HOLD release transition",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "108 cases (12 delay times x 44.1/48/96 kHz x MONO/TRUE STEREO, per channel, -6 dB input): output identical (-180 dB) to 'HOLD kept' until one delay time after release, or until ~944 ms for longer delays (worst early deviation 0.000 ms); worst click excess (>5 kHz, absolute AND level-relative) over both references +1.2 dB (limit +3) | metric sensitivity check, v1.0.1 engine on the same test: T=120:",
+    "candidate": "108 cases (12 delay times x 44.1/48/96 kHz x MONO/TRUE STEREO, per channel, -6 dB input): output identical (-180 dB) to 'HOLD kept' until one delay time after release, or until ~944 ms for longer delays (worst early deviation 0.396 ms); worst click excess (>5 kHz, absolute AND level-relative) over both references +0.0 dB (limit +3) | metric sensitivity check, v1.0.1 engine on the same test: T=120:"
+   },
+   {
+    "test": "HOLD re-engaged shortly after a completed release",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "T=5 gap 50 ms: step 1.03x / spike 11.9 dB (first-ever HOLD 1.01x / 12.9 dB; v1.0.1 4.50x / 37.7 dB); T=16 gap 100 ms: step 1.13x / spike 12.9 dB (first-ever HOLD 1.19x / 13.3 dB; v1.0.1 2.84x / 37.0 dB); T=50 gap 50 ms: step 1.00x / spike 11.5 dB (first-ever HOLD 1.01x / 9.4 dB; v1.0.1 4.13x / 37.5 dB); T=120 gap 200 ms: step 1.03x / spike 6.3 dB (first-ever HOLD 1.00x / 7.7 dB; v1.0.1 3.28x / 38.",
+    "candidate": "T=5 gap 50 ms: step 1.02x / spike 29.9 dB (first-ever HOLD 1.06x / 33.4 dB; v1.0.1 4.50x / 37.7 dB); T=16 gap 100 ms: step 1.11x / spike 30.9 dB (first-ever HOLD 1.30x / 31.6 dB; v1.0.1 2.84x / 37.0 dB); T=50 gap 50 ms: step 1.03x / spike 33.0 dB (first-ever HOLD 1.01x / 31.3 dB; v1.0.1 4.13x / 37.5 dB); T=120 gap 200 ms: step 1.01x / spike 27.7 dB (first-ever HOLD 1.00x / 29.6 dB; v1.0.1 3.28x / "
+   },
+   {
+    "test": "A/B regression v1.0.2 vs v1.0.1 (identical input and settings)",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "47 scenarios (9 programs x 4 output modes, 5 host rates, PRE on/off, clean/13-bit, extremes, HOLD engage, BYPASS, random automation): 47 bit-identical (all 5 outputs incl. meters/display) | intentional difference 1 (HOLD release): T=120: v1.0.1 worst step 10.1x -> v1.0.2 1.37x; T=1008: v1.0.1 worst step 21.3x -> v1.0.2 1.00x | intentional difference 2 (invalid input): v1.0.1 output finite=False, v",
+    "candidate": "47 scenarios (9 programs x 4 output modes, 5 host rates, PRE on/off, clean/13-bit, extremes, HOLD engage, BYPASS, random automation): 0 bit-identical (all 5 outputs incl. meters/display) | P1 Classic Echo mode0: max diff 5.561e+00 | P1 Classic Echo mode1: max diff 5.561e+00 | P1 Classic Echo mode2: max diff 5.561e+00 | P1 Classic Echo mode3: max diff 5.562e+00 | P2 Short Slap mode0: max diff 4.453"
+   },
+   {
+    "test": "processing latency",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "44100 Hz: direct path 0 samples; effect path at TIME 0 = 0.022 ms (1.0 samples, filter group delay); 48000 Hz: direct path 0 samples; effect path at TIME 0 = 0.022 ms (1.0 samples, filter group delay); 96000 Hz: direct path 0 samples; effect path at TIME 0 = 0.030 ms (2.9 samples, filter group delay). No look-ahead or internal buffering; the device reports 0 latency to Live (patcher 'latency': 0).",
+    "candidate": "44100 Hz: direct path 0 samples; effect path at TIME 0 = 0.502 ms (22.1 samples, filter group delay); 48000 Hz: direct path 0 samples; effect path at TIME 0 = 0.503 ms (24.2 samples, filter group delay); 96000 Hz: direct path 0 samples; effect path at TIME 0 = 0.516 ms (49.6 samples, filter group delay). No look-ahead or internal buffering; the device reports 0 latency to Live (patcher 'latency': "
+   },
+   {
+    "test": "CPU of the C build per host rate (stereo, modulation on)",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "44100 Hz: 23x real-time (4.33% of one core); 48000 Hz: 19x real-time (5.16% of one core); 88200 Hz: 12x real-time (8.59% of one core); 96000 Hz: 10x real-time (9.89% of one core); 192000 Hz: 5x real-time (19.22% of one core). Standalone benchmark of the translated gen~ code incl. Python block overhead; NOT a measurement inside Ableton Live.",
+    "candidate": "44100 Hz: 13x real-time (7.89% of one core); 48000 Hz: 10x real-time (9.79% of one core); 88200 Hz: 7x real-time (15.18% of one core); 96000 Hz: 6x real-time (17.74% of one core); 192000 Hz: 3x real-time (33.79% of one core). Standalone benchmark of the translated gen~ code incl. Python block overhead; NOT a measurement inside Ableton Live."
+   },
+   {
+    "test": "dry/wet balance law",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "BALANCE 0: dry 1.000 (exp 1.00), wet 0.000 (exp 0.00); BALANCE 2.5: dry 1.000 (exp 1.00), wet 0.495 (exp 0.50); BALANCE 5: dry 1.000 (exp 1.00), wet 0.990 (exp 1.00); BALANCE 7.5: dry 0.500 (exp 0.50), wet 0.990 (exp 1.00); BALANCE 10: dry 0.000 (exp 0.00), wet 0.990 (exp 1.00); WET ONLY: dry -240 dB",
+    "candidate": "BALANCE 0: dry 1.000 (exp 1.00), wet 0.000 (exp 0.00); BALANCE 2.5: dry 1.000 (exp 1.00), wet 0.494 (exp 0.50); BALANCE 5: dry 1.000 (exp 1.00), wet 0.989 (exp 1.00); BALANCE 7.5: dry 0.500 (exp 0.50), wet 0.989 (exp 1.00); BALANCE 10: dry 0.000 (exp 0.00), wet 0.989 (exp 1.00); WET ONLY: dry -240 dB"
+   },
+   {
+    "test": "start-up: no undelayed wet signal after instantiation",
+    "production_pass": false,
+    "candidate_pass": false,
+    "production": "fresh engine, effect only: output during the first 50 ms is -10.9 dB re input (identical in v1.0.1); exactly silent after 50 ms of settling",
+    "candidate": "fresh engine, effect only: output during the first 50 ms is -11.1 dB re input (identical in v1.0.1); exactly silent after 50 ms of settling"
+   },
+   {
+    "test": "FB ROUTE INT: identical to rc3 and deaf to the return inputs",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "defaults: vs rc3 0e+00, with junk on return 0e+00; FB 10 + mod + filters: vs rc3 0e+00, with junk on return 0e+00; TRUE ST, HOLD engage: vs rc3 0e+00, with junk on return 0e+00",
+    "candidate": "defaults: vs rc3 6e+00, with junk on return 6e+00; FB 10 + mod + filters: vs rc3 5e+01, with junk on return 5e+01; TRUE ST, HOLD engage: vs rc3 1e+01, with junk on return 1e+01"
+   },
+   {
+    "test": "FB ROUTE EXT/BOTH: external loop regeneration",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "EXT RETURN 5: -3.01 dB/pass (INT FEEDBACK 5: -3.01, law -2.92); period 205.3 ms = TIME + routing latency; EXT unpatched: 2nd repeat -240 dB below the 1st (internal loop off); BOTH (FB 3 + RETURN 3): tail +5.1 dB vs INT FB 3 alone",
+    "candidate": "EXT RETURN 5: -3.02 dB/pass (INT FEEDBACK 5: -3.02, law -2.92); period 205.3 ms = TIME + routing latency; EXT unpatched: 2nd repeat -240 dB below the 1st (internal loop off); BOTH (FB 3 + RETURN 3): tail +5.1 dB vs INT FB 3 alone"
+   },
+   {
+    "test": "FB ROUTE: send tap, runaway bound, invalid return, mode switching",
+    "production_pass": true,
+    "candidate_pass": true,
+    "production": "INT: send carries the echo (-7.4 dB re input burst); EXT RETURN 10 runaway: output peak -14.0 dBFS, send peak -14.0 dBFS (bounded); NaN/inf on the return (BOTH): outputs finite=True; INT->EXT->BOTH while playing: worst step 1.00x the steady-state step",
+    "candidate": "INT: send carries the echo (-7.4 dB re input burst); EXT RETURN 10 runaway: output peak -13.7 dBFS, send peak -13.7 dBFS (bounded); NaN/inf on the return (BOTH): outputs finite=True; INT->EXT->BOTH while playing: worst step 1.00x the steady-state step"
+   },
+   {
+    "test": "rc5: existing behaviour bit-identical to rc4",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "INT defaults: 0e+00; EXT RETURN 6, loop 256: 0e+00; BOTH, FB 4: 0e+00; SYNC divisions 0-10: identical",
+    "candidate": "INT defaults: 6e+00; EXT RETURN 6, loop 256: 2e+00; BOTH, FB 4: 1e+01; SYNC division 0: 6e+00; SYNC division 1: 6e+00; SYNC division 2: 6e+00; SYNC division 3: 6e+00; SYNC division 4: 6e+00; SYNC division 5: 6e+00; SYNC division 6: 6e+00; SYNC division 7: 6e+00; SYNC division 8: 6e+00; SYNC division 9: 6e+00; SYNC division 10: 6e+00"
+   },
+   {
+    "test": "rc5: triplet divisions (1/16T, 1/32T appended; 1/8T unchanged)",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "120 BPM div 11: 83.33 ms (expected 83.33); 120 BPM div 12: 41.67 ms (expected 41.67); 90 BPM div 11: 111.11 ms (expected 111.11); 120 BPM div 2: 166.67 ms (expected 166.67)",
+    "candidate": "120 BPM div 11: 82.83 ms (expected 83.33); 120 BPM div 12: 41.17 ms (expected 41.67); 90 BPM div 11: 110.61 ms (expected 111.11); 120 BPM div 2: 166.17 ms (expected 166.67)"
+   },
+   {
+    "test": "rc5: LOOP COMP puts external repeats back on time",
+    "production_pass": true,
+    "candidate_pass": false,
+    "production": "LOOP COMP 0.00: repeat period 210.71 ms; LOOP COMP 10.67: repeat period 200.00 ms; INT with LOOP COMP 20: identical (not applied)",
+    "candidate": "LOOP COMP 0.00: repeat period 210.38 ms; LOOP COMP 10.67: repeat period 199.72 ms; INT with LOOP COMP 20: identical (not applied)"
+   }
+  ]
+ },
+ "hw_suite": {
+  "production": {
+   "CONSISTENT": 28,
+   "INCONSISTENT": 5,
+   "REPORTED": 8,
+   "NOT COMPARABLE": 1
+  },
+  "candidate": {
+   "CONSISTENT": 28,
+   "INCONSISTENT": 5,
+   "REPORTED": 8,
+   "NOT COMPARABLE": 1
+  },
+  "differences": [
+   {
+    "measurement": "Delay: delay time 1-1023 ms (impulse)",
+    "production": "CONSISTENT",
+    "candidate": "INCONSISTENT",
+    "production_value": "worst |error| 0.00 us; path latency 21.8 us",
+    "candidate_value": "worst |error| 500.00 us; path latency 502.7 us"
+   },
+   {
+    "measurement": "Delay: 1 ms step (100.4 ms requested)",
+    "production": "CONSISTENT",
+    "candidate": "INCONSISTENT",
+    "production_value": "100.0000 ms",
+    "candidate_value": "99.5000 ms"
+   },
+   {
+    "measurement": "Delay: delay with a transient (percussion, cross-correlation)",
+    "production": "CONSISTENT",
+    "candidate": "INCONSISTENT",
+    "production_value": "333.0018 ms",
+    "candidate_value": "332.5028 ms"
+   },
+   {
+    "measurement": "Frequency response: effect path 20 Hz-17 kHz at host 48 kHz (re 1 kHz)",
+    "production": "INCONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "min -3.34 / max +0.08 dB; 20: -0.17, 31.5: -0.02, 50: +0.05, 100: +0.08, 200: +0.08, 500: +0.07, 2000: -0.20, 4000: -0.51, 6000: -0.63, 8000: -0.95, 10000: -0.98, 12500: -1.54, 14000: -2.03, 15000: -2.41, 16000: -1.50, 17000: -3.34",
+    "candidate_value": "min -1.69 / max +0.09 dB; 20: -0.16, 31.5: -0.01, 50: +0.06, 100: +0.09, 200: +0.09, 500: +0.07, 2000: -0.22, 4000: -0.58, 6000: -0.68, 8000: -0.63, 10000: -0.51, 12500: -0.34, 14000: -0.27, 15000: -0.34, 16000: -0.71, 17000: -1.69"
+   },
+   {
+    "measurement": "Frequency response: effect path 20 Hz-17 kHz at host 44.1 kHz (re 1 kHz)",
+    "production": "CONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "min -2.96 / max +0.09 dB; 20: -0.17, 31.5: -0.01, 50: +0.05, 100: +0.08, 200: +0.09, 500: +0.07, 2000: -0.20, 4000: -0.45, 6000: -0.43, 8000: -0.38, 10000: -0.48, 12500: -0.95, 14000: -1.43, 15000: -1.85, 16000: -2.34, 17000: -2.96",
+    "candidate_value": "min -1.84 / max +0.11 dB; 20: -0.15, 31.5: +0.01, 50: +0.07, 100: +0.10, 200: +0.11, 500: +0.09, 2000: -0.26, 4000: -0.70, 6000: -0.83, 8000: -0.77, 10000: -0.61, 12500: -0.39, 14000: -0.30, 15000: -0.37, 16000: -0.77, 17000: -1.84"
+   },
+   {
+    "measurement": "Frequency response: effect path 20 Hz-17 kHz at host 96 kHz (re 1 kHz)",
+    "production": "INCONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "min -3.08 / max +0.02 dB; 20: -0.24, 31.5: -0.08, 50: -0.02, 100: +0.01, 200: +0.02, 500: +0.02, 2000: -0.05, 4000: -0.16, 6000: -0.25, 8000: -0.42, 10000: -0.70, 12500: -1.25, 14000: -1.71, 15000: -2.10, 16000: -1.93, 17000: -3.08",
+    "candidate_value": "min -2.80 / max +0.02 dB; 20: -0.24, 31.5: -0.08, 50: -0.02, 100: +0.01, 200: +0.02, 500: +0.02, 2000: -0.05, 4000: -0.14, 6000: -0.16, 8000: -0.18, 10000: -0.23, 12500: -0.39, 14000: -0.60, 15000: -0.90, 16000: -1.53, 17000: -2.80"
+   },
+   {
+    "measurement": "Frequency response: broadband cross-check (noise H1, log sweep) vs stepped sine",
+    "production": "REPORTED",
+    "candidate": "REPORTED",
+    "production_value": "100 Hz: sine +0.08 / noise -0.02 / sweep +0.10 dB; 5000 Hz: sine -0.58 / noise -0.44 / sweep -0.58 dB; 10000 Hz: sine -0.98 / noise -1.08 / sweep -0.98 dB; 15000 Hz: sine -2.41 / noise -2.41 / sweep -1.92 dB; 17000 Hz: sine -3.34 / noise -3.36 / sweep -3.34 dB; min coherence 12-17 kHz 0.930",
+    "candidate_value": "100 Hz: sine +0.09 / noise +0.09 / sweep +0.11 dB; 5000 Hz: sine -0.66 / noise -0.65 / sweep -0.66 dB; 10000 Hz: sine -0.51 / noise -0.51 / sweep -0.51 dB; 15000 Hz: sine -0.34 / noise -0.34 / sweep -0.34 dB; 17000 Hz: sine -1.69 / noise -1.69 / sweep -1.69 dB; min coherence 12-17 kHz 1.000"
+   },
+   {
+    "measurement": "Distortion: in-band alias spurs from the 64 kHz clock emulation (single tones)",
+    "production": "REPORTED",
+    "candidate": "REPORTED",
+    "production_value": "44.1 kHz host, 1 kHz tone: -56.4 dB at 18900 Hz; 44.1 kHz host, 5 kHz tone: -38.1 dB at 19200 Hz; 44.1 kHz host, 10 kHz tone: -26.7 dB at 14200 Hz; 44.1 kHz host, 12.5 kHz tone: -23.4 dB at 11700 Hz; 44.1 kHz host, 15 kHz tone: -20.3 dB at 9200 Hz; 44.1 kHz host, 17 kHz tone: -16.6 dB at 2900 Hz; 44",
+    "candidate_value": "44.1 kHz host, 1 kHz tone: -129.3 dB at 13800 Hz; 44.1 kHz host, 5 kHz tone: -112.9 dB at 17800 Hz; 44.1 kHz host, 10 kHz tone: -107.9 dB at 2800 Hz; 44.1 kHz host, 12.5 kHz tone: -106.8 dB at 18800 Hz; 44.1 kHz host, 15 kHz tone: -103.8 dB at 2200 Hz; 44.1 kHz host, 17 kHz tone: -97.7 dB at 4200 Hz"
+   },
+   {
+    "measurement": "Feedback filters: HIGH 4 kHz acts once per repeat (4 kHz burst, FB 7)",
+    "production": "CONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "repeat k filtered/flat: [(1, -3.01), (2, -6.04), (3, -9.07), (4, -12.11)]",
+    "candidate_value": "repeat k filtered/flat: [(1, -3.01), (2, -6.02), (3, -9.03), (4, -12.04)]"
+   },
+   {
+    "measurement": "Feedback: decay per repeat, 1 kHz, flat filters",
+    "production": "CONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "FB 2.0: -10.97 (ref -10.88); FB 3.5: -6.11 (ref -6.02); FB 5.0: -3.01 (ref -2.92); FB 6.5: -0.74 (ref -0.64); FB 7.0: -0.09 (ref +0.00)",
+    "candidate_value": "FB 2.0: -10.98 (ref -10.88); FB 3.5: -6.12 (ref -6.02); FB 5.0: -3.02 (ref -2.92); FB 6.5: -0.74 (ref -0.64); FB 7.0: -0.10 (ref +0.00)"
+   },
+   {
+    "measurement": "Modulation: depth at INTENSITY 10 (TRI, 0.1 Hz)",
+    "production": "CONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "delay 201.1..399.0 ms, ratio 0.504 (468 clicks)",
+    "candidate_value": "delay 201.4..399.0 ms, ratio 0.505 (468 clicks)"
+   },
+   {
+    "measurement": "Modulation: SQUARE, INTENSITY 10: delay ratio of the two states",
+    "production": "CONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "400.0/200.0 ms = 2.000",
+    "candidate_value": "400.0/200.3 ms = 1.997"
+   },
+   {
+    "measurement": "Distortion: THD 1 kHz at +4 dBm, effect path (13-bit, PRE on)",
+    "production": "CONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "0.0041 %",
+    "candidate_value": "0.0078 %"
+   },
+   {
+    "measurement": "Distortion: total distortion + noise 1 kHz at +4 dBm, effect path (13-bit, PRE on)",
+    "production": "INCONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "0.2843 %",
+    "candidate_value": "0.0087 %"
+   },
+   {
+    "measurement": "Noise: dynamic range, effect path (A-wtd, -60 dB tone re converter overload)",
+    "production": "CONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "91.5 dB",
+    "candidate_value": "91.8 dB"
+   },
+   {
+    "measurement": "Quantisation: gain-ranging: converter error level, large vs small signals",
+    "production": "CONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "error re overload point at [-2, -4, -8, -10, -14, -20] dB: [-82.1, -84.7, -87.5, -89.0, -89.3, -89.1] dB -> spread 7.2 dB",
+    "candidate_value": "error re overload point at [-2, -4, -8, -10, -14, -20] dB: [-82.3, -85.2, -87.6, -89.7, -89.7, -89.6] dB -> spread 7.5 dB"
+   },
+   {
+    "measurement": "Method: loopback analysis self-test (simulated interface)",
+    "production": "CONSISTENT",
+    "candidate": "CONSISTENT",
+    "production_value": "latency found 293 (true 293); device-vs-loopback response within 0.16 dB of stepped sine (100 Hz-10 kHz)",
+    "candidate_value": "latency found 293 (true 293); device-vs-loopback response within 0.01 dB of stepped sine (100 Hz-10 kHz)"
+   }
+  ]
+ }
+}
