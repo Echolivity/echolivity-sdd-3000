@@ -1,0 +1,101 @@
+diff --git a/tests/engine.py b/tests/engine.py
+index c7315cb..d5af0be 100644
+--- a/tests/engine.py
++++ b/tests/engine.py
+@@ -16,6 +16,9 @@ REF3_SO = os.path.join(BUILD_DIR, "engine_v1.0.2-rc3.so")
+ # v1.0.2-rc5: reference build of the rc4 DSP for the LOOP COMP / CAL / triplet A/B test
+ REF4_GEN = os.path.join(ROOT, "tests", "reference", "echolivity_core_v1.0.2-rc4.genexpr")
+ REF4_SO = os.path.join(BUILD_DIR, "engine_v1.0.2-rc4.so")
++# HW-1 (candidate branch): the shipping v1.0.2 DSP, as the reference for population comparisons
++REF5_GEN = os.path.join(ROOT, "tests", "reference", "echolivity_core_v1.0.2.genexpr")
++REF5_SO = os.path.join(BUILD_DIR, "engine_v1.0.2.so")
+ 
+ 
+ def build():
+@@ -39,6 +42,10 @@ def build():
+         ref_c = os.path.join(BUILD_DIR, "engine_v1.0.2-rc4.c")
+         subprocess.check_call([py, os.path.join(ROOT, "tools", "gen2c.py"), REF4_GEN, ref_c])
+         subprocess.check_call([cc, "-O2", "-shared", "-fPIC", "-o", REF4_SO, ref_c, "-lm"])
++    if os.path.exists(REF5_GEN):
++        ref_c = os.path.join(BUILD_DIR, "engine_v1.0.2.c")
++        subprocess.check_call([py, os.path.join(ROOT, "tools", "gen2c.py"), REF5_GEN, ref_c])
++        subprocess.check_call([cc, "-O2", "-shared", "-fPIC", "-o", REF5_SO, ref_c, "-lm"])
+ 
+ 
+ class Engine:
+diff --git a/tests/run_tests.py b/tests/run_tests.py
+index 84e08ea..2266084 100644
+--- a/tests/run_tests.py
++++ b/tests/run_tests.py
+@@ -574,7 +574,22 @@ def t_cpu():
+ # any FAIL is reported, not "fixed" (see docs/TEST_REPORT.md).
+ 
+ def t_feedback_extreme():
+-    """FEEDBACK 10 with every loop option, maximum modulation and hot noise + DC."""
++    """FEEDBACK 10 with every loop option, maximum modulation and hot noise + DC.
++
++    HW-1 option (a), accepted by the owner: the per-combination bounds are unchanged (finite,
++    wet <= -13 dBFS, no bounds errors). The 'no DC build-up' clause keeps its 0.003 limit, but is
++    no longer decided by one seed of one configuration. A hard-clipped self-oscillation seeded by DC
++    in the excitation settles with a steady duty-cycle offset whose size depends on which pulse mode
++    it lands in; the shipping v1.0.2 DSP exceeds 0.003 in 24 of 60 such runs. The clause therefore
++    runs a fixed population (5 self-oscillation configurations x 6 seeds) on this engine AND on the
++    v1.0.2 reference, and fails if this engine exceeds 0.003 significantly more often (one-sided
++    Fisher exact test, p < 0.05) or if its largest offset exceeds twice the reference's largest.
++    A systematic bias is checked separately with the same 0.003 limit: the signed mean offset of each
++    channel over the population must stay within 0.003 of the reference's (natural offsets have
++    random sign; a bias shifts the mean). The single-seed tail values of the 8 combinations are
++    still reported."""
++    from scipy.stats import fisher_exact
++    import engine as _eng
+     sr = 48000
+     rng = np.random.default_rng(21)
+     rows, ok = [], True
+@@ -588,11 +603,45 @@ def t_feedback_extreme():
+         fin = np.isfinite(y[:2]).all()
+         pk = np.max(np.abs(y[:2]))
+         tail_dc = max(abs(np.mean(y[0][-sr * 2:])), abs(np.mean(y[1][-sr * 2:])))
+-        good = fin and pk < 10 ** (-13.0 / 20) and tail_dc < 0.003 and e.bounds_errors() == 0
++        good = fin and pk < 10 ** (-13.0 / 20) and e.bounds_errors() == 0
+         ok &= good
+         rows.append(f"{c or 'flat'}: peak {db(pk):.1f} dBFS, tail DC {tail_dc:.1e}{'' if good else ' <--'}")
++
++    pop = [dict(out_mode=3, waveform=2, intensity=10, frequency=8),
++           dict(out_mode=3, waveform=2, intensity=10, frequency=8, highcut=1),
++           dict(out_mode=3, waveform=2, intensity=10, frequency=8, highcut=2),
++           dict(out_mode=3, waveform=2, intensity=0, frequency=8),
++           dict(out_mode=3, waveform=1, intensity=10, frequency=8)]
++
++    def tails(so):
++        v = []
++        for c in pop:
++            for seed in range(100, 106):
++                r = np.random.default_rng(seed)
++                e = Engine(sr, so=so, time_ms=37, feedback=10, balance=10, in_range=0, in_level=10, **c)
++                x = np.concatenate([r.uniform(-1, 1, sr * 4) + 0.5, np.zeros(sr * 8)])
++                y = e.run(x, r.uniform(-1, 1, len(x)))
++                v.append((np.mean(y[0][-sr * 2:]), np.mean(y[1][-sr * 2:])))
++        return np.array(v)                       # signed tail means, [run, channel]
++
++    me_s = tails(None)
++    if os.path.exists(_eng.REF5_SO):
++        ref_s = tails(_eng.REF5_SO)
++        me, ref = np.abs(me_s).max(1), np.abs(ref_s).max(1)
++        nm, nr, n = int((me >= 0.003).sum()), int((ref >= 0.003).sum()), len(me)
++        p = fisher_exact([[nm, n - nm], [nr, n - nr]], alternative="greater")[1]
++        bias = np.abs(me_s.mean(0) - ref_s.mean(0)).max()
++        dc_ok = p >= 0.05 and me.max() <= 2 * ref.max() and bias < 0.003
++        rows.append(f"DC population (5 configs x 6 seeds, limit 0.003): this engine {nm}/{n} over, max {me.max():.1e}; "
++                    f"v1.0.2 reference {nr}/{n} over, max {ref.max():.1e}; one-sided Fisher p = {p:.3f}; "
++                    f"systematic bias vs reference {bias:.1e}{'' if dc_ok else ' <--'}")
++    else:
++        dc_ok = False
++        rows.append("DC population: v1.0.2 reference build missing <--")
++    ok &= dc_ok
+     record("feedback 10 stability across all loop options", ok, "; ".join(rows),
+-           "bounded (wet <= -13 dBFS at unity output), finite, no DC build-up")
++           "bounded (wet <= -13 dBFS at unity output), finite; DC offset of self-oscillation (limit 0.003) "
++           "not more frequent or larger than the v1.0.2 reference over a fixed population")
+ 
+ 
+ def t_automation_during_playback():

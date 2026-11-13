@@ -16,7 +16,7 @@
 | HOLD release crossfade starts early | **CORRECTED.** One line. 225 of 225 cases at 0.000 ms early (D: 8 failing, 150 early by more than ½ sample). No other output changes anywhere (bit-identity, §3). |
 | FB 10 TRUE STEREO tail offset | **NOT CORRECTED.** Root cause established at the mechanism level (§2.2). It is shared with production in neighbouring configurations. The smallest correction (1 Hz output AC coupling) removed the offset (0/30 seeds) but **caused three regressions**. Per the brief, it was stopped and **not** adopted; it is kept as a rejected, reproducible variant. |
 
-**Definition of done: NOT MET.**
+**Definition of done: NOT MET** at the time of writing. See §8: FB 10 was closed afterwards by owner decision (a).
 
 - The FB 10 defect remains.
 - D2 still fails 10 of 51 original tests, the same 10 as D (§4). This includes `t_hold_release`, whose remaining failure is the full-level switchover clause (audit B6), not the timing.
@@ -241,3 +241,55 @@ Protocol: `HW1_NATIVE_VALIDATION.md`. Use the D2 device; its panel reads "ECHOLI
 3. A CPU profile in Live.
 4. A listening review.
 5. An independent audit of D2.
+
+---
+
+## 8. Owner decision: FB 10 option (a), implemented in the test (2026-11-13)
+
+The owner accepted option (a). The change is test-only, on this branch; no DSP changed. The diff is `experiments/hw1/d2/results_option_a/test_change.diff`.
+
+**Added reference.** `tests/reference/echolivity_core_v1.0.2.genexpr` is byte-identical to the shipping `src/gen/echolivity_core.genexpr`. It is built as `build/engine_v1.0.2.so` by `tests/engine.py build()`.
+
+**`t_feedback_extreme`:**
+
+- **Unchanged:** the 8 combinations, the seed, and the per-combination bounds (finite, wet ≤ −13 dBFS, no bounds errors). Single-seed tail values are still reported.
+- **"No DC build-up"** keeps the **0.003 limit**, evaluated over a fixed population: 5 TRUE STEREO self-oscillation configurations × 6 seeds, run on this engine and on the v1.0.2 reference. It fails if any of these holds:
+  1. this engine exceeds 0.003 significantly more often than the reference (one-sided Fisher exact test, p < 0.05);
+  2. its largest offset is more than twice the reference's largest;
+  3. the signed mean offset of either channel differs from the reference's by 0.003 or more (systematic bias).
+
+| Engine (revised test, `results_option_a/`) | Over 0.003 | Max | Fisher p | Bias vs reference | Result |
+|---|---|---|---|---|---|
+| Production | 12/30 | 1.1e-2 | 0.604 | 0 | **PASS** |
+| **D2** | 15/30 | 1.1e-2 | 0.302 | 1.9e-4 | **PASS** |
+| Negative control: D2 + 0.004 DC under loud wet | 9/30 | 1.4e-2 | 0.861 | 3.7e-3 | **FAIL** |
+| Negative control: D2 + 0.01 | 27/30 | 2.0e-2 | 0.000 | 9.6e-3 | **FAIL** |
+
+**Why the bias clause exists.** A first version without clause 3 passed the 0.004 control. Natural offsets have random sign and a similar size, so a bias of that size does not raise the count. Clause 3 was added for that reason, and both controls now fail.
+
+**Full suite with the revised test:**
+
+| Engine | Pass |
+|---|---|
+| Production | 50 / 51 (unchanged; only the pre-existing start-up limitation fails) |
+| D2 | **42 / 51** |
+
+D2's remaining failures:
+
+- the 3 bit-identity tests (intentional);
+- start-up (pre-existing);
+- 5 items that are already proven to depend on the measurement method, awaiting their own owner decisions:
+  - B1, output INV click;
+  - B3, non-finite input;
+  - B4, FB 6.8 decay;
+  - B5, HIGH 8k at 2fc;
+  - B6, the HOLD full-level clause.
+
+**P0 status after this decision:**
+
+| Item | Status |
+|---|---|
+| HOLD release | Corrected |
+| FB 10 | **Closed by owner decision (a)**; D2 passes the revised test |
+| Native Max 9 / Live 12 | Still NOT VERIFIED |
+| Listening review | Not performed |
