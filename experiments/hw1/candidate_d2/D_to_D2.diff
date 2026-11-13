@@ -1,0 +1,4 @@
+1399c1399
+<     if (relk >= max(na, nb) + 3) {
+---
+>     if (relk >= max(na, nb) + dcmp + 3) {   // HW-1 D2: wait for the uncompensated read offset

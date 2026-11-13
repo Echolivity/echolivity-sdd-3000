@@ -20,7 +20,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.abspath(os.pat
 sys.path.insert(0, os.path.join(ROOT, "tests"))
 from engine import Engine  # noqa
 NOM = 10 ** (-17 / 20)
-OUT = os.path.join(HERE, "results")
+OUT = os.path.join(os.environ.get("AUDIT_RESULTS", os.path.join(HERE, "results")))
 FREQS = [100, 1000, 5000, 10000, 15000, 17000, 19000]
 LEVELS = [-40, -20, -6]
 OPS = {"clean": dict(converter=1, pre_on=0), "default": dict()}

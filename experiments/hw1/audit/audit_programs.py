@@ -28,4 +28,4 @@ for pr in progs:
                                                             corr=round(float(np.corrcoef(L, R)[0, 1]) if np.std(R) > 0 and np.std(L) > 0 else 1.0, 4),
                                                             side_mid_db=round(db(np.sqrt(np.mean(s ** 2))) - db(np.sqrt(np.mean(m ** 2))), 2))
     print(pr["name"], flush=True)
-json.dump(res, open(os.path.join(HERE, "results", "audit_programs.json"), "w"), indent=1)
+json.dump(res, open(os.path.join(os.environ.get("AUDIT_RESULTS", os.path.join(HERE, "results")), "audit_programs.json"), "w"), indent=1)

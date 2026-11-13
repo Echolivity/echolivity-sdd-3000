@@ -1,0 +1,62 @@
+{
+ "test case (HIGH flat, RND INT10)|production": {
+  "n_over_0p003": 1,
+  "median_abs": 0.0010569477693615312,
+  "max_abs": 0.004873768036064711,
+  "median_zc": 40.25
+ },
+ "test case (HIGH flat, RND INT10)|candidate_D2": {
+  "n_over_0p003": 5,
+  "median_abs": 0.002835668934944472,
+  "max_abs": 0.010904021161458402,
+  "median_zc": 118.25
+ },
+ "HIGH 8 kHz|production": {
+  "n_over_0p003": 3,
+  "median_abs": 0.001699028088188735,
+  "max_abs": 0.003626900095613008,
+  "median_zc": 40.25
+ },
+ "HIGH 8 kHz|candidate_D2": {
+  "n_over_0p003": 7,
+  "median_abs": 0.003294529979870536,
+  "max_abs": 0.010425026333744904,
+  "median_zc": 40.25
+ },
+ "HIGH 4 kHz|production": {
+  "n_over_0p003": 4,
+  "median_abs": 0.001912623570952832,
+  "max_abs": 0.007234841537438941,
+  "median_zc": 40.75
+ },
+ "HIGH 4 kHz|candidate_D2": {
+  "n_over_0p003": 2,
+  "median_abs": 0.0018416261518811295,
+  "max_abs": 0.006169648839890622,
+  "median_zc": 44.25
+ },
+ "modulation off|production": {
+  "n_over_0p003": 5,
+  "median_abs": 0.0025497972990219495,
+  "max_abs": 0.007407869527146951,
+  "median_zc": 669.375
+ },
+ "modulation off|candidate_D2": {
+  "n_over_0p003": 3,
+  "median_abs": 0.0016514731200970713,
+  "max_abs": 0.006680427392967516,
+  "median_zc": 645.75
+ },
+ "SQUARE INT10|production": {
+  "n_over_0p003": 11,
+  "median_abs": 0.007893524385854736,
+  "max_abs": 0.011179538220738876,
+  "median_zc": 292.75
+ },
+ "SQUARE INT10|candidate_D2": {
+  "n_over_0p003": 11,
+  "median_abs": 0.007171464920643878,
+  "max_abs": 0.01365711559433177,
+  "median_zc": 469.25
+ }
+}

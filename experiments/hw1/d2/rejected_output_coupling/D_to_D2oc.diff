@@ -1,0 +1,40 @@
+69a70,72
+> History h_g_oc(0);
+> History h_st_oc_l(0);
+> History h_st_oc_r(0);   // HW-1 D2: output coupling
+297a301
+> g_oc = h_g_oc;
+484a489
+>     v_g = tan(pi * 1 / sr);      g_oc = v_g / (1 + v_g);      // HW-1 D2: 1 Hz output coupling
+1399c1404
+<     if (relk >= max(na, nb) + 3) {
+---
+>     if (relk >= max(na, nb) + dcmp + 3) {   // HW-1 D2: wait for the uncompensated read offset
+1512,1514c1517,1529
+< mx_l = a_l * s_bal_d + s_so * wet_l * s_bal_w;    // VARIABLE / +MIX
+< mn_l = a_l * s_bal_d - wet_l * s_bal_w;           // -MIX (always difference)
+< mx_r = a_r * s_bal_d + s_so * wet_r * s_bal_w;
+---
+> // HW-1 D2: AC-couple the wet signal where it leaves the device (not in the regeneration loop)
+> st_oc_l = h_st_oc_l; st_oc_r = h_st_oc_r;
+> v_tmp = (wet_l - st_oc_l) * g_oc;
+> lpo_l = v_tmp + st_oc_l;
+> st_oc_l = fixdenorm(lpo_l + v_tmp);
+> wo_l = wet_l - lpo_l;
+> v_tmp = (wet_r - st_oc_r) * g_oc;
+> lpo_r = v_tmp + st_oc_r;
+> st_oc_r = fixdenorm(lpo_r + v_tmp);
+> wo_r = wet_r - lpo_r;
+> mx_l = a_l * s_bal_d + s_so * wo_l * s_bal_w;    // VARIABLE / +MIX
+> mn_l = a_l * s_bal_d - wo_l * s_bal_w;           // -MIX (always difference)
+> mx_r = a_r * s_bal_d + s_so * wo_r * s_bal_w;
+1534,1535c1549,1550
+< out6 = fixnan(wet_l / pow(1 + pow(abs(wet_l) * 0.25, 8), 0.125) * cal_live + cal_click);
+< out7 = fixnan(wet_r / pow(1 + pow(abs(wet_r) * 0.25, 8), 0.125) * cal_live + cal_click);
+---
+> out6 = fixnan(wo_l / pow(1 + pow(abs(wo_l) * 0.25, 8), 0.125) * cal_live + cal_click);
+> out7 = fixnan(wo_r / pow(1 + pow(abs(wo_r) * 0.25, 8), 0.125) * cal_live + cal_click);
+1546a1562,1564
+> h_g_oc = fixnan(g_oc);
+> h_st_oc_l = fixnan(st_oc_l);
+> h_st_oc_r = fixnan(st_oc_r);

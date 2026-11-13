@@ -46,4 +46,4 @@ for name, so in engs.items():
     r["startup_first_50ms_db_re_input"] = round(float(20 * np.log10(np.sqrt(np.mean(y[:2400] ** 2)) / np.sqrt(np.mean(x[:2400] ** 2)) + 1e-30)), 1)
     res[name] = r
     print(name, json.dumps(r)[:1500], flush=True)
-json.dump(res, open(os.path.join(HERE, "results", "audit_timing.json"), "w"), indent=1)
+json.dump(res, open(os.path.join(os.environ.get("AUDIT_RESULTS", os.path.join(HERE, "results")), "audit_timing.json"), "w"), indent=1)

@@ -10,6 +10,8 @@
 | Environment | Linux cloud VM, 2 vCPU, shared. Python 3.13.18, NumPy 2.5.3, SciPy 1.18.1, Matplotlib 3.11.2, gcc 13.3.0, ffmpeg 6.1.1. **No Max, no Live, no audio interface.** |
 | Scripts and raw results | `experiments/hw1/audit/` (scripts) and `experiments/hw1/audit/results/` (raw JSON/CSV and plots) |
 
+> **Erratum (D2 phase):** the 225-case HOLD data show **8/225** candidate-D cases outside the test allowance, not 6. The TRUE STEREO T = 3 ms case (first difference 2.948 ms) is also outside, and 192 kHz is early by 0.037 ms. See `HW1_D2_REPORT.md` §2.1.
+
 ## Release decision: **C. REJECTED / FURTHER INVESTIGATION REQUIRED**
 
 Candidate D fixes the original defect. The reported 48 kHz, 17 kHz → 1 kHz spur goes from −10.2 dB to −89.4 dB, and every conversion-image measurement improves by 70–100 dB. It is still not production-ready:

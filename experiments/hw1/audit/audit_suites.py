@@ -22,4 +22,4 @@ for name, so in engs.items():
     out[name] = [dict(test=r["test"], passed=bool(r["pass"]), detail=r["detail"], spec=r.get("spec", ""), known=r.get("known", ""))
                  for r in run_tests.RESULTS]
     print(name, sum(r["passed"] for r in out[name]), "/", len(out[name]), flush=True)
-json.dump(out, open(os.path.join(HERE, "results", "audit_engine_suite.json"), "w"), indent=1)
+json.dump(out, open(os.path.join(os.environ.get("AUDIT_RESULTS", os.path.join(HERE, "results")), "audit_engine_suite.json"), "w"), indent=1)

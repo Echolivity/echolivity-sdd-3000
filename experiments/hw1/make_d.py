@@ -58,6 +58,54 @@ def f(v):
     return f"{v:.17g}"
 
 
+def patch_d2(text, output_coupling=False):
+    """Candidate D2 = candidate D + the HOLD-release correction (HW-1 audit, P0).
+    output_coupling=True adds the REJECTED FB 10 correction attempt (kept only so the rejected
+    variant D2-oc stays reproducible; it caused three regressions, see experiments/hw1/d2/D2_REPORT.md).
+    1. HOLD release: the release state machine waits for the UNCOMPENSATED read offset
+       (relk >= max(na, nb) + dcmp + 3). D compensated the normal-tap read offset by dcmp ticks but
+       kept the old switch rule, so the crossfade out of the loop started dcmp-3 ticks early.
+    2. Output coupling: a 1 Hz first-order high-pass (TPT, AC coupling) on the WET signal where it
+       leaves the device (main outputs and EXT sends). The regeneration loop (fbn_l/fbn_r) is NOT
+       changed; it keeps its existing 5 Hz DC block. Removes the steady output offset of hard-clipped
+       self-oscillation patterns (duty-cycle asymmetry, see experiments/hw1/d2/D2_ROOT_CAUSE.md)."""
+    def rep(a, b, cnt=1):
+        nonlocal text
+        assert text.count(a) == cnt, (a[:80], text.count(a))
+        text = text.replace(a, b)
+    rep("    if (relk >= max(na, nb) + 3) {",
+        "    if (relk >= max(na, nb) + dcmp + 3) {   // HW-1 D2: wait for the uncompensated read offset")
+    if not output_coupling:
+        return text
+    rep("History h_g_dc(0);", "History h_g_dc(0);\nHistory h_g_oc(0);\nHistory h_st_oc_l(0);\nHistory h_st_oc_r(0);   // HW-1 D2: output coupling")
+    rep("g_dc = h_g_dc; g_tone = h_g_tone; k_pk = h_k_pk;",
+        "g_dc = h_g_dc; g_tone = h_g_tone; k_pk = h_k_pk;\ng_oc = h_g_oc;")
+    rep("    v_g = tan(pi * 5 / sr);      g_dc = v_g / (1 + v_g);      // 5 Hz DC block in loop\n",
+        "    v_g = tan(pi * 5 / sr);      g_dc = v_g / (1 + v_g);      // 5 Hz DC block in loop\n"
+        "    v_g = tan(pi * 1 / sr);      g_oc = v_g / (1 + v_g);      // HW-1 D2: 1 Hz output coupling\n")
+    rep("// ============================================================ OUTPUT\n",
+        "// ============================================================ OUTPUT\n"
+        "// HW-1 D2: AC-couple the wet signal where it leaves the device (not in the regeneration loop)\n"
+        "st_oc_l = h_st_oc_l; st_oc_r = h_st_oc_r;\n"
+        "v_tmp = (wet_l - st_oc_l) * g_oc;\n"
+        "lpo_l = v_tmp + st_oc_l;\n"
+        "st_oc_l = fixdenorm(lpo_l + v_tmp);\n"
+        "wo_l = wet_l - lpo_l;\n"
+        "v_tmp = (wet_r - st_oc_r) * g_oc;\n"
+        "lpo_r = v_tmp + st_oc_r;\n"
+        "st_oc_r = fixdenorm(lpo_r + v_tmp);\n"
+        "wo_r = wet_r - lpo_r;\n")
+    rep("mx_l = a_l * s_bal_d + s_so * wet_l * s_bal_w;", "mx_l = a_l * s_bal_d + s_so * wo_l * s_bal_w;")
+    rep("mn_l = a_l * s_bal_d - wet_l * s_bal_w;", "mn_l = a_l * s_bal_d - wo_l * s_bal_w;")
+    rep("mx_r = a_r * s_bal_d + s_so * wet_r * s_bal_w;", "mx_r = a_r * s_bal_d + s_so * wo_r * s_bal_w;")
+    rep("out6 = fixnan(wet_l / pow(1 + pow(abs(wet_l) * 0.25, 8), 0.125) * cal_live + cal_click);",
+        "out6 = fixnan(wo_l / pow(1 + pow(abs(wo_l) * 0.25, 8), 0.125) * cal_live + cal_click);")
+    rep("out7 = fixnan(wet_r / pow(1 + pow(abs(wet_r) * 0.25, 8), 0.125) * cal_live + cal_click);",
+        "out7 = fixnan(wo_r / pow(1 + pow(abs(wo_r) * 0.25, 8), 0.125) * cal_live + cal_click);")
+    rep("h_g_dc = fixnan(g_dc);", "h_g_dc = fixnan(g_dc);\nh_g_oc = fixnan(g_oc);\nh_st_oc_l = fixnan(st_oc_l);\nh_st_oc_r = fixnan(st_oc_r);")
+    return text
+
+
 def patch(text, cal, short=True):
     P = poles()
 
@@ -325,11 +373,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cal", default=CAL)
     ap.add_argument("--no-short", action="store_true")
+    ap.add_argument("--d2", action="store_true", help="candidate D2: D + HOLD-release correction")
+    ap.add_argument("--d2-oc", action="store_true", help="REJECTED variant: D2 + 1 Hz output coupling (regressions)")
     ap.add_argument("--out", default=OUT)
     a = ap.parse_args()
     cal = json.load(open(a.cal)) if os.path.exists(a.cal) else {}
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     t = patch(open(SRC).read(), cal, short=not a.no_short)
+    if a.d2 or a.d2_oc:
+        t = patch_d2(t, output_coupling=a.d2_oc)
     open(a.out, "w").write(t)
     print(f"wrote {a.out} ({t.count(chr(10))} lines; cal={'yes' if cal else 'none'}, short={'off' if a.no_short else 'on'})")
 

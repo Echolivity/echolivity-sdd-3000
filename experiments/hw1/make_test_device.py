@@ -14,8 +14,10 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import build_amxd as B
 
-B.GEN = os.path.join(HERE, "build", "echolivity_core_d.genexpr")
-OUT = os.path.join(HERE, "build", "ECHOLIVITY SDD-3000 HW1-D TEST.amxd")
+# usage: make_test_device.py [genexpr] [label]   (defaults: candidate D, "HW1-D")
+B.GEN = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(HERE, "build", "echolivity_core_d.genexpr")
+LABEL = sys.argv[2] if len(sys.argv) > 2 else "HW1-D"
+OUT = os.path.join(HERE, "build", f"ECHOLIVITY SDD-3000 {LABEL} TEST.amxd")
 
 
 def mark(obj):
@@ -23,9 +25,9 @@ def mark(obj):
     if isinstance(obj, dict):
         for k, v in obj.items():
             if k == "text" and v == "ECHOLIVITY":
-                obj[k] = "ECHOLIVITY HW1-D TEST"; n += 1
+                obj[k] = f"ECHOLIVITY {LABEL} TEST"; n += 1
             elif k == "description" and isinstance(v, str) and v.startswith("ECHOLIVITY SDD-3000"):
-                obj[k] = v + " - HW1-D TEST BUILD (not a release)"; n += 1
+                obj[k] = v + f" - {LABEL} TEST BUILD (not a release)"; n += 1
             else:
                 n += mark(v)
     elif isinstance(obj, list):

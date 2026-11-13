@@ -22,4 +22,4 @@ for name, so in engs.items():
     res[name] = dict(n=len(v), median=float(np.median(v)), p90=float(np.percentile(v, 90)), max=float(v.max()),
                      n_over_test_limit_0p003=int((v > 0.003).sum()), mean_growth_last4s=float(np.mean(growth)), values=vals)
     print(name, {k: res[name][k] for k in ("median", "p90", "max", "n_over_test_limit_0p003", "mean_growth_last4s")}, flush=True)
-json.dump(res, open(os.path.join(HERE, "results", "audit_fb10.json"), "w"), indent=1)
+json.dump(res, open(os.path.join(os.environ.get("AUDIT_RESULTS", os.path.join(HERE, "results")), "audit_fb10.json"), "w"), indent=1)

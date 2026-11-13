@@ -1,0 +1,361 @@
+{
+ "candidate_D2": [
+  {
+   "test": "delay time accuracy @ 44100 Hz",
+   "passed": true,
+   "detail": "worst error 9.7 us over 1..1023 ms (system latency 0.000 ms)",
+   "spec": "0-1023 ms, 1 ms step",
+   "known": ""
+  },
+  {
+   "test": "delay time accuracy @ 48000 Hz",
+   "passed": true,
+   "detail": "worst error 5.3 us over 1..1023 ms (system latency 0.000 ms)",
+   "spec": "0-1023 ms, 1 ms step",
+   "known": ""
+  },
+  {
+   "test": "delay time accuracy @ 88200 Hz",
+   "passed": true,
+   "detail": "worst error 1.2 us over 1..1023 ms (system latency 0.018 ms)",
+   "spec": "0-1023 ms, 1 ms step",
+   "known": ""
+  },
+  {
+   "test": "delay time accuracy @ 96000 Hz",
+   "passed": true,
+   "detail": "worst error 0.7 us over 1..1023 ms (system latency 0.019 ms)",
+   "spec": "0-1023 ms, 1 ms step",
+   "known": ""
+  },
+  {
+   "test": "delay time accuracy @ 192000 Hz",
+   "passed": true,
+   "detail": "worst error 2.7 us over 1..1023 ms (system latency 0.022 ms)",
+   "spec": "0-1023 ms, 1 ms step",
+   "known": ""
+  },
+  {
+   "test": "authentic 1 ms stepping",
+   "passed": true,
+   "detail": "100.4 ms requested -> authentic 100.005 ms, continuous 100.405 ms",
+   "spec": "1 ms step (authentic) / continuous (modern)",
+   "known": ""
+  },
+  {
+   "test": "tempo sync divisions",
+   "passed": true,
+   "detail": "120 BPM 1/8=250.01, 3/8=750.01 ms; 100 BPM 1/4=600.01 ms; 60 BPM 1/1 clamped to 1023.01 ms",
+   "spec": "modern",
+   "known": ""
+  },
+  {
+   "test": "effect frequency response",
+   "passed": true,
+   "detail": "20 Hz -0.27 dB, 50 Hz -0.04 dB, 100 Hz -0.01 dB, 1000 Hz -0.10 dB, 5000 Hz -0.69 dB, 10000 Hz -1.11 dB, 15000 Hz -2.24 dB, 17000 Hz -2.87 dB, 20000 Hz -4.70 dB",
+   "spec": "Effect 20 Hz-17 kHz +0.5/-3 dB",
+   "known": ""
+  },
+  {
+   "test": "feedback decay per repeat",
+   "passed": true,
+   "detail": "FB 2.0: -10.98 dB/repeat (expected -10.88); FB 3.5: -6.12 dB/repeat (expected -6.02); FB 5.0: -3.02 dB/repeat (expected -2.92); FB 6.5: -0.74 dB/repeat (expected -0.64)",
+   "spec": "loop gain = FEEDBACK/7 (oscillation above ~7)",
+   "known": ""
+  },
+  {
+   "test": "regeneration filter responses",
+   "passed": false,
+   "detail": "HIGH 8000 Hz: -3.01 dB at fc, -10.00 dB at 2fc; HIGH 4000 Hz: -2.97 dB at fc, -7.44 dB at 2fc; HIGH 2000 Hz: -2.97 dB at fc, -7.04 dB at 2fc; LOW 125 Hz: -2.97 dB at fc, slope 2.92 dB/oct below; LOW 250 Hz: -2.94 dB at fc, slope 2.85 dB/oct below; LOW 500 Hz: -2.94 dB at fc, slope 2.88 dB/oct below; LOW 500 Hz alt -6 dB/oct: -2.97 dB at fc, slope 5.30 dB/oct",
+   "spec": "LOW 125/250/500 Hz -3 dB/oct, HIGH 8k/4k/2k -6 dB/oct (service manual)",
+   "known": ""
+  },
+  {
+   "test": "filters act inside the feedback loop",
+   "passed": true,
+   "detail": "4000 Hz burst: filtered/flat per repeat -7.1 -14.2 -21.3 -28.4 -35.6 dB; 125 Hz burst: filtered/flat per repeat -8.5 -17.0 -25.5 -33.9 -42.3 dB",
+   "spec": "each repeat is filtered again (progressive)",
+   "known": ""
+  },
+  {
+   "test": "modulation rate range",
+   "passed": true,
+   "detail": "FREQ 0: 0.100 Hz (target 0.100); FREQ 3: 0.450 Hz (target 0.450); FREQ 5: 1.225 Hz (target 1.225); FREQ 10: 15.000 Hz (target 15.000)",
+   "spec": "VCO 0.1-15 Hz (FREQ 0 = 10 s period)",
+   "known": ""
+  },
+  {
+   "test": "modulation depth (delay shortening)",
+   "passed": true,
+   "detail": "INT 10: 200.0 ms of 400 ms (50.0%, expected 50.0%); INT 5: 266.7 ms of 400 ms (66.7%, expected 66.7%); INT 2: 333.4 ms of 400 ms (83.3%, expected 83.3%)",
+   "spec": "INTENSITY 0-2:1, delay only shortens (100%->50%)",
+   "known": ""
+  },
+  {
+   "test": "modulation waveforms",
+   "passed": true,
+   "detail": "TRI: curvature peak/trough = 78.8x (sharp top, rounded bottom); SQUARE: 98.9% of time at 0/1; RND @5.5 Hz: std 0.239, max step/sample 1.37e-04, energy >50 Hz -39 dB re signal",
+   "spec": "triangle / square / smoothed random",
+   "known": ""
+  },
+  {
+   "test": "envelope follower",
+   "passed": true,
+   "detail": "nominal tone -> 0.99 of full swing, -20 dB tone -> 0.10; release tau 1.44 s",
+   "spec": "delay shortens as input rises; ~2 s decay (SM Fig.4)",
+   "known": ""
+  },
+  {
+   "test": "HOLD (infinite repeat)",
+   "passed": true,
+   "detail": "loop period 1008.0 ms, level spread over 4 loops 0.00 dB, new input leakage -240 dB, seam jump 1.23x of 99.9th pct step",
+   "spec": "infinite repeat of last ~1 s; input locked out; no degradation",
+   "known": ""
+  },
+  {
+   "test": "BYPASS (direct only, clears loop)",
+   "passed": true,
+   "detail": "wet during bypass (after 250 ms) -195 dBFS, after release -193 dBFS, direct at BALANCE 10 -0.00 dB",
+   "spec": "all outputs direct; bypass clears an overdub (owner's manual)",
+   "known": ""
+  },
+  {
+   "test": "stereo / phase output modes",
+   "passed": true,
+   "detail": "output INV: sum+difference = 2x direct (residual -82 dB); STEREO A: L=DIRECT (-240 dB), R=+MIX (-240 dB); STEREO B: L=+MIX, R=-MIX, mono sum cancels wet (-82 dB); TRUE STEREO: L->R crosstalk -240 dB; WIDTH 0 -> mono",
+   "spec": "+MIX/MONO, -MIX, DIRECT, output INV (owner's manual)",
+   "known": ""
+  },
+  {
+   "test": "parameter changes are click-free",
+   "passed": false,
+   "detail": "[metric self-check: -60 dB step scores 222x]; delay time 380->120 ms (crossfade): 1.09x; delay time 380->120 ms (glide): 1.35x; feedback 2->8: 0.80x; regen INV: 0.07x; LOW FLAT->500: 0.94x; HIGH FLAT->2k: 0.40x; HIGH 8k->2k: 0.47x; balance 2->9: 1.01x; output INV: 2.69x <-- CLICK; input ATT +4 -> -10: 0.02x; output mode MONO->STEREO B: 0.98x; HOLD on: 0.11x; BYPASS on: 0.94x; waveform TRI->SQUARE (INT 3): 0.97x; converter 13-bit->clean: 0.98x; tempo sync on: 0.10x; preamp character off: 0.85x; loop saturation on: 0.80x",
+   "spec": "3rd-difference transient within 2.5x of steady state",
+   "known": ""
+  },
+  {
+   "test": "no uncontrolled runaway / DC accumulation",
+   "passed": true,
+   "detail": "FB 10 sat=hard: peak -13.0 dBFS, DC 2.0e-04, finite=True; FB 10 sat=soft: peak -13.9 dBFS, DC 4.6e-05, finite=True",
+   "spec": "self-oscillation is bounded by the converter (or soft limiter)",
+   "known": ""
+  },
+  {
+   "test": "service-manual feedback check",
+   "passed": false,
+   "detail": "FB 10 / 50 ms / 500 Hz+2 kHz: sustained oscillation -18 dBFS after 5 s; no input -> output exactly 0 (0.0); 8 ms flat FB 6.8 decays (-80 dBFS)",
+   "spec": "SM 7.7: oscillates with pulse at FB 10; no oscillation with LEVEL 0",
+   "known": ""
+  },
+  {
+   "test": "preamp / input stage",
+   "passed": true,
+   "detail": "ATT -30: 1 dB compression at -13.5 dBm (spec clip -13 dBm); ATT -10: 1 dB compression at +6.5 dBm (spec clip +7 dBm); ATT +4: 1 dB compression at +20.5 dBm (spec clip +21 dBm); delay BYPASS + drive: 3rd harmonic 10 dB (preamp active); character OFF at 0 dBFS: highest harmonic -125 dB",
+   "spec": "SM spec: max input -13/+7/+21 dBm @ LEVEL 5",
+   "known": ""
+  },
+  {
+   "test": "13-bit gain-ranged converter",
+   "passed": true,
+   "detail": "13-bit vs clean at nominal: noise 77.7 dB below signal; -26 dB signal: noise 62.4 dB below signal (gain-ranged 13-bit)",
+   "spec": "12-bit DAC + 1 range bit; effect S/N 88 dB(A) spec incl. emphasis",
+   "known": ""
+  },
+  {
+   "test": "random automation fuzz (90 s, 1800 changes)",
+   "passed": true,
+   "detail": "finite=True, peak 12.0 dBFS (out gain up to +12 dB), memory bounds errors 0",
+   "spec": "stability, no buffer overruns",
+   "known": ""
+  },
+  {
+   "test": "CPU (C build of the gen~ code, 48 kHz stereo)",
+   "passed": true,
+   "detail": "15x real-time on this machine's single core (~6.78% of one core; includes Python block overhead)",
+   "spec": "efficient; gen~ in Live must be measured separately",
+   "known": ""
+  },
+  {
+   "test": "feedback 10 stability across all loop options",
+   "passed": false,
+   "detail": "flat: peak -13.7 dBFS, tail DC 1.4e-04; {'fb_inv': 1}: peak -13.6 dBFS, tail DC 1.4e-04; {'lowcut': 3, 'highcut': 3}: peak -16.5 dBFS, tail DC 8.0e-06; {'lowcut': 0, 'highcut': 0, 'lc_slope': 1}: peak -13.5 dBFS, tail DC 8.0e-05; {'loop_sat': 1}: peak -13.5 dBFS, tail DC 1.1e-04; {'converter': 1}: peak -13.2 dBFS, tail DC 5.3e-06; {'waveform': 1, 'intensity': 10, 'frequency': 10}: peak -13.5 dBFS, tail DC 1.9e-05; {'out_mode': 3, 'waveform': 2, 'intensity': 10, 'frequency': 8}: peak -12.4 dBFS, tail DC 3.3e-04 <--",
+   "spec": "bounded (wet <= -13 dBFS at unity output), finite, no DC build-up",
+   "known": ""
+  },
+  {
+   "test": "parameter changes during active playback",
+   "passed": true,
+   "detail": "per-vector random automation 20 s: finite=True, peak -5.2 dBFS, bounds errors 0; ramp feedback 0->9: 0.11x; ramp balance 0->10: 1.01x; ramp intensity 0->10: 1.07x; ramp in_level 2->8: 0.62x; ramp drive 0->24: 1.08x; ramp width 0->2: 0.98x; ramp out_gain -24->12: 0.89x",
+   "spec": "stable under per-vector automation; smoothed ramps click-free",
+   "known": ""
+  },
+  {
+   "test": "TRUE STEREO channel isolation",
+   "passed": true,
+   "detail": "WAVE TRI: R->L -240 dB (rounding only), L->R with silent R: -240 dB (rounding only); WAVE SQR: R->L -240 dB (rounding only), L->R with silent R: -240 dB (rounding only); WAVE RND: R->L -240 dB (rounding only), L->R with silent R: -240 dB (rounding only); WAVE ENV: L and R share one envelope/clock by design (coupled only when INTENSITY > 0)",
+   "spec": "independent L/R audio paths; one shared memory clock (as one hardware unit)",
+   "known": ""
+  },
+  {
+   "test": "HOLD engage transition",
+   "passed": true,
+   "detail": "T=5 ms: 1.00x; T=120 ms: 0.92x; T=380 ms: 0.11x; T=1008 ms: 0.98x; T=1023 ms: 1.03x",
+   "spec": "click-free engage (3rd-difference within 2.5x)",
+   "known": ""
+  },
+  {
+   "test": "BYPASS transitions and residual wet signal",
+   "passed": false,
+   "detail": "wet residual after BYPASS on: 50 ms -43 dBFS, 100 ms -72 dBFS, 150 ms -101 dBFS, 300 ms -191 dBFS; BYPASS on during playback: 0.97x; BYPASS off during playback: 0.03x; after >1.023 s bypassed, release outputs no stale echo (peak -169 dBFS)",
+   "spec": "15 ms wet fade; converter input grounded; click-free on/off",
+   "known": ""
+  },
+  {
+   "test": "host sample-rate change (state kept)",
+   "passed": true,
+   "detail": "48000->96000 Hz without reset: delay 250.017 ms, finite=True; 96000->44100 Hz without reset: delay 250.022 ms, finite=True; 44100->192000 Hz without reset: delay 250.018 ms, finite=True; 192000->48000 Hz without reset: delay 250.023 ms, finite=True",
+   "spec": "rate-dependent coefficients recomputed (cached on 'sr != h_sr')",
+   "known": ""
+  },
+  {
+   "test": "memory / buffer boundary safety",
+   "passed": true,
+   "detail": "44100 Hz {'time_ms': 1023, 'waveform': 1, 'intensity': 10, 'frequency': 10}: 30 s, memory wraps ~58x, bounds errors 0, finite=True; 192000 Hz {'time_ms': 0, 'waveform': 0, 'intensity': 10, 'frequency': 10}: 30 s, memory wraps ~58x, bounds errors 0, finite=True; 22050 Hz {'time_ms': 1023, 'waveform': 1, 'intensity': 10, 'frequency': 10}: 30 s, memory wraps ~58x, bounds errors 0, finite=True; 48000 Hz {'time_ms': 1023, 'time_glide': 1, 'time_mode': 1}: 30 s, memory wraps ~29x, bounds errors 0, finite=True; 48000 Hz {'time_ms': 0, 'hold': 1}: 30 s, memory wraps ~29x, bounds errors 0, finite=True",
+   "spec": "every peek/poke index inside the 65536 x 2 Data (checked on every access)",
+   "known": ""
+  },
+  {
+   "test": "out-of-range parameter values",
+   "passed": true,
+   "detail": "values far outside the range are clamped to min/max (harness mirrors gen~ Param min/max); output finite",
+   "spec": "Param min/max",
+   "known": ""
+  },
+  {
+   "test": "huge finite input sample (1e30)",
+   "passed": true,
+   "detail": "output stays finite and below the ceiling (peak -2.4 dBFS), recovers",
+   "spec": "",
+   "known": ""
+  },
+  {
+   "test": "non-finite audio input (NaN / +inf / -inf)",
+   "passed": false,
+   "detail": "single NaN: all outputs finite, level after 1.4 s within 0.00 dB of clean; single +inf: all outputs finite, level after 1.4 s within 0.00 dB of clean; single -inf: all outputs finite, level after 1.4 s within 0.00 dB of clean; 1000 NaN samples: all outputs finite, level after 1.4 s within 0.00 dB of clean; 1000 alternating +-inf/NaN: all outputs finite, level after 1.4 s within 0.82 dB of clean; invalid input during HOLD leaves the loop bit-identical: True",
+   "spec": "v1.0.2: invalid samples cannot contaminate memory, feedback or filter state; no reload needed",
+   "known": ""
+  },
+  {
+   "test": "NaN parameter values (C model)",
+   "passed": true,
+   "detail": "23 parameters set to NaN for 0.3 s then restored: output finite throughout and audio resumes; failures: none. Whether gen~ Param clamping lets NaN through is NOT VERIFIED.",
+   "spec": "",
+   "known": ""
+  },
+  {
+   "test": "HOLD release transition",
+   "passed": false,
+   "detail": "108 cases (12 delay times x 44.1/48/96 kHz x MONO/TRUE STEREO, per channel, -6 dB input): output identical (-180 dB) to 'HOLD kept' until one delay time after release, or until ~944 ms for longer delays (worst early deviation 0.000 ms); worst click excess (>5 kHz, absolute AND level-relative) over both references +0.0 dB (limit +3) | metric sensitivity check, v1.0.1 engine on the same test: T=120: +27.0 dB, T=1008: +34.6 dB (flagged) | after T+80 ms the output equals the never-held output (FB 0): T=5@48000: -80 dB, T=380@48000: -98 dB, T=1023@48000: -88 dB, T=120@96000: -110 dB, T=700@44100: -100 dB | special cases (level-relative >5 kHz excess over both references): modulation TRI INT 3 T=380@48000: -3.0 dB; modulation TRI INT 3 T=1008@44100: +0.0 dB; modulation SQR INT 10 T=380@48000: -12.8 dB; modulation SQR INT 10 T=1008@44100: -6.8 dB; GLIDE + CONT T=380@48000: -11.8 dB; GLIDE + CONT T=1008@44100: -0.0 dB; FEEDBACK 9 + INV + LOW/HIGH T=380@48000: -13.2 dB; FEEDBACK 9 + INV + LOW/HIGH T=1008@44100: -0.2 dB; hold 6 s (seam crossed 6x) T=380@48000: -10.4 dB; hold 6 s (seam crossed 6x) T=1008@44100: -0.6 dB; release 2 ms after engage T=380@48000: -0.0 dB; release 2 ms after engage T=1008@44100: -0.1 dB; re-engage half-way through the release window T=380@48000: +0.0 dB; re-engage half-way through the release window T=1008@44100: +0.0 dB; time change during the release window T=380@48000: -13.8 dB; time change during the release window T=1008@44100: +0.0 dB; re-engage 4 ms into the 10 ms release fade T=380@48000: +0.1 dB; re-engage 4 ms into the 10 ms release fade T=1008@44100: +0.0 dB | full nominal level TRUE STEREO T=120: switchover window excess +4.7 dB (later content may overload the 13-bit converter, as the hardware would)",
+   "spec": "v1.0.2: loop keeps playing until the normal tap reads only new audio, then a 10 ms crossfade; no added latency; normal operation resumes",
+   "known": ""
+  },
+  {
+   "test": "HOLD re-engaged shortly after a completed release",
+   "passed": true,
+   "detail": "T=5 gap 50 ms: step 1.02x / spike 30.0 dB (first-ever HOLD 1.01x / 32.5 dB; v1.0.1 4.50x / 37.7 dB); T=16 gap 100 ms: step 1.10x / spike 30.0 dB (first-ever HOLD 1.26x / 31.5 dB; v1.0.1 2.84x / 37.0 dB); T=50 gap 50 ms: step 1.00x / spike 31.3 dB (first-ever HOLD 1.01x / 28.1 dB; v1.0.1 4.13x / 37.5 dB); T=120 gap 200 ms: step 1.00x / spike 22.0 dB (first-ever HOLD 1.00x / 25.0 dB; v1.0.1 3.28x / 38.2 dB); T=250 gap 600 ms: step 1.00x / spike 35.7 dB (first-ever HOLD 1.47x / 34.1 dB; v1.0.1 4.17x / 38.3 dB); T=380 gap 400 ms: step 1.00x / spike 22.0 dB (first-ever HOLD 1.02x / 29.0 dB; v1.0.1 2.49x / 34.1 dB); T=700 gap 300 ms: step 1.05x / spike 26.9 dB (first-ever HOLD 1.00x / 24.9 dB; v1.0.1 4.12x / 38.4 dB); T=900 gap 100 ms: step 1.07x / spike 27.7 dB (first-ever HOLD 1.00x / 24.5 dB; v1.0.1 4.20x / 39.8 dB); T=1023 gap 200 ms: step 1.11x / spike 29.5 dB (first-ever HOLD 1.05x / 29.0 dB; v1.0.1 2.41x / 34.6 dB)",
+   "spec": "re-captured loop as clean as a first-ever HOLD: worst step <= max(1.5x, 1.2x reference), recurring >5 kHz spike <= reference + 6 dB",
+   "known": ""
+  },
+  {
+   "test": "A/B regression v1.0.2 vs v1.0.1 (identical input and settings)",
+   "passed": false,
+   "detail": "47 scenarios (9 programs x 4 output modes, 5 host rates, PRE on/off, clean/13-bit, extremes, HOLD engage, BYPASS, random automation): 0 bit-identical (all 5 outputs incl. meters/display) | P1 Classic Echo mode0: max diff 3.894e+00 | P1 Classic Echo mode1: max diff 3.894e+00 | P1 Classic Echo mode2: max diff 3.894e+00 | P1 Classic Echo mode3: max diff 3.895e+00 | P2 Short Slap mode0: max diff 2.939e+00 | P2 Short Slap mode1: max diff 2.939e+00 | P2 Short Slap mode2: max diff 2.939e+00 | P2 Short Slap mode3: max diff 2.939e+00 | P3 Dub Regeneration mode0: max diff 4.431e+00 | P3 Dub Regeneration mode1: max diff 4.431e+00 | P3 Dub Regeneration mode2: max diff 4.431e+00 | P3 Dub Regeneration mode3: max diff 4.432e+00 | P4 Metallic Flange mode0: max diff 1.427e+00 | P4 Metallic Flange mode1: max diff 1.427e+00 | P4 Metallic Flange mode2: max diff 1.427e+00 | P4 Metallic Flange mode3: max diff 1.416e+00 | P5 Wide Doubling mode0: max diff 6.788e-01 | P5 Wide Doubling mode1: max diff 6.788e-01 | P5 Wide Doubling mode2: max diff 6.788e-01 | P5 Wide Doubling mode3: max diff 3.110e-01 | P6 Vibrato mode0: max diff 5.049e-02 | P6 Vibrato mode1: max diff 5.049e-02 | P6 Vibrato mode2: max diff 5.049e-02 | P6 Vibrato mode3: max diff 1.010e-01 | P7 Random Drift mode0: max diff 3.894e+00 | P7 Random Drift mode1: max diff 3.894e+00 | P7 Random Drift mode2: max diff 3.894e+00 | P7 Random Drift mode3: max diff 3.895e+00 | P8 Infinite Hold mode0: max diff 8.784e+00 | P8 Infinite Hold mode1: max diff 8.784e+00 | P8 Infinite Hold mode2: max diff 8.784e+00 | P8 Infinite Hold mode3: max diff 7.162e+00 | P9 Rhythmic Modulation mode0: max diff 4.110e+00 | P9 Rhythmic Modulation mode1: max diff 4.110e+00 | P9 Rhythmic Modulation mode2: max diff 4.110e+00 | P9 Rhythmic Modulation mode3: max diff 4.054e+00 | P1 @ 44100: max diff 3.951e+00 | P1 @ 88200: max diff 4.187e+00 | P1 @ 96000: max diff 4.158e+00 | P1 @ 192000: max diff 4.362e+00 | PRE off: max diff 2.879e-01 | PRE drive 24 / tone / trim: max diff 3.566e+00 | clean converter + soft sat FB 10: max diff 1.107e+01 | extremes: max diff 5.537e+00 | HOLD engage only (no release): max diff 5.783e+00 | BYPASS on/off: max diff 5.783e+00 | random automation (no HOLD): max diff 2.991e+00 | intentional difference 1 (HOLD release): T=120: v1.0.1 worst step 10.5x -> v1.0.2 1.35x; T=1008: v1.0.1 worst step 22.5x -> v1.0.2 1.00x | intentional difference 2 (invalid input): v1.0.1 output finite=False, v1.0.2 output finite=True",
+   "spec": "bit-identical everywhere except HOLD release and invalid-input handling",
+   "known": ""
+  },
+  {
+   "test": "processing latency",
+   "passed": true,
+   "detail": "44100 Hz: direct path 0 samples; effect path at TIME 0 = 0.000 ms (0.0 samples, filter group delay); 48000 Hz: direct path 0 samples; effect path at TIME 0 = 0.000 ms (0.0 samples, filter group delay); 96000 Hz: direct path 0 samples; effect path at TIME 0 = 0.019 ms (1.8 samples, filter group delay). No look-ahead or internal buffering; the device reports 0 latency to Live (patcher 'latency': 0).",
+   "spec": "direct path 0 samples",
+   "known": ""
+  },
+  {
+   "test": "CPU of the C build per host rate (stereo, modulation on)",
+   "passed": true,
+   "detail": "44100 Hz: 18x real-time (5.63% of one core); 48000 Hz: 16x real-time (6.19% of one core); 88200 Hz: 10x real-time (9.98% of one core); 96000 Hz: 10x real-time (9.75% of one core); 192000 Hz: 5x real-time (21.62% of one core). Standalone benchmark of the translated gen~ code incl. Python block overhead; NOT a measurement inside Ableton Live.",
+   "spec": "informational",
+   "known": ""
+  },
+  {
+   "test": "dry/wet balance law",
+   "passed": true,
+   "detail": "BALANCE 0: dry 1.000 (exp 1.00), wet 0.000 (exp 0.00); BALANCE 2.5: dry 1.000 (exp 1.00), wet 0.494 (exp 0.50); BALANCE 5: dry 1.000 (exp 1.00), wet 0.989 (exp 1.00); BALANCE 7.5: dry 0.500 (exp 0.50), wet 0.989 (exp 1.00); BALANCE 10: dry 0.000 (exp 0.00), wet 0.989 (exp 1.00); WET ONLY: dry -240 dB",
+   "spec": "0 = direct, 5 = 1:1, 10 = effect",
+   "known": ""
+  },
+  {
+   "test": "start-up: no undelayed wet signal after instantiation",
+   "passed": false,
+   "detail": "fresh engine, effect only: output during the first 50 ms is -10.9 dB re input (identical in v1.0.1); exactly silent after 50 ms of settling",
+   "spec": "",
+   "known": ""
+  },
+  {
+   "test": "block-size independence (C harness)",
+   "passed": true,
+   "detail": "block sizes 32: identical, 64: identical, 128: identical, 256: identical, 512: identical, 1024: identical, 2048: identical (parameter changes at block-aligned times, incl. HOLD)",
+   "spec": "no dependence on vector size",
+   "known": ""
+  },
+  {
+   "test": "FB ROUTE INT: identical to rc3 and deaf to the return inputs",
+   "passed": false,
+   "detail": "defaults: vs rc3 3e+00, with junk on return 3e+00; FB 10 + mod + filters: vs rc3 3e+01, with junk on return 3e+01; TRUE ST, HOLD engage: vs rc3 5e+00, with junk on return 5e+00",
+   "spec": "default behaviour unchanged; return ignored unless EXT/BOTH",
+   "known": ""
+  },
+  {
+   "test": "FB ROUTE EXT/BOTH: external loop regeneration",
+   "passed": true,
+   "detail": "EXT RETURN 5: -3.02 dB/pass (INT FEEDBACK 5: -3.02, law -2.92); period 205.3 ms = TIME + routing latency; EXT unpatched: 2nd repeat -122 dB below the 1st (internal loop off); BOTH (FB 3 + RETURN 3): tail +5.1 dB vs INT FB 3 alone",
+   "spec": "EXT loop gain = RETURN/7 per pass; internal loop off in EXT, summed in BOTH",
+   "known": ""
+  },
+  {
+   "test": "FB ROUTE: send tap, runaway bound, invalid return, mode switching",
+   "passed": true,
+   "detail": "INT: send carries the echo (-7.4 dB re input burst); EXT RETURN 10 runaway: output peak -14.0 dBFS, send peak -14.0 dBFS (bounded); NaN/inf on the return (BOTH): outputs finite=True; INT->EXT->BOTH while playing: worst step 1.00x the steady-state step",
+   "spec": "send always active; bounded; NaN-safe; click-free switching",
+   "known": ""
+  },
+  {
+   "test": "rc5: existing behaviour bit-identical to rc4",
+   "passed": false,
+   "detail": "INT defaults: 3e+00; EXT RETURN 6, loop 256: 5e-01; BOTH, FB 4: 4e+00; SYNC division 0: 3e+00; SYNC division 1: 3e+00; SYNC division 2: 3e+00; SYNC division 3: 3e+00; SYNC division 4: 3e+00; SYNC division 5: 3e+00; SYNC division 6: 3e+00; SYNC division 7: 3e+00; SYNC division 8: 3e+00; SYNC division 9: 3e+00; SYNC division 10: 3e+00",
+   "spec": "LOOP COMP 0 / no CAL / old divisions change nothing",
+   "known": ""
+  },
+  {
+   "test": "rc5: triplet divisions (1/16T, 1/32T appended; 1/8T unchanged)",
+   "passed": true,
+   "detail": "120 BPM div 11: 83.34 ms (expected 83.33); 120 BPM div 12: 41.67 ms (expected 41.67); 90 BPM div 11: 111.12 ms (expected 111.11); 120 BPM div 2: 166.67 ms (expected 166.67)",
+   "spec": "exact triplet times",
+   "known": ""
+  },
+  {
+   "test": "rc5: CAL measures the external loop's round trip",
+   "passed": true,
+   "detail": "loop 256 smp (5.33 ms): CAL 5.33 ms; loop 2048 smp (42.67 ms): CAL 42.67 ms; loop busy, return -6 dB: CAL 10.67 ms (expected 10.67); nothing patched: result -1.0; main output during CAL: max step 0.0e+00 (click stays on outputs 3/4); INT: CAL ignored",
+   "spec": "exact to the sample; robust to loop audio and fader; no click on the main output",
+   "known": ""
+  },
+  {
+   "test": "rc5: LOOP COMP puts external repeats back on time",
+   "passed": true,
+   "detail": "LOOP COMP 0.00: repeat period 210.67 ms; LOOP COMP 10.67: repeat period 200.00 ms; INT with LOOP COMP 20: identical (not applied)",
+   "spec": "period = TIME",
+   "known": ""
+  }
+ ]
+}

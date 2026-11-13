@@ -8,7 +8,7 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 sys.path.insert(0, os.path.join(ROOT, "tests"))
 import engine, run_tests as RT
-OUT = os.path.join(HERE, "results"); os.makedirs(OUT, exist_ok=True)
+OUT = os.path.join(os.environ.get("AUDIT_RESULTS", os.path.join(HERE, "results"))); os.makedirs(OUT, exist_ok=True)
 engs = dict(a.split("=", 1) for a in sys.argv[1:])
 Ts = (0, 1, 2, 3, 5, 10, 16, 50, 120, 380, 700, 1000, 1008, 1016, 1023)
 res = {}
