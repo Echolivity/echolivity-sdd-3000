@@ -11,5 +11,5 @@ This variant is kept only for the record and for reproducibility (`make_d.py --d
 
 It caused three regressions against original thresholds (`audit_engine_suite.json`, 40/51). Per the brief, the correction was stopped and not adopted.
 
-- `audit_hold.json` and `audit_spectral.json` were measured on D2-oc.
-- `audit_timing.json` holds production and candidate D only: the D2-oc timing run was stopped when the regression was found.
+- `audit_hold.json`, `audit_spectral.json` and `audit_timing.json` were measured on D2-oc. In those files the key `candidate_D2` refers to D2-oc.
+- The factory-program run was stopped when the regression was found.
