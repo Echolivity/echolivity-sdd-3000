@@ -1,5 +1,14 @@
 # HW-1 Remediation and Production Qualification Report
 
+> **ERRATA (independent audit, branch `audit/hw1-candidate-d`):** this report contains false statements. See `HW1_INDEPENDENT_AUDIT.md`, Discrepancy Register D1–D10.
+> - The HOLD release cases do **not** all pass: the shipped candidate starts the release crossfade 0.042–0.059 ms early (P0).
+> - The FB 10 failure is a genuine behaviour difference, not a measurement defect (P0).
+> - "No genuine regressions remaining" is withdrawn.
+> - The audit decision is **REJECTED / FURTHER INVESTIGATION REQUIRED**.
+>
+> The text below is left unchanged for the record.
+
+
 | | |
 |---|---|
 | Baseline | `16d87a7` |
