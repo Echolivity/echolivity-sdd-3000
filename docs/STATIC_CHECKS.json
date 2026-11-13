@@ -2,32 +2,32 @@
  {
   "check": "container",
   "pass": true,
-  "detail": "ampf/aaaa, meta, ptch length 523654 = file size - 32, NUL-terminated, JSON parses, amxdtype audio effect"
+  "detail": "ampf/aaaa, meta, ptch length 548380 = file size - 32, NUL-terminated, JSON parses, amxdtype audio effect"
  },
  {
   "check": "gen~ code == src/gen/echolivity_core.genexpr",
   "pass": true,
-  "detail": "39477 chars, sha256 673f01ac1b240de3..."
+  "detail": "49149 chars, sha256 bd63b587df93cbb8..."
  },
  {
   "check": "GenExpr subset rules (tools/gen2c.py)",
   "pass": true,
-  "detail": "gen2c: 39 params, 119 histories, 320 locals, 8 outs -> /tmp/echolivity_check.c -- gen~ compilation itself NOT VERIFIED"
+  "detail": "gen2c: 40 params, 148 histories, 409 locals, 8 outs -> /tmp/echolivity_check.c -- gen~ compilation itself NOT VERIFIED"
  },
  {
   "check": "parameter count",
   "pass": true,
-  "detail": "162 parameters: 42 automatable + 120 stored-only (program memory)"
+  "detail": "163 parameters: 43 automatable + 120 stored-only (program memory)"
  },
  {
   "check": "parameter names unique",
   "pass": true,
-  "detail": "162 unique long names"
+  "detail": "163 unique long names"
  },
  {
   "check": "'parameters' table matches objects",
   "pass": true,
-  "detail": "162 entries"
+  "detail": "163 entries"
  },
  {
   "check": "initial values inside ranges / enum sizes",
@@ -37,12 +37,12 @@
  {
   "check": "Push / Configure banks",
   "pass": true,
-  "detail": "4 banks of 8 slots, all names resolve or are '-'"
+  "detail": "5 banks of 8 slots, all names resolve or are '-'"
  },
  {
   "check": "controls -> gen~ Params (name, connection, range)",
   "pass": true,
-  "detail": "36 controls verified"
+  "detail": "37 controls verified"
  },
  {
   "check": "gen~ Params without a panel control",
@@ -72,7 +72,7 @@
  {
   "check": "initialisation pushes every stored control value to gen~",
   "pass": true,
-  "detail": "live.thisdevice -> [t b b b b b]: outlet 2 bangs 38 objects; momentary buttons deliberately excluded"
+  "detail": "live.thisdevice -> [t b b b b b]: outlet 2 bangs 39 objects; momentary buttons deliberately excluded"
  },
  {
   "check": "LFO Mod mapping: Modulation Mode Additive on all continuous dials only",
@@ -82,7 +82,7 @@
  {
   "check": "D-1: program logic closed during the start-up sequence; Program recalled first",
   "pass": true,
-  "detail": "[t b b b b b] outlet 3 -> '0' -> [gate 1] (before outlet 2 re-outputs Program), outlet 0 -> '1'; Program parameter_order 0, other 161 parameters order 1 -- Live behaviour NOT VERIFIED"
+  "detail": "[t b b b b b] outlet 3 -> '0' -> [gate 1] (before outlet 2 re-outputs Program), outlet 0 -> '1'; Program parameter_order 0, other 162 parameters order 1 -- Live behaviour NOT VERIFIED"
  },
  {
   "check": "UI-1: backing panels in the background layer, LEDs/segments in front",
@@ -92,11 +92,11 @@
  {
   "check": "presentation layout",
   "pass": true,
-  "detail": "42 controls inside 169 px, no overlapping controls"
+  "detail": "47 controls inside 169 px, no overlapping controls"
  },
  {
   "check": "distributed .amxd == fresh build from source",
   "pass": true,
-  "detail": "sha256 6129b1d209dea14464481a01885471dd63dff62bc7ffd2d6671b9b1952b9f65b"
+  "detail": "sha256 530dccfdef1a81b05e9619b8a478798280edb43edefb3f47677b2b96af95e52a"
  }
 ]

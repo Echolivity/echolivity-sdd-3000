@@ -1,4 +1,4 @@
-# Ableton Live 12 validation checklist — OUTSTANDING (v1.0.2-rc6)
+# Ableton Live 12 validation checklist — OUTSTANDING (v1.0.2-rc7)
 
 Some of these checks have since been run by the owner: see `docs/validation/LIVE_INTEGRATION_REPORT.md` for results (rc3/rc4 on Windows) and `docs/validation/RC6_SEND_RTN_LIVE_TEST.md` for the rc6 SEND / RTN routing checks (7/7 PASS, Live 12.4.6). The Result column below is left blank; the reports are the record. The remaining checks are required before 1.0.2 final (see `docs/OUTSTANDING_ISSUES.md`, OI-1 to OI-3). Record the result, Live/Max version, OS and audio buffer size for each item.
 
@@ -26,4 +26,5 @@ Some of these checks have since been run by the owner: see `docs/validation/LIVE
 | L-12 | Invalid input recovery | Put a device that can output NaN before ECHOLIVITY (or a Max for Live test device sending `nan`). | ECHOLIVITY keeps working once valid audio returns; no reload needed | |
 | L-13 | CPU | 1 and 8 instances (TRUE ST, modulation on) at 44.1 / 48 / 88.2 / 96 kHz × buffer 64 / 128 / 256 / 512 / 1024: static, while automating TIME/FEEDBACK/BALANCE, and with HOLD + FEEDBACK 10. Read Live's CPU meter; watch for dropouts. | Record the values; no dropouts; compare the trend with `docs/validation/PERFORMANCE_REPORT.md` | |
 | L-14 | Latency | Read the device's reported latency (PDC; *not* the audio buffer latency). Null-test the dry path (BALANCE 0, PRE off) against the source on a parallel track. | Reported latency 0 samples; dry path nulls | |
+| L-16 | **REVERSE (rc7)** | Run `docs/validation/REVERSE_LIVE_TEST.md` checks 1–13. | All 13 pass | |
 | L-15 | Interface | Compare with `docs/ui_preview.png`. | Layout readable; no overlapping controls | |

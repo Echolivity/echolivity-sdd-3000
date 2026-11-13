@@ -199,6 +199,9 @@ def controls():
     # rc5: LOOP COMP (ms, set by CAL or by hand); not modulatable
     C.append(dict(key="loop_comp", gp="p_loop_comp", ln="Loop Comp", sn="COMP", kind="numbox", lo=0, hi=250,
                   init=0, rect=[690, 142, 38, 15], modern=True, unit=1, exp=1.0, scale=None, mod=False))
+    # REVERSE (modern, owner request): not stored in programs, like the other routing/modern extras
+    e("reverse", "p_reverse", "Reverse", "REVERSE", "menu", ["OFF", "REV", "ALT", "ALT R"], 0,
+      [570, 95, 62, 14], modern=True)
     # E EFFECT / OUTPUT
     d("balance", "p_balance", "Balance", "BALANCE", 0, 10, 5, [776, 14, 58, 66])
     e("out_inv", "p_out_inv", "Output Invert", "OUT INV", "text", ["off", "on"], 0, [838, 22, 42, 16],
@@ -279,6 +282,7 @@ def build():
     plabel([158, 136, 150, 12], "TIME / SYNC  (EXT)", C_MOD, 7.5)
     plabel([672, 128, 90, 12], "LOW CUT SLOPE", C_MOD, 7)
     plabel([570, 128, 90, 12], "LOOP SAT", C_MOD, 7)
+    plabel([636, 97, 36, 11], "REVERSE", C_MOD, 6.5)
     plabel([570, 157, 80, 11], "FB ROUTE (I/O 3-4)", C_MOD, 6.5)
     plabel([652, 157, 36, 11], "RETURN", C_MOD, 6.5)
     plabel([690, 157, 40, 11], "COMP ms", C_MOD, 6.5)
@@ -814,6 +818,7 @@ def build():
         # parameters, printing "parameter '<unknown>' not found" each time Live refreshed the bank)
         "3": {"index": 3, "name": "Ext Loop", "parameters": ["FB Route", "Ext Return", "Loop Comp", "Loop Cal"] +
                                                              ["-"] * 4},
+        "4": {"index": 4, "name": "Reverse", "parameters": ["Reverse"] + ["-"] * 7},
     }
     params = dict(P.params)
     params["parameterbanks"] = banks

@@ -54,8 +54,9 @@ def main(old, new):
         print(("PASS (static) " if ok else "FAIL (static) ") + name + " :: " + detail)
 
     ADDED = {"FB Route", "Ext Return",          # v1.0.2-rc4: EXT regeneration loop (new parameters only)
-             "Loop Comp", "Loop Cal"}           # v1.0.2-rc5: EXT loop latency compensation / calibration
-    chk("every old parameter still present; only the rc4/rc5 EXT-loop parameters added",
+             "Loop Comp", "Loop Cal",           # v1.0.2-rc5: EXT loop latency compensation / calibration
+             "Reverse"}                         # REVERSE (feature branch)
+    chk("every old parameter still present; only the intended new parameters added",
         set(a) <= set(b) and set(b) - set(a) <= ADDED,
         f"{len(a)} old, {len(b)} new; missing: {sorted(set(a) - set(b))[:5]}; added: {sorted(set(b) - set(a))}")
     diffs = [n for n in a if n in b and a[n] != b[n]]

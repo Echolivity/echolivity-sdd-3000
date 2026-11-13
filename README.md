@@ -8,9 +8,9 @@
 
 <p align="center"><em>Hardware-inspired concept render. ECHOLIVITY is software only; this is not a product photo or an image of the device's interface.</em></p>
 
-> **v1.0.2-rc6 · CONDITIONAL PASS**
+> **v1.0.2-rc7 · CONDITIONAL PASS**
 >
-> This is a release candidate, **not a production-ready release**. Automated DSP and static checks pass (one known minor limitation). The owner has tested selected workflows in Live 12 Suite on Windows (rc3/rc4), and the new rc6 SEND / RTN routing menus passed all seven native checks in Live 12.4.6 / Max 9. That routing result says nothing about sound quality: the DSP findings, including the HW-1 alias images, are still open, as are the remaining Live checklist items and the rc5 controls. Read the [release decision](docs/validation/RELEASE_DECISION.md) before relying on this build in a critical session.
+> This is a release candidate, **not a production-ready release**. Automated DSP and static checks pass (one known minor limitation). The owner has tested selected workflows in Live 12 Suite on Windows (rc3/rc4), and the rc6 SEND / RTN routing menus passed all seven native checks in Live 12.4.6 / Max 9. The new rc7 **REVERSE** modes pass offline engine tests but **have not yet been tested in Live**. The DSP findings, including the HW-1 alias images, are still open, as are the remaining Live checklist items and the rc5 controls. Read the [release decision](docs/validation/RELEASE_DECISION.md) before relying on this build in a critical session.
 
 ## The instrument
 
@@ -29,6 +29,7 @@ ECHOLIVITY SDD-3000 is a Max for Live digital delay for Ableton Live 12, built a
 - **Feedback routing:** internal (INT), external (EXT) or both combined (BOTH).
 - **FEEDBACK** with polarity **INV**. Above 7 the loop builds up to self-oscillation, which the converter keeps bounded.
 - **HOLD** freezes the last ~1 s of memory and repeats it indefinitely, while new input is not recorded.
+- **REVERSE** (rc7): every repeat backwards (REV), or the direction flipping on each pass (ALT, ALT R). HOLD always plays forwards.
 - **LOW (125 / 250 / 500 Hz) and HIGH (8 / 4 / 2 kHz) filters inside the regeneration path**, so each repeat changes tone. LOW cut can use a gentle −3 dB/oct slope or a 6 dB/oct slope.
 - **HARD** (converter clipping) or **SOFT** loop saturation. In sustained oscillation the two measure close to each other.
 - **Input ranges** −30 / −10 / +4, LEVEL, and a **HEADROOM** meter showing input plus feedback. The converter starts to clip at the red +3, so set LEVEL by the meter.
@@ -70,7 +71,7 @@ Send the repeats through another Live track's effects (reverb, filters, EQ, dist
 
 ### Ableton Live integration
 
-- All 42 panel controls are Live parameters, available for automation and MIDI, key and macro mapping. Hands-on checks in Live are still partial.
+- All 43 panel controls are Live parameters, available for automation and MIDI, key and macro mapping. Hands-on checks in Live are still partial.
 - **Push / Configure banks:** Delay, Character, Modern and Ext Loop.
 - **14 continuous controls accept Live's modulators in Mod mode** (Additive: the knob keeps its own value): the 13 knobs plus RETURN. Mapping Live's LFO in Mod mode has been confirmed by the owner. Stepped controls (switches, tabs, menus) can only be mapped with Mod off.
 
@@ -84,7 +85,12 @@ This is an independent homage, **not** a component-level replica or an official 
 2. Drag it onto an audio track or return track in Ableton Live 12.
 3. Follow the [installation guide](docs/INSTALL.md) and [user manual](docs/MANUAL.md).
 
-## Current release: rc6
+## Current release: rc7
+
+- **REVERSE** menu (owner request): OFF / REV / ALT / ALT R. REVERSE OFF is bit-identical to rc6; one new parameter (Reverse), not stored in programs. Offline engine tests pass; **not yet tested in Live** ([test plan](docs/validation/REVERSE_LIVE_TEST.md)).
+- **Not changed by rc7:** HW-1 is not fixed, and the other release blockers remain open.
+
+### Previous release: rc6
 
 - **SEND / RTN routing menus** (Live 12.2+): choose the external-loop send and return tracks from the panel. **Passed 7/7 native checks** by the owner in Live 12.4.6 / Max 9 ([test record](docs/validation/RC6_SEND_RTN_LIVE_TEST.md)). rc6 changes routing only; DSP, parameters and factory programs are unchanged from rc5.
 - **Not changed by rc6:** HW-1 (alias images) is not fixed in this build, and the other release blockers listed in the [release decision](docs/validation/RELEASE_DECISION.md) remain open.
@@ -131,11 +137,11 @@ These renders are demonstrations, not a substitute for testing the device in you
 
 | Check | Current result |
 |---|---|
-| Engine tests (C build of the exact gen~ code; not Live) | 50 PASS · 1 known-limitation FAIL (D-3) · 51 total |
+| Engine tests (C build of the exact gen~ code; not Live) | 56 PASS · 1 known-limitation FAIL (D-3) · 57 total |
 | Static device checks | 20/20 PASS (static inspection) |
 | Reproducibility | 6/7 PASS: rebuild, determinism, tests and renders reproduce; 1 FAIL for a stray experiment file in the tree (`docs/REPRODUCIBILITY.json`) |
 | Hardware-reference suite (against the 1982 Korg documentation, not an original unit) | 28 consistent · 5 inconsistent · 9 without a documented reference — see [hardware reference](docs/validation/HARDWARE_REFERENCE.md) |
-| Ableton Live / Max runtime | Selected owner checks PASS (rc3/rc4, Windows); rc6 SEND / RTN routing 7/7 PASS (Live 12.4.6); remaining items outstanding |
+| Ableton Live / Max runtime | Selected owner checks PASS (rc3/rc4, Windows); rc6 SEND / RTN routing 7/7 PASS (Live 12.4.6); rc7 REVERSE not yet run; remaining items outstanding |
 | Release decision | **Conditional pass — not production-ready** |
 
 The test report distinguishes automated evidence from host-runtime checks. CPU figures from the C test build are not measurements of Live or Max performance. See [TEST_REPORT.md](docs/TEST_REPORT.md) for detail.

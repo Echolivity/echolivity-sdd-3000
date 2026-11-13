@@ -69,6 +69,8 @@ PARAMS = [
     ("p_out_gain",   0,  -24, 12,   "output gain dB (modern)"),
     ("p_converter",  0,    0, 1,    "0=13-bit gain-ranged converter 1=clean (modern)"),
     ("p_hf_comp",    1,    0, 1,    "host-rate resampling droop compensation (engineering, keep on)"),
+    # reverse (modern, owner request): 0 = OFF (identical to rc6)
+    ("p_reverse",    0,    0, 3,    "REVERSE 0=OFF 1=REV (all repeats) 2=ALT (fwd, rev, fwd...) 3=ALT R (rev, fwd, rev...)"),
 ]
 
 # -------------------------------------------------------------- constants
@@ -79,6 +81,8 @@ HOLD_L = 64512       # hold loop length (words)
 HOLD_F = 1024        # hold seam crossfade (words)
 K_ADC = 5.011872     # +14 dB: nominal (+4 dBm) -> meter 0 dB (= -3 dB re ADC full scale)
 K_DAC = 1.0 / K_ADC
+RMEM = 131072        # reverse memory: 2 x 64K words, so a reversed window of up to 1023 ms fits
+RV_MIN = 128         # shortest reverse window (2 ms at 64 kHz)
 
 
 def oc(x):
@@ -107,7 +111,7 @@ INIT_PAIRS = [("s_rg", "t_rg"), ("s_w1", "t_w1"), ("s_lvl", "t_lvl"), ("s_pre", 
     ("s_ogain", "pow(10, p_out_gain * 0.05)"), ("s_width", "p_width"), ("s_dir", "t_dir"),
     ("s_m0", "t_m0"), ("s_m1", "t_m1"), ("s_m2", "t_m2"), ("s_m3", "t_m3"), ("s_fbs", "t_fbs"),
     ("s_so", "t_so"), ("s_byp", "t_byp"), ("s_lca", "t_lca"), ("s_hca", "t_hca"),
-    ("s_fbi", "t_fbi"), ("s_ret", "t_ret")]
+    ("s_fbi", "t_fbi"), ("s_ret", "t_ret"), ("s_rvo", "t_rvo"), ("s_rvf", "t_rvf")]
 
 import json
 HFTAB = os.path.join(HERE, "hfcomp_table.json")
@@ -131,6 +135,7 @@ def build():
         a(f"Param {n}({d}, min={lo}, max={hi});   // {c}")
     a("")
     a(f"Data mem({MEM}, 2);")
+    a(f"Data rmem({RMEM}, 2);   // reverse: a copy of the recorded words, twice as long")
     a("@@HISTORIES@@")
     a("")
     body = []
@@ -193,7 +198,7 @@ def build():
     for n in ["s_rg", "s_w1", "s_lvl", "s_pre", "s_drv", "s_tone", "s_trim", "s_fb", "s_fbs",
               "s_int", "s_bal_d", "s_bal_w", "s_so", "s_byp", "s_sat", "s_conv", "s_lcs",
               "s_lca", "s_hca", "s_lclg", "s_hclg", "s_oatt", "s_ogain", "s_width", "s_dir",
-              "s_m0", "s_m1", "s_m2", "s_m3", "s_hm", "s_fbi", "s_ret"]:
+              "s_m0", "s_m1", "s_m2", "s_m3", "s_hm", "s_fbi", "s_ret", "s_rvo", "s_rvf"]:
         b(f"{n} = h_{n};")
     b("")
     b("// ----------------------------------------------- parameter targets")
@@ -230,6 +235,20 @@ def build():
     b("t_so = 1;")
     b("if (p_out_inv > 0.5) {")
     b("    t_so = -1;")
+    b("}")
+    b("// REVERSE: which path takes the reversed tap. Output reversed = every echo heard backwards;")
+    b("// feedback reversed = the direction flips on every pass through the loop.")
+    b("t_rvo = 0;")
+    b("t_rvf = 0;")
+    b("if (p_reverse > 0.5 && p_reverse < 1.5) {")
+    b("    t_rvo = 1;     // REV")
+    b("}")
+    b("else if (p_reverse > 1.5 && p_reverse < 2.5) {")
+    b("    t_rvf = 1;     // ALT: forward first")
+    b("}")
+    b("else if (p_reverse > 2.5) {")
+    b("    t_rvo = 1;     // ALT R: reversed first")
+    b("    t_rvf = 1;")
     b("}")
     b("t_bd = min(1, (10 - p_balance) * 0.2);")
     b("t_bw = min(1, p_balance * 0.2);")
@@ -341,6 +360,16 @@ def build():
     b("    g_hc = tan(pi * min(v_g, 0.45 * sr) * inv_sr);  g_hc = g_hc / (1 + g_hc);")
     b("}")
     b("v_g = 0;")
+    b("// REVERSE: 25 ms linear ramps that land exactly on 0 / 1, smoothstep-weighted")
+    b("rv_step = inv_sr / 0.025;")
+    b("s_rvo = s_rvo + clamp(t_rvo - s_rvo, -rv_step, rv_step);")
+    b("s_rvf = s_rvf + clamp(t_rvf - s_rvf, -rv_step, rv_step);")
+    b("g_rvo = s_rvo * s_rvo * (3 - 2 * s_rvo);")
+    b("g_rvf = s_rvf * s_rvf * (3 - 2 * s_rvf);")
+    b("rv_on = 0;")
+    b("if (s_rvo > 0 || s_rvf > 0 || t_rvo > 0.5 || t_rvf > 0.5) {")
+    b("    rv_on = 1;")
+    b("}")
     b("")
 
     # ---------------------------------------------------------------- input
@@ -533,6 +562,7 @@ a_$c = al_$c + (ac_$c - al_$c) * s_pre;       // preamp output = DIRECT signal
     b("    xf = xf + clamp(xdir - xf, -xstep, xstep);")
     b("    ns = na + (nb - na) * xf;")
     b("}")
+    b(f"rv_len = clamp(floor(ns + 0.5), {RV_MIN}, {RMEM // 2});   // reverse window = the current delay")
     b("g_a = cos(xf * 1.570796327);")
     b("g_b = sin(xf * 1.570796327);")
     b("")
@@ -661,13 +691,26 @@ xc_$c = xs_$c + (xsat_$c - xs_$c) * s_sat;    // optional soft loop saturation
     b("nt = 0;")
     b("acc_l = 0; acc_r = 0;")
     b("lsb_q = 1 - s_conv;")
+    b("rw = h_rw; rka = h_rka; rkb = h_rkb; rla = h_rla; rlb = h_rlb;")
+    b("dacr_l = h_dacr_l; dacr_r = h_dacr_r;")
+    b("accr_l = 0; accr_r = 0;")
+    b(f"if (rla < {RV_MIN - 0.5}) {{")
+    b("    rla = rv_len;")
+    b("    rka = 0;")
+    b("}")
+    b(f"if (rlb < {RV_MIN - 0.5}) {{")
+    b("    rlb = rv_len;")
+    b("    rkb = floor(rv_len * 0.5);   // second reader half a window later: the two Hann windows sum to 1")
+    b("}")
     for v in ["xi_l", "xi_r", "q_l", "q_r", "ra", "ia", "fa", "ib", "rb", "jb", "fb2", "jb2",
               "ta_l", "ta_r", "tb_l", "tb_r", "hr", "hr2", "hg", "hv_l", "hv_r", "wl", "wr", "ia2", "q13_l", "q13_r",
-              "g_ws"]:
+              "g_ws", "rq_l", "rq_r", "rra", "rrb", "rga", "rgb", "rgs", "rvl", "rvr"]:
         b(f"{v} = 0;")
     b("while (tt < 1 && nt < 8) {")
     b("    acc_l = acc_l + dac_l * (tt - tl);")
     b("    acc_r = acc_r + dac_r * (tt - tl);")
+    b("    accr_l = accr_l + dacr_l * (tt - tl);")
+    b("    accr_r = accr_r + dacr_r * (tt - tl);")
     for c in "lr":
         b(f"    xi_{c} = clamp(xp_{c} + (xc_{c} - xp_{c}) * tt, -1, 0.999755859);   // converter full scale")
         b(f"    if (abs(xi_{c}) < 0.5) {{")
@@ -679,14 +722,51 @@ xc_$c = xs_$c + (xsat_$c - xs_$c) * s_sat;    // optional soft loop saturation
         b(f"    q_{c} = xi_{c} + (q13_{c} - xi_{c}) * lsb_q;")
     b("    q_l = fixnan(q_l);")
     b("    q_r = fixnan(q_r);")
+    b("    rq_l = q_l;")
+    b("    rq_r = q_r;")
     b("    if (g_w > 0.000001) {")
     b("        if (g_w < 0.999999) {")
     b("            g_ws = g_w * g_w * (3 - 2 * g_w);   // 4 ms smoothstep write fade (HOLD transitions only)")
     b("            q_l = peek(mem, w, 0) + (q_l - peek(mem, w, 0)) * g_ws;")
     b("            q_r = peek(mem, w, 1) + (q_r - peek(mem, w, 1)) * g_ws;")
+    b("            rq_l = peek(rmem, rw, 0) + (rq_l - peek(rmem, rw, 0)) * g_ws;")
+    b("            rq_r = peek(rmem, rw, 1) + (rq_r - peek(rmem, rw, 1)) * g_ws;")
     b("        }")
     b("        poke(mem, q_l, w, 0);")
     b("        poke(mem, q_r, w, 1);")
+    b("        poke(rmem, rq_l, rw, 0);    // reverse memory records exactly what the main memory records")
+    b("        poke(rmem, rq_r, rw, 1);")
+    b("    }")
+    b("    rra = rw - 2 * rka;              // reverse readers move backwards: age 2k, window centre = delay")
+    b("    if (rra < 0) {")
+    b(f"        rra = rra + {RMEM};")
+    b("    }")
+    b("    rrb = rw - 2 * rkb;")
+    b("    if (rrb < 0) {")
+    b(f"        rrb = rrb + {RMEM};")
+    b("    }")
+    b("    if (rv_on > 0.5) {")
+    b("        rga = 0.5 - 0.5 * cos(6.283185307 * rka / rla);")
+    b("        rgb = 0.5 - 0.5 * cos(6.283185307 * rkb / rlb);")
+    b("        rgs = max(rga + rgb, 0.25);   // = 1 while the window length is steady")
+    b("        rvl = (peek(rmem, rra, 0) * rga + peek(rmem, rrb, 0) * rgb) / rgs;")
+    b("        rvr = (peek(rmem, rra, 1) * rga + peek(rmem, rrb, 1) * rgb) / rgs;")
+    b("    }")
+    b("    if (g_w > 0.000001) {")
+    b("        rka = rka + 1;               // readers advance only while recording (frozen during HOLD)")
+    b("        if (rka >= rla) {")
+    b("            rka = 0;")
+    b("            rla = rv_len;")
+    b("        }")
+    b("        rkb = rkb + 1;")
+    b("        if (rkb >= rlb) {")
+    b("            rkb = 0;")
+    b("            rlb = rv_len;")
+    b("        }")
+    b("        rw = rw + 1;")
+    b(f"        if (rw >= {RMEM}) {{")
+    b(f"            rw = rw - {RMEM};")
+    b("        }")
     b("    }")
     b("    g_w = g_w + clamp(w_tgt - g_w, -0.00390625, 0.00390625);")
     b("    relk = relk + 1;")
@@ -744,6 +824,8 @@ xc_$c = xs_$c + (xsat_$c - xs_$c) * s_sat;    // optional soft loop saturation
     b("    if (gnt_w < 1) {")
     b("        wl = wl * gnt_w;")
     b("        wr = wr * gnt_w;")
+    b("        rvl = rvl * gnt_w;")
+    b("        rvr = rvr * gnt_w;")
     b("    }")
     b("    if (s_hm > 0.000001) {")
     b(f"        hr = hbase - {HOLD_L} + hpos;")
@@ -763,9 +845,13 @@ xc_$c = xs_$c + (xsat_$c - xs_$c) * s_sat;    // optional soft loop saturation
     b("        }")
     b("        wl = wl + (hv_l - wl) * hm_w;")
     b("        wr = wr + (hv_r - wr) * hm_w;")
+    b("        rvl = rvl + (hv_l - rvl) * hm_w;   // HOLD plays forwards in every REVERSE mode")
+    b("        rvr = rvr + (hv_r - rvr) * hm_w;")
     b("    }")
     b("    dac_l = wl;")
     b("    dac_r = wr;")
+    b("    dacr_l = rvl;")
+    b("    dacr_r = rvr;")
     b("    w = w + 1;")
     b(f"    if (w >= {MEM}) {{")
     b(f"        w = w - {MEM};")
@@ -780,6 +866,8 @@ xc_$c = xs_$c + (xsat_$c - xs_$c) * s_sat;    // optional soft loop saturation
     b("}")
     b("acc_l = acc_l + dac_l * (1 - tl);")
     b("acc_r = acc_r + dac_r * (1 - tl);")
+    b("accr_l = accr_l + dacr_l * (1 - tl);")
+    b("accr_r = accr_r + dacr_r * (1 - tl);")
     b("hra = 0;")
     b("if (hst > 1.5) {")
     b(f"    hra = hbase - {HOLD_L} + hpos - w;   // how far the HOLD reader is ahead of the writer")
@@ -849,16 +937,41 @@ v_tmp = (lo_$c - hcs_$c) * g_hc;               // HIGH cut: first-order (-6 dB/o
 hl_$c = v_tmp + hcs_$c;
 hcs_$c = fixdenorm(hl_$c + v_tmp);
 wet_$c = lo_$c + (hl_$c - lo_$c) * s_hca;
-fbn_$c = wet_$c * s_fb * s_fbs * s_fbi + ret_$c * s_ret * cal_live;   // regeneration: internal + EXT return
 """
     b(per_ch(dac))
+    # REVERSE: the same D/A chain and LOW/HIGH filters for the reversed tap, with its own states
+    rdac = re.sub(r"\b([A-Za-z0-9_]+?)_\$c\b", r"\1r_$c", dac)
+    rlhs = sorted(set(re.findall(r"^\s*([A-Za-z0-9_]+r)_\$c\s*=", rdac, re.M)))
+    rstate = ["ib1r", "ib2r", "st_der", "eqz1r", "eqz2r", "lc0r", "lc1r", "lc2r", "lc6r", "hcsr"]
+    for c in "lr":
+        b(" ".join(f"{v}_{c} = h_{v}_{c};" for v in rstate))
+    b("// ----- REVERSE tap: own D/A chain, computed only while a REVERSE mode is (fading) on")
+    tmp = [f"{v}_{c}" for v in rlhs for c in "lr" if v not in rstate]
+    b(" ".join(f"{v} = 0;" for v in tmp))
+    b("if (rv_on > 0.5) {")
+    for line in per_ch(rdac).splitlines():
+        b("    " + line if line.strip() else line)
+    b("}")
+    b("else {")
+    for c in "lr":
+        b("    " + " ".join(f"{v}_{c} = 0;" for v in rstate))
+    b("}")
+    b("wo_l = wet_l; wo_r = wet_r;     // output path")
+    b("wf_l = wet_l; wf_r = wet_r;     // regeneration path (and the EXT send)")
+    b("if (rv_on > 0.5) {")
+    b("    wo_l = wet_l + (wetr_l - wet_l) * g_rvo;")
+    b("    wo_r = wet_r + (wetr_r - wet_r) * g_rvo;")
+    b("    wf_l = wet_l + (wetr_l - wet_l) * g_rvf;")
+    b("    wf_r = wet_r + (wetr_r - wet_r) * g_rvf;")
+    b("}")
+    b(per_ch("fbn_$c = wf_$c * s_fb * s_fbs * s_fbi + ret_$c * s_ret * cal_live;   // regeneration: internal + EXT return"))
     b("")
 
     # ------------------------------------------------------------- output
     b("// ============================================================ OUTPUT")
-    b("mx_l = a_l * s_bal_d + s_so * wet_l * s_bal_w;    // VARIABLE / +MIX")
-    b("mn_l = a_l * s_bal_d - wet_l * s_bal_w;           // -MIX (always difference)")
-    b("mx_r = a_r * s_bal_d + s_so * wet_r * s_bal_w;")
+    b("mx_l = a_l * s_bal_d + s_so * wo_l * s_bal_w;     // VARIABLE / +MIX")
+    b("mn_l = a_l * s_bal_d - wo_l * s_bal_w;            // -MIX (always difference)")
+    b("mx_r = a_r * s_bal_d + s_so * wo_r * s_bal_w;")
     b("dr_l = a_l * s_dir;                               // DIRECT")
     b("o_l = mx_l * s_m0 + dr_l * s_m1 + mx_l * s_m2 + mx_l * s_m3;")
     b("o_r = mx_l * s_m0 + mx_l * s_m1 + mn_l * s_m2 + mx_r * s_m3;")
@@ -878,8 +991,8 @@ fbn_$c = wet_$c * s_fb * s_fbs * s_fbi + ret_$c * s_ret * cal_live;   // regener
     b("out4 = fixnan(m_s);                                  // LFO / ENV LED")
     b("out5 = fixnan(ms_disp);                              // delay time for the display (TIME, before LOOP COMP)")
     b("// v1.0.2-rc4: EXT loop send (device outputs 3/4): the regeneration tap after LOW/HIGH, unity gain")
-    b("out6 = fixnan(wet_l / pow(1 + pow(abs(wet_l) * 0.25, 8), 0.125) * cal_live + cal_click);")
-    b("out7 = fixnan(wet_r / pow(1 + pow(abs(wet_r) * 0.25, 8), 0.125) * cal_live + cal_click);")
+    b("out6 = fixnan(wf_l / pow(1 + pow(abs(wf_l) * 0.25, 8), 0.125) * cal_live + cal_click);")
+    b("out7 = fixnan(wf_r / pow(1 + pow(abs(wf_r) * 0.25, 8), 0.125) * cal_live + cal_click);")
     b("out8 = cal_out;                                      // rc5: CAL result for the patcher")
     b("")
 
@@ -901,6 +1014,9 @@ fbn_$c = wet_$c * s_fb * s_fbs * s_fbi + ret_$c * s_ret * cal_live;   // regener
     stores += ["hst", "relk", "g_w", "gnt", "hshape"]
     stores += ["s_fbi", "s_ret"]
     stores += ["cal_st", "cal_n", "cal_m", "cal_env", "cal_res", "cal_hold", "cal_prev"]
+    stores += ["s_rvo", "s_rvf", "rw", "rka", "rkb", "rla", "rlb", "dacr_l", "dacr_r"]
+    stores += [f"{v}_{c}" for v in ["ib1r", "ib2r", "st_der", "eqz1r", "eqz2r", "lc0r", "lc1r", "lc2r", "lc6r", "hcsr"]
+               for c in "lr"]
     for s in stores:
         b(f"h_{s} = fixnan({s});")
     b("h_lc_done = s_lclg;")

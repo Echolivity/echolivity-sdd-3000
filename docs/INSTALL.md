@@ -15,7 +15,7 @@ You can also drag the .amxd straight from Explorer/Finder onto a track.
 ## First run
 
 - Expected: the display shows `0  380` and the TIME dial reads 380 ms.
-- Replacing an earlier version: save your Set first. No parameter was removed or renamed. 1.0.2-rc4/rc5 added four parameters (FB Route, Ext Return, Loop Comp, Loop Cal) and two sync divisions (1/16T, 1/32T, appended so existing division settings recall unchanged); see `docs/validation/PRESET_COMPATIBILITY_REPORT.md`. Reopening older Sets in Live hasn't been validated yet.
+- Replacing an earlier version: save your Set first. No parameter was removed or renamed. 1.0.2-rc4/rc5 added four parameters (FB Route, Ext Return, Loop Comp, Loop Cal), rc7 adds one (Reverse, default OFF) and two sync divisions (1/16T, 1/32T, appended so existing division settings recall unchanged); see `docs/validation/PRESET_COMPATIBILITY_REPORT.md`. Reopening older Sets in Live hasn't been validated yet.
 - Play audio. The HEADROOM LEDs should move and you should hear echoes.
 - If the device loads but stays silent, open it in Max (the wrench icon) and check the Max Console for gen~ errors. Please report the message. Loading in Live 12 Suite on Windows has been confirmed by the owner (rc4); macOS and other Live versions are untested. See `docs/validation/LIVE_INTEGRATION_REPORT.md`.
 

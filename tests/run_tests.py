@@ -1430,6 +1430,207 @@ def t_loop_comp():
     record("rc5: LOOP COMP puts external repeats back on time", ok, "; ".join(rows), "period = TIME")
 
 
+# ------------------------------------------------------------ REVERSE (feature branch)
+def chirp(sr, f0, f1, secs, amp=NOM):
+    t = np.arange(int(sr * secs)) / sr
+    k = np.log(f1 / f0) / secs
+    x = amp * np.sin(2 * np.pi * f0 * (np.exp(k * t) - 1) / k)
+    return x * np.hanning(len(x))
+
+
+def sweep_direction(y, sr, centre_s, half_s=0.06):
+    """slope of log peak frequency (octaves/s) around centre_s; > 0 rising, < 0 falling"""
+    i0, i1 = int(sr * (centre_s - half_s)), int(sr * (centre_s + half_s))
+    f, t, S = signal.stft(y[i0:i1], sr, nperseg=512, noverlap=448)
+    mag = np.abs(S)
+    e = mag.max(axis=0)
+    keep = e > e.max() * 0.1
+    pk = f[np.argmax(mag, axis=0)]
+    keep &= pk > 100
+    if keep.sum() < 4:
+        return 0.0, 0.0
+    sl = np.polyfit(t[keep], np.log2(pk[keep]), 1)[0]
+    return float(sl), float(rms(y[i0:i1]))
+
+
+_RV_PHASE = {}
+
+
+def rev_centre(T, sr=48000):
+    """Input time (s) that sits on a reverse-window centre. The two readers run from load whatever the
+    mode, but the start-up delay crossfade sets their phase, so it is located once: the offset whose
+    single REV echo is most concentrated in one window-centred copy."""
+    key = (T, sr)
+    if key not in _RV_PHASE:
+        c = burst(sr, 1000, 0.02)
+
+        def conc(cs):
+            x = np.zeros(int(sr * (cs + 2.2 * T / 1000)))
+            i0 = int(sr * cs) - len(c) // 2
+            x[i0:i0 + len(c)] = c
+            y = Engine(sr, time_ms=T, feedback=0, balance=10, wet_only=1, reverse=1).run(x)[0]
+            e = y ** 2
+            j, w = int(sr * (cs + T / 1000)), int(sr * 0.03)
+            return e[j - w:j + w].sum() / (e.sum() + 1e-30)
+        step = T / 48000
+        best = max((conc(cs), cs) for cs in (0.6 + k * step for k in range(48)))
+        best = max((conc(cs), cs) for cs in (best[1] + (k - 8) * step / 8 for k in range(17)))
+        _RV_PHASE[key] = best[1]
+    return _RV_PHASE[key]
+
+
+def rev_echo_dirs(mode, n_echo, T=300, fb=7.0, sr=48000):
+    """REVERSE mode -> (slope, level) of echoes 1..n_echo. The chirp sits on a reverse-window centre,
+    so each pass lands as one clean copy at multiples of T."""
+    cs = rev_centre(T, sr)
+    x = np.zeros(int(sr * (cs + (n_echo + 0.6) * T / 1000)))
+    c = chirp(sr, 500, 4000, 0.08)
+    i0 = int(sr * cs) - len(c) // 2
+    x[i0:i0 + len(c)] = c
+    y = Engine(sr, time_ms=T, feedback=fb, balance=10, wet_only=1, reverse=mode).run(x)[0]
+    return [sweep_direction(y, sr, cs + n * T / 1000) for n in range(1, n_echo + 1)]
+
+
+def t_reverse_off_identical():
+    """REVERSE OFF (default): all 8 outputs bit-identical to rc6, in INT, EXT, BOTH, HOLD and with modulation."""
+    from engine import REF6_SO
+    sr = 48000
+    src = np.tile(np.concatenate([burst(sr, 330, 0.25), np.zeros(4800), burst(sr, 1100, 0.15)]), 3)
+    cases = [("defaults", {}, None, None),
+             ("FB 10 + mod + filters", dict(feedback=10, intensity=6, lowcut=2, highcut=2), None, None),
+             ("EXT RETURN 6, loop 256", dict(fb_route=1, **{"return": 6}), 256, None),
+             ("BOTH FB 4, LOOP COMP 5", dict(fb_route=2, feedback=4, loop_comp=5), 128, None),
+             ("TRUE ST, HOLD engage/release", dict(out_mode=3, feedback=5), None,
+              [(int(sr * 1.0), {"hold": 1}), (int(sr * 2.0), {"hold": 0})]),
+             ("glide + SYNC", dict(time_glide=1, sync=1, division=4, tempo=133), None,
+              [(int(sr * 1.2), {"division": 7})])]
+    rows, ok = [], True
+    for name, p, lat, auto in cases:
+        a = Engine(sr, so=REF6_SO, **p).run(src, automation=auto, loop_latency=lat)
+        b = Engine(sr, **p).run(src, automation=auto, loop_latency=lat)
+        d = np.max(np.abs(a - b))
+        ok &= d == 0
+        rows.append(f"{name}: {d:.0e}")
+    record("REVERSE OFF: all outputs bit-identical to rc6", ok, "; ".join(rows),
+           "the new control changes nothing until it is used")
+
+
+def t_reverse_direction():
+    """Direction of each echo for every mode (chirp 500 Hz -> 4 kHz; + = rising/forward)."""
+    expect = {0: [1, 1, 1], 1: [-1, -1, -1], 2: [1, -1, 1], 3: [-1, 1, -1]}
+    names = {0: "OFF", 1: "REV", 2: "ALT", 3: "ALT R"}
+    rows, ok = [], True
+    for m, exp in expect.items():
+        d = rev_echo_dirs(m, 3)
+        sgn = [int(np.sign(sl)) for sl, _ in d]
+        good = sgn == exp and all(abs(sl) > 5 for sl, _ in d)
+        ok &= good
+        rows.append(f"{names[m]}: " + " ".join(f"{sl:+.0f}" for sl, _ in d) + (" ok" if good else f" expected {exp}"))
+    record("REVERSE: direction of echoes 1-3 per mode (oct/s)", ok, "; ".join(rows),
+           "REV all backwards; ALT forwards first then alternating; ALT R backwards first")
+
+
+def t_reverse_level_timing():
+    """A reversed echo keeps the forward echo's level and lands on TIME (window centre)."""
+    sr, T = 48000, 300
+    rows, ok = [], True
+    f = rev_echo_dirs(0, 2, T=T, fb=5)
+    r = rev_echo_dirs(1, 2, T=T, fb=5)
+    for n in range(2):
+        dl = db(r[n][1] / f[n][1])
+        ok &= abs(dl) < 1.0
+        rows.append(f"echo {n + 1}: REV vs OFF level {dl:+.2f} dB")
+    # timing: a reversed echo slides between 0.5 T and 1.5 T with the input's phase in the reverse window
+    # (period T/2, two readers) and is loudest exactly on T
+    c = burst(sr, 1000, 0.02)
+    ages, lvls = [], []
+    for k in range(24):
+        cs = 0.6 + k * T / 48000
+        x = np.zeros(int(sr * (cs + 0.7)))
+        i0 = int(sr * cs) - len(c) // 2
+        x[i0:i0 + len(c)] = c
+        y = Engine(sr, time_ms=T, feedback=0, balance=10, wet_only=1, reverse=1).run(x)[0]
+        ages.append(np.argmax(y ** 2) / sr * 1000 - cs * 1000)
+        lvls.append(db(np.abs(y).max()))
+    ages, lvls = np.array(ages), np.array(lvls)
+    near = lvls > lvls.max() - 1.5
+    pc = np.polyfit(ages[near], lvls[near], 2)
+    a_max = -pc[1] / (2 * pc[0])
+    ok &= abs(a_max - T) < 3 and ages.min() > 0.45 * T and ages.max() < 1.55 * T
+    rows.append(f"REV echo arrives {ages.min():.0f}-{ages.max():.0f} ms after the input depending on its phase, "
+                f"loudest at {a_max:.1f} ms (TIME {T}); OFF {T:.0f} ms always")
+    record("REVERSE: echo level and timing", ok, "; ".join(rows), "same level as forward; reversed echoes centred on TIME, within 0.5-1.5 TIME")
+
+
+def t_reverse_switching():
+    """Switching modes while echoes ring: no jumps, no HF bursts; works at short and long TIME."""
+    sr = 48000
+    rows, ok = [], True
+    for T in (60, 400, 1023):
+        x = tone(sr, 220, 6.0)
+        auto = [(int(sr * 1.5), {"reverse": 1}), (int(sr * 2.5), {"reverse": 2}),
+                (int(sr * 3.5), {"reverse": 3}), (int(sr * 4.5), {"reverse": 0})]
+        y = Engine(sr, time_ms=T, feedback=5).run(x, automation=auto)[0]
+        ref = np.abs(np.diff(y[int(sr * 0.5):int(sr * 1.4)])).max()
+        st = np.abs(np.diff(y[int(sr * 1.4):])).max() / ref
+        fin = np.isfinite(y).all()
+        ok &= fin and st < 3.0
+        rows.append(f"TIME {T}: worst step {st:.2f}x steady")
+    record("REVERSE: click-free switching OFF/REV/ALT/ALT R while playing", ok, "; ".join(rows),
+           "25 ms smoothstep crossfade between the forward and reversed taps")
+
+
+def t_reverse_safety():
+    """FB 10 runaway bounded in every mode; HOLD plays the forward loop; invalid input recovers."""
+    sr = 48000
+    rows, ok = [], True
+    x = np.concatenate([burst(sr, 500, 0.2, amp=0.5), np.zeros(sr * 5)])
+    for m in (1, 2, 3):
+        y = Engine(sr, time_ms=250, feedback=10, intensity=4, reverse=m).run(x)
+        pk = np.abs(y[:2]).max()
+        ok &= np.isfinite(y).all() and pk < 4.0
+        rows.append(f"mode {m} FB 10: peak {db(pk):+.1f} dBFS")
+    # HOLD: steady held loop is the same in REV as in OFF
+    src = np.concatenate([tone(sr, 330, 1.5), np.zeros(sr * 2)])
+    auto = [(int(sr * 1.2), {"hold": 1})]
+    a = Engine(sr, feedback=3, reverse=0).run(src, automation=auto)[0]
+    b = Engine(sr, feedback=3, reverse=1).run(src, automation=auto)[0]
+    seg = slice(int(sr * 2.0), int(sr * 3.4))
+    dh = db(rms(a[seg] - b[seg]) / rms(a[seg]))
+    ok &= dh < -60
+    rows.append(f"HOLD steady loop REV vs OFF: {dh:.0f} dB")
+    # HOLD release in REV: no click
+    auto2 = [(int(sr * 1.2), {"hold": 1}), (int(sr * 2.5), {"hold": 0})]
+    c = Engine(sr, feedback=3, reverse=1).run(src, automation=auto2)[0]
+    st = np.abs(np.diff(c[int(sr * 2.4):])).max() / np.abs(np.diff(c[int(sr * 0.5):int(sr * 1.1)])).max()
+    ok &= st < 3.0 and np.isfinite(c).all()
+    rows.append(f"HOLD release in REV: worst step {st:.2f}x steady")
+    # invalid input
+    e = Engine(sr, feedback=6, reverse=2)
+    e.set_raw("p_time_ms", float("nan"))
+    e.run(tone(sr, 440, 0.3))
+    e.set(time_ms=300)
+    bad = tone(sr, 440, 0.5); bad[100:200] = np.nan; bad[300] = np.inf
+    y1 = e.run(bad)
+    y2 = e.run(tone(sr, 440, 1.5))
+    ok &= np.isfinite(y2).all() and rms(y2[0][sr:]) > NOM * 0.1
+    rows.append(f"NaN/inf input and NaN TIME (ALT): recovers, output finite={np.isfinite(y2).all()}")
+    record("REVERSE: runaway bound, HOLD, invalid values", ok, "; ".join(rows), "bounded; HOLD forwards; NaN-safe")
+
+
+def t_reverse_cpu():
+    sr = 48000
+    x = np.random.default_rng(0).standard_normal(sr * 10) * NOM
+    rt = {}
+    for m in (0, 1, 3):
+        e = Engine(sr, time_ms=380, feedback=5, intensity=5, out_mode=3, reverse=m)
+        t0 = time.time(); e.run(x, x); rt[m] = 10 / (time.time() - t0)
+    ratio = rt[0] / rt[3]
+    record("REVERSE: CPU (C build, 48 kHz stereo)", rt[3] > 5 and ratio < 2.0,
+           f"OFF {rt[0]:.0f}x, REV {rt[1]:.0f}x, ALT R {rt[3]:.0f}x real-time; ALT R costs {ratio:.2f}x OFF",
+           "reverse path only computed while a mode is on")
+
+
 def main():
     build()
     tests = [t_delay_accuracy, t_ms_stepping, t_sync, t_wet_gain_and_response, t_feedback_decay,
@@ -1446,7 +1647,10 @@ def main():
              # v1.0.2-rc4: external regeneration loop
              t_fbroute_int_identical, t_fbroute_ext_loop, t_fbroute_send_and_safety,
              # v1.0.2-rc5: triplets, LOOP COMP, CAL
-             t_rc5_unchanged, t_triplets, t_loop_cal, t_loop_comp]
+             t_rc5_unchanged, t_triplets, t_loop_cal, t_loop_comp,
+             # REVERSE (feature branch)
+             t_reverse_off_identical, t_reverse_direction, t_reverse_level_timing, t_reverse_switching,
+             t_reverse_safety, t_reverse_cpu]
     only = sys.argv[1:]
     for t in tests:
         if only and t.__name__ not in only:

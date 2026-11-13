@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.0.2-rc7 — 2026-11-13 — REVERSE (owner request)
+
+### Added
+- **REVERSE** menu (REGENERATION section, modern row): OFF / REV / ALT / ALT R.
+  - **REV:** every repeat plays backwards; the loop itself runs forwards.
+  - **ALT:** the first echo is forwards, then the direction flips on every pass (forwards, backwards, forwards…).
+  - **ALT R:** the first echo is backwards, then alternating.
+  - Each reversed slice is one delay time long. A reversed echo arrives between 0.5 and 1.5 × TIME depending on where the note falls in the slice, and is loudest exactly on TIME.
+  - HOLD always plays its loop forwards. Switching modes crossfades over 25 ms.
+  - One new Live parameter, **Reverse** (163 in total), in a new Push bank "Reverse". It is not stored in programs, so programs, presets and Sets recall as before.
+- DSP: a 2 × 64K-word reverse memory records exactly what the main memory records; two Hann-windowed readers half a slice apart read it backwards, through their own D/A chain and LOW/HIGH filters. That path is only computed while a REVERSE mode is on.
+
+### Unchanged
+- **REVERSE OFF is bit-identical to rc6** on all 8 outputs (INT, EXT, BOTH, HOLD, modulation, glide/SYNC; new reference `tests/reference/echolivity_core_v1.0.2-rc6.genexpr`).
+- 162/162 existing parameters, the existing Push banks and the 120 factory-program values are identical.
+
+### Validation (offline only)
+- Engine tests 56/57 (6 new REVERSE tests pass; 1 known limitation D-3, unchanged). Static checks 20/20 (expected counts updated for the new parameter). Preset compatibility vs rc6 6/6.
+- **Not yet tested in Live** (plan: `docs/validation/REVERSE_LIVE_TEST.md`). HW-1 is not addressed by rc7.
+
 ## 1.0.2-rc6 — 2026-11-13 — SEND / RTN routing menus (owner request)
 
 ### Added

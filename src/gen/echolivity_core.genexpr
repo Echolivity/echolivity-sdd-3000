@@ -42,8 +42,10 @@ Param p_wet_only(0, min=0, max=1);   // wet only (modern)
 Param p_out_gain(0, min=-24, max=12);   // output gain dB (modern)
 Param p_converter(0, min=0, max=1);   // 0=13-bit gain-ranged converter 1=clean (modern)
 Param p_hf_comp(1, min=0, max=1);   // host-rate resampling droop compensation (engineering, keep on)
+Param p_reverse(0, min=0, max=3);   // REVERSE 0=OFF 1=REV (all repeats) 2=ALT (fwd, rev, fwd...) 3=ALT R (rev, fwd, rev...)
 
 Data mem(65536, 2);
+Data rmem(131072, 2);   // reverse: a copy of the recorded words, twice as long
 History h_cal_env(0);
 History h_cal_hold(0);
 History h_cal_m(0);
@@ -53,6 +55,8 @@ History h_cal_res(0);
 History h_cal_st(0);
 History h_dac_l(0);
 History h_dac_r(0);
+History h_dacr_l(0);
+History h_dacr_r(0);
 History h_envf(0);
 History h_eq_a1(0);
 History h_eq_a2(0);
@@ -61,8 +65,12 @@ History h_eq_b1(0);
 History h_eq_b2(0);
 History h_eqz1_l(0);
 History h_eqz1_r(0);
+History h_eqz1r_l(0);
+History h_eqz1r_r(0);
 History h_eqz2_l(0);
 History h_eqz2_r(0);
+History h_eqz2r_l(0);
+History h_eqz2r_r(0);
 History h_fb_l(0);
 History h_fb_r(0);
 History h_g_aa(0);
@@ -81,6 +89,8 @@ History h_hbase(0);
 History h_hc_done(0);
 History h_hcs_l(0);
 History h_hcs_r(0);
+History h_hcsr_l(0);
+History h_hcsr_r(0);
 History h_hpos(0);
 History h_hshape(0);
 History h_hst(0);
@@ -90,8 +100,12 @@ History h_ia2_l(0);
 History h_ia2_r(0);
 History h_ib1_l(0);
 History h_ib1_r(0);
+History h_ib1r_l(0);
+History h_ib1r_r(0);
 History h_ib2_l(0);
 History h_ib2_r(0);
+History h_ib2r_l(0);
+History h_ib2r_r(0);
 History h_init(0);
 History h_k_aa1(0);
 History h_k_aa2(0);
@@ -99,12 +113,20 @@ History h_k_aa3(0);
 History h_k_pk(0);
 History h_lc0_l(0);
 History h_lc0_r(0);
+History h_lc0r_l(0);
+History h_lc0r_r(0);
 History h_lc1_l(0);
 History h_lc1_r(0);
+History h_lc1r_l(0);
+History h_lc1r_r(0);
 History h_lc2_l(0);
 History h_lc2_r(0);
+History h_lc2r_l(0);
+History h_lc2r_r(0);
 History h_lc6_l(0);
 History h_lc6_r(0);
+History h_lc6r_l(0);
+History h_lc6r_r(0);
 History h_lc_done(0);
 History h_lph(0);
 History h_m_s(0);
@@ -114,9 +136,14 @@ History h_nb(0);
 History h_ns(0);
 History h_ph(0);
 History h_relk(0);
+History h_rka(0);
+History h_rkb(0);
+History h_rla(0);
+History h_rlb(0);
 History h_rnd1(0);
 History h_rnd2(0);
 History h_rnd_t(0);
+History h_rw(0);
 History h_s_bal_d(0);
 History h_s_bal_w(0);
 History h_s_byp(0);
@@ -143,6 +170,8 @@ History h_s_ogain(0);
 History h_s_pre(0);
 History h_s_ret(0);
 History h_s_rg(0);
+History h_s_rvf(0);
+History h_s_rvo(0);
 History h_s_sat(0);
 History h_s_so(0);
 History h_s_tone(0);
@@ -154,6 +183,8 @@ History h_st_dc_l(0);
 History h_st_dc_r(0);
 History h_st_de_l(0);
 History h_st_de_r(0);
+History h_st_der_l(0);
+History h_st_der_r(0);
 History h_st_pre_l(0);
 History h_st_pre_r(0);
 History h_st_tone_l(0);
@@ -251,6 +282,8 @@ s_m3 = h_s_m3;
 s_hm = h_s_hm;
 s_fbi = h_s_fbi;
 s_ret = h_s_ret;
+s_rvo = h_s_rvo;
+s_rvf = h_s_rvf;
 
 // ----------------------------------------------- parameter targets
 t_rg = 1;
@@ -286,6 +319,20 @@ if (p_fb_route > 0.5 && p_fb_route < 1.5) {
 t_so = 1;
 if (p_out_inv > 0.5) {
     t_so = -1;
+}
+// REVERSE: which path takes the reversed tap. Output reversed = every echo heard backwards;
+// feedback reversed = the direction flips on every pass through the loop.
+t_rvo = 0;
+t_rvf = 0;
+if (p_reverse > 0.5 && p_reverse < 1.5) {
+    t_rvo = 1;     // REV
+}
+else if (p_reverse > 1.5 && p_reverse < 2.5) {
+    t_rvf = 1;     // ALT: forward first
+}
+else if (p_reverse > 2.5) {
+    t_rvo = 1;     // ALT R: reversed first
+    t_rvf = 1;
 }
 t_bd = min(1, (10 - p_balance) * 0.2);
 t_bw = min(1, p_balance * 0.2);
@@ -391,6 +438,8 @@ if (h_init < 0.5) {
     s_hca = t_hca;
     s_fbi = t_fbi;
     s_ret = t_ret;
+    s_rvo = t_rvo;
+    s_rvf = t_rvf;
 }
 // ------------------------------------------------------- smoothing
 s_rg = s_rg + (t_rg - s_rg) * k15;
@@ -440,6 +489,16 @@ if (abs(s_hclg - h_hc_done) > 0.00001 || sr != h_sr) {
     g_hc = tan(pi * min(v_g, 0.45 * sr) * inv_sr);  g_hc = g_hc / (1 + g_hc);
 }
 v_g = 0;
+// REVERSE: 25 ms linear ramps that land exactly on 0 / 1, smoothstep-weighted
+rv_step = inv_sr / 0.025;
+s_rvo = s_rvo + clamp(t_rvo - s_rvo, -rv_step, rv_step);
+s_rvf = s_rvf + clamp(t_rvf - s_rvf, -rv_step, rv_step);
+g_rvo = s_rvo * s_rvo * (3 - 2 * s_rvo);
+g_rvf = s_rvf * s_rvf * (3 - 2 * s_rvf);
+rv_on = 0;
+if (s_rvo > 0 || s_rvf > 0 || t_rvo > 0.5 || t_rvf > 0.5) {
+    rv_on = 1;
+}
 
 // ============================================================ INPUT
 in_l = clamp(fixnan(in1), -1000, 1000);   // v1.0.2: NaN -> 0, +-inf -> +-1000 (+60 dBFS); valid audio unchanged
@@ -660,6 +719,7 @@ else {
     xf = xf + clamp(xdir - xf, -xstep, xstep);
     ns = na + (nb - na) * xf;
 }
+rv_len = clamp(floor(ns + 0.5), 128, 65536);   // reverse window = the current delay
 g_a = cos(xf * 1.570796327);
 g_b = sin(xf * 1.570796327);
 
@@ -799,6 +859,17 @@ tl = 0;
 nt = 0;
 acc_l = 0; acc_r = 0;
 lsb_q = 1 - s_conv;
+rw = h_rw; rka = h_rka; rkb = h_rkb; rla = h_rla; rlb = h_rlb;
+dacr_l = h_dacr_l; dacr_r = h_dacr_r;
+accr_l = 0; accr_r = 0;
+if (rla < 127.5) {
+    rla = rv_len;
+    rka = 0;
+}
+if (rlb < 127.5) {
+    rlb = rv_len;
+    rkb = floor(rv_len * 0.5);   // second reader half a window later: the two Hann windows sum to 1
+}
 xi_l = 0;
 xi_r = 0;
 q_l = 0;
@@ -826,9 +897,20 @@ ia2 = 0;
 q13_l = 0;
 q13_r = 0;
 g_ws = 0;
+rq_l = 0;
+rq_r = 0;
+rra = 0;
+rrb = 0;
+rga = 0;
+rgb = 0;
+rgs = 0;
+rvl = 0;
+rvr = 0;
 while (tt < 1 && nt < 8) {
     acc_l = acc_l + dac_l * (tt - tl);
     acc_r = acc_r + dac_r * (tt - tl);
+    accr_l = accr_l + dacr_l * (tt - tl);
+    accr_r = accr_r + dacr_r * (tt - tl);
     xi_l = clamp(xp_l + (xc_l - xp_l) * tt, -1, 0.999755859);   // converter full scale
     if (abs(xi_l) < 0.5) {
         q13_l = floor(xi_l * 4096 + 0.5) * 0.000244140625;   // gain-ranged: +6 dB before the 12-bit converter
@@ -847,14 +929,51 @@ while (tt < 1 && nt < 8) {
     q_r = xi_r + (q13_r - xi_r) * lsb_q;
     q_l = fixnan(q_l);
     q_r = fixnan(q_r);
+    rq_l = q_l;
+    rq_r = q_r;
     if (g_w > 0.000001) {
         if (g_w < 0.999999) {
             g_ws = g_w * g_w * (3 - 2 * g_w);   // 4 ms smoothstep write fade (HOLD transitions only)
             q_l = peek(mem, w, 0) + (q_l - peek(mem, w, 0)) * g_ws;
             q_r = peek(mem, w, 1) + (q_r - peek(mem, w, 1)) * g_ws;
+            rq_l = peek(rmem, rw, 0) + (rq_l - peek(rmem, rw, 0)) * g_ws;
+            rq_r = peek(rmem, rw, 1) + (rq_r - peek(rmem, rw, 1)) * g_ws;
         }
         poke(mem, q_l, w, 0);
         poke(mem, q_r, w, 1);
+        poke(rmem, rq_l, rw, 0);    // reverse memory records exactly what the main memory records
+        poke(rmem, rq_r, rw, 1);
+    }
+    rra = rw - 2 * rka;              // reverse readers move backwards: age 2k, window centre = delay
+    if (rra < 0) {
+        rra = rra + 131072;
+    }
+    rrb = rw - 2 * rkb;
+    if (rrb < 0) {
+        rrb = rrb + 131072;
+    }
+    if (rv_on > 0.5) {
+        rga = 0.5 - 0.5 * cos(6.283185307 * rka / rla);
+        rgb = 0.5 - 0.5 * cos(6.283185307 * rkb / rlb);
+        rgs = max(rga + rgb, 0.25);   // = 1 while the window length is steady
+        rvl = (peek(rmem, rra, 0) * rga + peek(rmem, rrb, 0) * rgb) / rgs;
+        rvr = (peek(rmem, rra, 1) * rga + peek(rmem, rrb, 1) * rgb) / rgs;
+    }
+    if (g_w > 0.000001) {
+        rka = rka + 1;               // readers advance only while recording (frozen during HOLD)
+        if (rka >= rla) {
+            rka = 0;
+            rla = rv_len;
+        }
+        rkb = rkb + 1;
+        if (rkb >= rlb) {
+            rkb = 0;
+            rlb = rv_len;
+        }
+        rw = rw + 1;
+        if (rw >= 131072) {
+            rw = rw - 131072;
+        }
     }
     g_w = g_w + clamp(w_tgt - g_w, -0.00390625, 0.00390625);
     relk = relk + 1;
@@ -912,6 +1031,8 @@ while (tt < 1 && nt < 8) {
     if (gnt_w < 1) {
         wl = wl * gnt_w;
         wr = wr * gnt_w;
+        rvl = rvl * gnt_w;
+        rvr = rvr * gnt_w;
     }
     if (s_hm > 0.000001) {
         hr = hbase - 64512 + hpos;
@@ -931,9 +1052,13 @@ while (tt < 1 && nt < 8) {
         }
         wl = wl + (hv_l - wl) * hm_w;
         wr = wr + (hv_r - wr) * hm_w;
+        rvl = rvl + (hv_l - rvl) * hm_w;   // HOLD plays forwards in every REVERSE mode
+        rvr = rvr + (hv_r - rvr) * hm_w;
     }
     dac_l = wl;
     dac_r = wr;
+    dacr_l = rvl;
+    dacr_r = rvr;
     w = w + 1;
     if (w >= 65536) {
         w = w - 65536;
@@ -948,6 +1073,8 @@ while (tt < 1 && nt < 8) {
 }
 acc_l = acc_l + dac_l * (1 - tl);
 acc_r = acc_r + dac_r * (1 - tl);
+accr_l = accr_l + dacr_l * (1 - tl);
+accr_r = accr_r + dacr_r * (1 - tl);
 hra = 0;
 if (hst > 1.5) {
     hra = hbase - 64512 + hpos - w;   // how far the HOLD reader is ahead of the writer
@@ -1015,7 +1142,6 @@ v_tmp = (lo_l - hcs_l) * g_hc;               // HIGH cut: first-order (-6 dB/oct
 hl_l = v_tmp + hcs_l;
 hcs_l = fixdenorm(hl_l + v_tmp);
 wet_l = lo_l + (hl_l - lo_l) * s_hca;
-fbn_l = wet_l * s_fb * s_fbs * s_fbi + ret_l * s_ret * cal_live;   // regeneration: internal + EXT return
 
 
 u3_r = acc_r - ib2_r;                       // reconstruction LPF (2-pole Butterworth)
@@ -1053,13 +1179,105 @@ v_tmp = (lo_r - hcs_r) * g_hc;               // HIGH cut: first-order (-6 dB/oct
 hl_r = v_tmp + hcs_r;
 hcs_r = fixdenorm(hl_r + v_tmp);
 wet_r = lo_r + (hl_r - lo_r) * s_hca;
-fbn_r = wet_r * s_fb * s_fbs * s_fbi + ret_r * s_ret * cal_live;   // regeneration: internal + EXT return
 
+ib1r_l = h_ib1r_l; ib2r_l = h_ib2r_l; st_der_l = h_st_der_l; eqz1r_l = h_eqz1r_l; eqz2r_l = h_eqz2r_l; lc0r_l = h_lc0r_l; lc1r_l = h_lc1r_l; lc2r_l = h_lc2r_l; lc6r_l = h_lc6r_l; hcsr_l = h_hcsr_l;
+ib1r_r = h_ib1r_r; ib2r_r = h_ib2r_r; st_der_r = h_st_der_r; eqz1r_r = h_eqz1r_r; eqz2r_r = h_eqz2r_r; lc0r_r = h_lc0r_r; lc1r_r = h_lc1r_r; lc2r_r = h_lc2r_r; lc6r_r = h_lc6r_r; hcsr_r = h_hcsr_r;
+// ----- REVERSE tap: own D/A chain, computed only while a REVERSE mode is (fading) on
+dlr_l = 0; dlr_r = 0; eqyr_l = 0; eqyr_r = 0; hlr_l = 0; hlr_r = 0; lor_l = 0; lor_r = 0; lp0r_l = 0; lp0r_r = 0; lp1r_l = 0; lp1r_r = 0; lp2r_l = 0; lp2r_r = 0; lp6r_l = 0; lp6r_r = 0; u1r_l = 0; u1r_r = 0; u2r_l = 0; u2r_r = 0; u3r_l = 0; u3r_r = 0; uqr_l = 0; uqr_r = 0; wetr_l = 0; wetr_r = 0; yr_l = 0; yr_r = 0; z0r_l = 0; z0r_r = 0; z1r_l = 0; z1r_r = 0; z2r_l = 0; z2r_r = 0; z6r_l = 0; z6r_r = 0; zlr_l = 0; zlr_r = 0;
+if (rv_on > 0.5) {
+
+    u3r_l = accr_l - ib2r_l;                       // reconstruction LPF (2-pole Butterworth)
+    u1r_l = k_aa1 * ib1r_l + k_aa2 * u3r_l;
+    u2r_l = ib2r_l + k_aa2 * ib1r_l + k_aa3 * u3r_l;
+    ib1r_l = fixdenorm(2 * u1r_l - ib1r_l);
+    ib2r_l = fixdenorm(2 * u2r_l - ib2r_l);
+    eqyr_l = eq_b0 * u2r_l + eqz1r_l;                // droop compensation (TDF-II biquad)
+    eqz1r_l = fixdenorm(eq_b1 * u2r_l - eq_a1 * eqyr_l + eqz2r_l);
+    eqz2r_l = fixdenorm(eq_b2 * u2r_l - eq_a2 * eqyr_l);
+    uqr_l = u2r_l + (eqyr_l - u2r_l) * p_hf_comp;
+    v_tmp = (uqr_l - st_der_l) * g_de;             // de-emphasis
+    dlr_l = v_tmp + st_der_l;
+    st_der_l = fixdenorm(dlr_l + v_tmp);
+    yr_l = (dlr_l + 0.3 * (uqr_l - dlr_l)) * 0.199526231;   // back to analog nominal
+    v_tmp = (yr_l - lc0r_l) * g_lc0;               // LOW cut: half-order (-3 dB/oct)
+    lp0r_l = v_tmp + lc0r_l;
+    lc0r_l = fixdenorm(lp0r_l + v_tmp);
+    z0r_l = (yr_l - lp0r_l) + 0.5 * lp0r_l;
+    v_tmp = (z0r_l - lc1r_l) * g_lc1;
+    lp1r_l = v_tmp + lc1r_l;
+    lc1r_l = fixdenorm(lp1r_l + v_tmp);
+    z1r_l = (z0r_l - lp1r_l) + 0.5 * lp1r_l;
+    v_tmp = (z1r_l - lc2r_l) * g_lc2;
+    lp2r_l = v_tmp + lc2r_l;
+    lc2r_l = fixdenorm(lp2r_l + v_tmp);
+    z2r_l = (z1r_l - lp2r_l) + 0.5 * lp2r_l;
+    v_tmp = (yr_l - lc6r_l) * g_lc6;               // LOW cut: alternative first-order (-6 dB/oct)
+    lp6r_l = v_tmp + lc6r_l;
+    lc6r_l = fixdenorm(lp6r_l + v_tmp);
+    z6r_l = yr_l - lp6r_l;
+    zlr_l = z2r_l + (z6r_l - z2r_l) * s_lcs;
+    lor_l = yr_l + (zlr_l - yr_l) * s_lca;
+    v_tmp = (lor_l - hcsr_l) * g_hc;               // HIGH cut: first-order (-6 dB/oct)
+    hlr_l = v_tmp + hcsr_l;
+    hcsr_l = fixdenorm(hlr_l + v_tmp);
+    wetr_l = lor_l + (hlr_l - lor_l) * s_hca;
+
+
+    u3r_r = accr_r - ib2r_r;                       // reconstruction LPF (2-pole Butterworth)
+    u1r_r = k_aa1 * ib1r_r + k_aa2 * u3r_r;
+    u2r_r = ib2r_r + k_aa2 * ib1r_r + k_aa3 * u3r_r;
+    ib1r_r = fixdenorm(2 * u1r_r - ib1r_r);
+    ib2r_r = fixdenorm(2 * u2r_r - ib2r_r);
+    eqyr_r = eq_b0 * u2r_r + eqz1r_r;                // droop compensation (TDF-II biquad)
+    eqz1r_r = fixdenorm(eq_b1 * u2r_r - eq_a1 * eqyr_r + eqz2r_r);
+    eqz2r_r = fixdenorm(eq_b2 * u2r_r - eq_a2 * eqyr_r);
+    uqr_r = u2r_r + (eqyr_r - u2r_r) * p_hf_comp;
+    v_tmp = (uqr_r - st_der_r) * g_de;             // de-emphasis
+    dlr_r = v_tmp + st_der_r;
+    st_der_r = fixdenorm(dlr_r + v_tmp);
+    yr_r = (dlr_r + 0.3 * (uqr_r - dlr_r)) * 0.199526231;   // back to analog nominal
+    v_tmp = (yr_r - lc0r_r) * g_lc0;               // LOW cut: half-order (-3 dB/oct)
+    lp0r_r = v_tmp + lc0r_r;
+    lc0r_r = fixdenorm(lp0r_r + v_tmp);
+    z0r_r = (yr_r - lp0r_r) + 0.5 * lp0r_r;
+    v_tmp = (z0r_r - lc1r_r) * g_lc1;
+    lp1r_r = v_tmp + lc1r_r;
+    lc1r_r = fixdenorm(lp1r_r + v_tmp);
+    z1r_r = (z0r_r - lp1r_r) + 0.5 * lp1r_r;
+    v_tmp = (z1r_r - lc2r_r) * g_lc2;
+    lp2r_r = v_tmp + lc2r_r;
+    lc2r_r = fixdenorm(lp2r_r + v_tmp);
+    z2r_r = (z1r_r - lp2r_r) + 0.5 * lp2r_r;
+    v_tmp = (yr_r - lc6r_r) * g_lc6;               // LOW cut: alternative first-order (-6 dB/oct)
+    lp6r_r = v_tmp + lc6r_r;
+    lc6r_r = fixdenorm(lp6r_r + v_tmp);
+    z6r_r = yr_r - lp6r_r;
+    zlr_r = z2r_r + (z6r_r - z2r_r) * s_lcs;
+    lor_r = yr_r + (zlr_r - yr_r) * s_lca;
+    v_tmp = (lor_r - hcsr_r) * g_hc;               // HIGH cut: first-order (-6 dB/oct)
+    hlr_r = v_tmp + hcsr_r;
+    hcsr_r = fixdenorm(hlr_r + v_tmp);
+    wetr_r = lor_r + (hlr_r - lor_r) * s_hca;
+}
+else {
+    ib1r_l = 0; ib2r_l = 0; st_der_l = 0; eqz1r_l = 0; eqz2r_l = 0; lc0r_l = 0; lc1r_l = 0; lc2r_l = 0; lc6r_l = 0; hcsr_l = 0;
+    ib1r_r = 0; ib2r_r = 0; st_der_r = 0; eqz1r_r = 0; eqz2r_r = 0; lc0r_r = 0; lc1r_r = 0; lc2r_r = 0; lc6r_r = 0; hcsr_r = 0;
+}
+wo_l = wet_l; wo_r = wet_r;     // output path
+wf_l = wet_l; wf_r = wet_r;     // regeneration path (and the EXT send)
+if (rv_on > 0.5) {
+    wo_l = wet_l + (wetr_l - wet_l) * g_rvo;
+    wo_r = wet_r + (wetr_r - wet_r) * g_rvo;
+    wf_l = wet_l + (wetr_l - wet_l) * g_rvf;
+    wf_r = wet_r + (wetr_r - wet_r) * g_rvf;
+}
+fbn_l = wf_l * s_fb * s_fbs * s_fbi + ret_l * s_ret * cal_live;   // regeneration: internal + EXT return
+fbn_r = wf_r * s_fb * s_fbs * s_fbi + ret_r * s_ret * cal_live;   // regeneration: internal + EXT return
 
 // ============================================================ OUTPUT
-mx_l = a_l * s_bal_d + s_so * wet_l * s_bal_w;    // VARIABLE / +MIX
-mn_l = a_l * s_bal_d - wet_l * s_bal_w;           // -MIX (always difference)
-mx_r = a_r * s_bal_d + s_so * wet_r * s_bal_w;
+mx_l = a_l * s_bal_d + s_so * wo_l * s_bal_w;     // VARIABLE / +MIX
+mn_l = a_l * s_bal_d - wo_l * s_bal_w;            // -MIX (always difference)
+mx_r = a_r * s_bal_d + s_so * wo_r * s_bal_w;
 dr_l = a_l * s_dir;                               // DIRECT
 o_l = mx_l * s_m0 + dr_l * s_m1 + mx_l * s_m2 + mx_l * s_m3;
 o_r = mx_l * s_m0 + mx_l * s_m1 + mn_l * s_m2 + mx_r * s_m3;
@@ -1079,8 +1297,8 @@ out3 = fixnan(20 * log10(max(mtr, 0.00001)) + 3);   // HEADROOM meter, dB
 out4 = fixnan(m_s);                                  // LFO / ENV LED
 out5 = fixnan(ms_disp);                              // delay time for the display (TIME, before LOOP COMP)
 // v1.0.2-rc4: EXT loop send (device outputs 3/4): the regeneration tap after LOW/HIGH, unity gain
-out6 = fixnan(wet_l / pow(1 + pow(abs(wet_l) * 0.25, 8), 0.125) * cal_live + cal_click);
-out7 = fixnan(wet_r / pow(1 + pow(abs(wet_r) * 0.25, 8), 0.125) * cal_live + cal_click);
+out6 = fixnan(wf_l / pow(1 + pow(abs(wf_l) * 0.25, 8), 0.125) * cal_live + cal_click);
+out7 = fixnan(wf_r / pow(1 + pow(abs(wf_r) * 0.25, 8), 0.125) * cal_live + cal_click);
 out8 = cal_out;                                      // rc5: CAL result for the patcher
 
 // ============================================================= STORE
@@ -1196,6 +1414,35 @@ h_cal_env = fixnan(cal_env);
 h_cal_res = fixnan(cal_res);
 h_cal_hold = fixnan(cal_hold);
 h_cal_prev = fixnan(cal_prev);
+h_s_rvo = fixnan(s_rvo);
+h_s_rvf = fixnan(s_rvf);
+h_rw = fixnan(rw);
+h_rka = fixnan(rka);
+h_rkb = fixnan(rkb);
+h_rla = fixnan(rla);
+h_rlb = fixnan(rlb);
+h_dacr_l = fixnan(dacr_l);
+h_dacr_r = fixnan(dacr_r);
+h_ib1r_l = fixnan(ib1r_l);
+h_ib1r_r = fixnan(ib1r_r);
+h_ib2r_l = fixnan(ib2r_l);
+h_ib2r_r = fixnan(ib2r_r);
+h_st_der_l = fixnan(st_der_l);
+h_st_der_r = fixnan(st_der_r);
+h_eqz1r_l = fixnan(eqz1r_l);
+h_eqz1r_r = fixnan(eqz1r_r);
+h_eqz2r_l = fixnan(eqz2r_l);
+h_eqz2r_r = fixnan(eqz2r_r);
+h_lc0r_l = fixnan(lc0r_l);
+h_lc0r_r = fixnan(lc0r_r);
+h_lc1r_l = fixnan(lc1r_l);
+h_lc1r_r = fixnan(lc1r_r);
+h_lc2r_l = fixnan(lc2r_l);
+h_lc2r_r = fixnan(lc2r_r);
+h_lc6r_l = fixnan(lc6r_l);
+h_lc6r_r = fixnan(lc6r_r);
+h_hcsr_l = fixnan(hcsr_l);
+h_hcsr_r = fixnan(hcsr_r);
 h_lc_done = s_lclg;
 h_init = 1;
 h_hc_done = s_hclg;
