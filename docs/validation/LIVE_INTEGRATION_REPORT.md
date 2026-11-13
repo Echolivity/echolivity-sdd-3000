@@ -1,4 +1,6 @@
-# Ableton Live 12 integration test report — v1.0.2-rc5
+# Ableton Live 12 integration test report — v1.0.2-rc6
+
+**rc6 update (2026-11-13):** the owner tested the new SEND / RTN routing menus in Ableton Live 12.4.6 (bundled Max 9): **7/7 PASS**. Full record: `RC6_SEND_RTN_LIVE_TEST.md`. No other checklist item was run in that session, so the table below (rc3/rc4) is otherwise unchanged. rc6 test 1 reported a clean Max for Live console on load; the formal UI-2 console check (device open in Max) is still to be recorded.
 
 **Status: tested by the owner in Ableton Live 12 Suite (Windows), 2026-11-12, on rc3, the UI test build and rc4.** Results are as reported by the owner; items not listed are not yet run. rc5's new parts (UI-2 fix, triplets, LOOP COMP / CAL) haven't been tested in Live yet.
 
@@ -16,6 +18,7 @@
 | L-7a D-1 `.adv` hot-load | | **not run** |
 | L-3, L-4, L-5, L-6, L-7b, L-8, L-10, L-11, L-12, L-14 | | **not run** |
 | rc5: L-5d CAL / LOOP COMP, L-6b triplets, UI-2 console | rc5 | **not run** |
+| rc6: SEND / RTN routing menus (7 checks) | rc6 (`c03aabb`), Live 12.4.6 | **PASS 7/7** (`RC6_SEND_RTN_LIVE_TEST.md`) |
 
 Earlier status of this report (static only):
 

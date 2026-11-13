@@ -8,9 +8,9 @@
 
 <p align="center"><em>Hardware-inspired concept render. ECHOLIVITY is software only; this is not a product photo or an image of the device's interface.</em></p>
 
-> **v1.0.2-rc5 · CONDITIONAL PASS**
+> **v1.0.2-rc6 · CONDITIONAL PASS**
 >
-> This is a release candidate, **not a production-ready release**. Automated DSP and static checks pass (one known minor limitation), and selected workflows have been tested by the owner in Live 12 on Windows. Full Live validation is still outstanding, including the controls new in rc5. Read the [release decision](docs/validation/RELEASE_DECISION.md) before relying on this build in a critical session.
+> This is a release candidate, **not a production-ready release**. Automated DSP and static checks pass (one known minor limitation). The owner has tested selected workflows in Live 12 Suite on Windows (rc3/rc4), and the new rc6 SEND / RTN routing menus passed all seven native checks in Live 12.4.6 / Max 9. That routing result says nothing about sound quality: the DSP findings, including the HW-1 alias images, are still open, as are the remaining Live checklist items and the rc5 controls. Read the [release decision](docs/validation/RELEASE_DECISION.md) before relying on this build in a critical session.
 
 ## The instrument
 
@@ -84,7 +84,12 @@ This is an independent homage, **not** a component-level replica or an official 
 2. Drag it onto an audio track or return track in Ableton Live 12.
 3. Follow the [installation guide](docs/INSTALL.md) and [user manual](docs/MANUAL.md).
 
-## Current release: rc5
+## Current release: rc6
+
+- **SEND / RTN routing menus** (Live 12.2+): choose the external-loop send and return tracks from the panel. **Passed 7/7 native checks** by the owner in Live 12.4.6 / Max 9 ([test record](docs/validation/RC6_SEND_RTN_LIVE_TEST.md)). rc6 changes routing only; DSP, parameters and factory programs are unchanged from rc5.
+- **Not changed by rc6:** HW-1 (alias images) is not fixed in this build, and the other release blockers listed in the [release decision](docs/validation/RELEASE_DECISION.md) remain open.
+
+### Previous release: rc5
 
 - **External loop calibration:** LOOP COMP and CAL help align external regeneration returns to the device delay time.
 - **Expanded sync divisions:** 1/16T and 1/32T added without changing existing division indices.
@@ -128,9 +133,9 @@ These renders are demonstrations, not a substitute for testing the device in you
 |---|---|
 | Engine tests (C build of the exact gen~ code; not Live) | 50 PASS · 1 known-limitation FAIL (D-3) · 51 total |
 | Static device checks | 20/20 PASS (static inspection) |
-| Reproducibility | 8/8 PASS |
+| Reproducibility | 6/7 PASS: rebuild, determinism, tests and renders reproduce; 1 FAIL for a stray experiment file in the tree (`docs/REPRODUCIBILITY.json`) |
 | Hardware-reference suite (against the 1982 Korg documentation, not an original unit) | 28 consistent · 5 inconsistent · 9 without a documented reference — see [hardware reference](docs/validation/HARDWARE_REFERENCE.md) |
-| Ableton Live / Max runtime | Selected owner checks PASS; remaining items outstanding |
+| Ableton Live / Max runtime | Selected owner checks PASS (rc3/rc4, Windows); rc6 SEND / RTN routing 7/7 PASS (Live 12.4.6); remaining items outstanding |
 | Release decision | **Conditional pass — not production-ready** |
 
 The test report distinguishes automated evidence from host-runtime checks. CPU figures from the C test build are not measurements of Live or Max performance. See [TEST_REPORT.md](docs/TEST_REPORT.md) for detail.

@@ -1,6 +1,6 @@
-# Ableton Live 12 validation checklist — OUTSTANDING (v1.0.2-rc5)
+# Ableton Live 12 validation checklist — OUTSTANDING (v1.0.2-rc6)
 
-None of these checks has been performed; they are required before 1.0.2 final (see `docs/OUTSTANDING_ISSUES.md`, OI-1 to OI-3). Record the result, Live/Max version, OS and audio buffer size for each item.
+Some of these checks have since been run by the owner: see `docs/validation/LIVE_INTEGRATION_REPORT.md` for results (rc3/rc4 on Windows) and `docs/validation/RC6_SEND_RTN_LIVE_TEST.md` for the rc6 SEND / RTN routing checks (7/7 PASS, Live 12.4.6). The Result column below is left blank; the reports are the record. The remaining checks are required before 1.0.2 final (see `docs/OUTSTANDING_ISSUES.md`, OI-1 to OI-3). Record the result, Live/Max version, OS and audio buffer size for each item.
 
 **Setup:** Live 12 (note the bundled Max version), audio buffer 256 samples. Test files: `audio_examples/00_dry_source.wav` and `audio_examples/regression/*.wav`.
 

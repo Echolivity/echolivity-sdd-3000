@@ -1,15 +1,41 @@
-# Release decision — ECHOLIVITY SDD-3000 v1.0.2-rc5
+# Release decision — ECHOLIVITY SDD-3000 v1.0.2-rc6
 
 ## Decision: CONDITIONAL PASS — **not ready for v1.0.2 production release**
 
-No critical defect has been **reproduced**. However, every mandatory Ableton Live validation item is **BLOCKED**: no Live/Max environment was available, and the requester's computer was not linked. One **likely high-severity** defect (D-1, `.adv` hot-load) is predicted from the shipped wiring and Cycling '74's documentation and must be confirmed or refuted in Live.
+No critical defect has been **reproduced**. Ableton Live validation is **partial**:
+- The owner ran selected checklist items in Live 12 Suite on Windows on rc3/rc4 (see "Owner's Live 12 results" below).
+- The rc6 SEND / RTN routing menus passed all **7** native checks in Live 12.4.6 / Max 9 (`RC6_SEND_RTN_LIVE_TEST.md`).
+- Every other checklist item is still **not run**.
+
+One **likely high-severity** defect (D-1, `.adv` hot-load) is predicted from the shipped wiring and Cycling '74's documentation and must be confirmed or refuted in Live.
+
+The rc6 result covers **routing only**. It is not evidence about sound quality. The DSP is byte-identical to rc5, so HW-1 (alias images) and HW-2/HW-3 are exactly as open as before.
+
+*Earlier status (before the owner's rc3 testing, kept for the record):* every mandatory Live item was BLOCKED because no Live/Max environment was available and the requester's computer was not linked. This no longer describes the current state.
 
 **Production release requires all of:**
 1. `docs/LIVE_VALIDATION_CHECKLIST.md` executed in Live 12 (L-1 … L-15) with results recorded in `LIVE_INTEGRATION_REPORT.md`.
 2. **L-7a (D-1)** passes: the fix is applied in rc3, so the hot-loaded `.adv` must restore TIME 500 / FEEDBACK 6. If it still shows 380 / 3, the decision becomes **FAIL** for preset functionality.
-3. **L-5d (CAL / LOOP COMP)**, **L-6b (triplets)** and the UI-2 console check pass in rc5. (L-5b and L-5c passed in rc4.)
+3. **L-5d (CAL / LOOP COMP)**, **L-6b (triplets)** and the UI-2 console check pass in rc5 or later. (L-5b and L-5c passed in rc4.)
 4. **L-7b (D-2)** run and dispositioned the same way.
 5. Decide on D-3: defer to v1.0.3 (recommended) or fix now (changes start-up output only).
+6. A recorded decision on **HW-1** (see "Hardware-reference validation" below), backed by a listening review.
+
+## Release-blocker status (rc6)
+
+| Item | Status | Evidence that closes it |
+|---|---|---|
+| rc6 SEND / RTN routing menus | **PASS** (7/7, Live 12.4.6 / Max 9, device at `c03aabb`) | Closed: `RC6_SEND_RTN_LIVE_TEST.md` |
+| L-1 load, L-2, L-7, L-9, L-15, L-5b, L-5c, L-13 (no dropouts) | **PASS** on rc4 (owner, Windows) | Closed for rc4. rc6 changed the panel (new menus), so L-15 is worth a re-look on rc6 |
+| UI-2 console flood (fixed in rc5) | **Not formally confirmed.** rc6 test 1 reported a clean Max for Live console on load | Run the L-1 console check on rc6 with the device open in Max, and record it |
+| L-7a (D-1 `.adv` hot-load) | **Open, not run** | L-7a result in `LIVE_INTEGRATION_REPORT.md` |
+| L-7b (D-2 program re-select) | **Open, not run** | L-7b result and disposition |
+| D-3 (first 25 ms after creation) | **Open, decision pending** | Owner decision: defer to v1.0.3 or fix |
+| L-5d CAL / LOOP COMP, L-6b triplets | **Open, not run in Live** (simulation only) | L-5d and L-6b results |
+| L-3, L-4, L-5, L-6, L-8, L-10, L-11, L-12, L-14; L-13 CPU % | **Open, not run** | Checklist results. rc6 test 5 covered routing persistence only, not the full L-8 Set reopen |
+| HW-1 alias images | **Open, not fixed in rc6** | A fix merged after its own audit, native test and listening review; or a recorded decision to ship with it documented |
+| HW-2, HW-3 | **Open, minor** | Disposition (fix or document) |
+| Reproducibility | **6/7**: one FAIL for a stray file (`experiments/hw1/bench_hw1.c`) in the release tree | Remove or relocate the file and re-run `tools/verify_release.py` |
 
 ## What was verified (executed)
 
@@ -21,10 +47,11 @@ No critical defect has been **reproduced**. However, every mandatory Ableton Liv
 | Static device checks | 20/20 (rc3: +LFO Mod mapping, +D-1 wiring and order; rc4: +UI-1, 4-channel I/O) |
 | EXT regeneration loop (C build, simulated routing) | INT bit-identical to rc3; EXT −3.01 dB/pass at RETURN 5 (= FEEDBACK 5); bounded; NaN-safe; click-free switching |
 | **Live 12 Suite, Windows (owner)** | device loads, Max Console clean; UI-1 (blank panel) found and fixed, panel now displays |
+| **Live 12.4.6 / Max 9 (owner), rc6** | SEND / RTN routing menus 7/7 PASS (`RC6_SEND_RTN_LIVE_TEST.md`) |
 | Parameter / preset compatibility vs v1.0.1 (static) | 158/158 definitions identical; factory programs unchanged since v1.0 |
 | CPU (C build) | flat across block sizes, automation and HOLD + FB 10; same as v1.0.1 |
 | Latency | PDC 0 declared; direct path 0 samples (C build) |
-| Reproducibility | see `docs/TEST_REPORT.md` section 7 |
+| Reproducibility | 6/7 in the current `docs/REPRODUCIBILITY.json` (1 FAIL: stray `experiments/hw1/bench_hw1.c`). `docs/TEST_REPORT.md` section 7 still shows an earlier 8/8 run |
 
 ## Hardware-reference validation (added after rc5; device unchanged)
 
@@ -34,13 +61,24 @@ Against the 1982 Korg documentation, not an original unit (`HARDWARE_REFERENCE.m
   - Not a functional defect, and the existing engine and static results don't change.
   - It is the largest measured deviation from the documented hardware, and it could colour bright material.
   - **Recommendation:** listen for it (cymbals and hats through long feedback) and decide on a resampler investigation before a production release.
+  - **Status at rc6:** not fixed. Remediation candidates exist on separate branches and are not merged; rc6 does not contain them. The rc6 routing validation does not bear on HW-1.
 - **HW-2 and HW-3 (minor):** the HIGH cut's top-octave slope, and 17 kHz response marginally beyond −3 dB at 48 / 96 kHz.
 
 Every feature remains **HARDWARE UNVERIFIED**: no original unit was available. The decision stays **CONDITIONAL PASS**.
 
+## Owner's Live 12.4.6 results (rc6)
+
+SEND / RTN menus: load with a clean console, destination and source lists, full EXT loop from the menus, following routing changes made in Live, routing persistence across save / reopen, track rename / add / delete, and unchanged INT mode and factory programs: **7/7 PASS** (`RC6_SEND_RTN_LIVE_TEST.md`). No other checklist item was run in this session.
+
 ## Owner's Live 12 results (rc3/rc4)
 
 Load, panel, sound without clicks, HOLD, program memory, LFO Mod mapping, external loop routing and 8 instances without dropouts: **PASS** (`LIVE_INTEGRATION_REPORT.md`). Found and fixed: UI-1 (blank panel, rc4), UI-2 (console flood, rc5). Still open: D-1 `.adv` hot-load (L-7a), automation, Set reopen, sample-rate change, and the new rc5 items.
+
+## What changed in rc6
+
+- **Feature (owner request):** SEND / RTN menus on the panel select the external-loop send and return tracks through the Live Object Model (`v8.codebox`, Live 12.2+ / Max 9). Live saves the routing with the Set.
+- **Unchanged:** gen~ DSP byte-identical to rc5; 162/162 parameters, Push banks and factory programs identical. Engine tests 50/51 (known D-3), static checks 20/20, mock routing test 10/10.
+- **Interface:** the WRITE help text moved to the manual to make room for the menus.
 
 ## What changed in rc5
 
