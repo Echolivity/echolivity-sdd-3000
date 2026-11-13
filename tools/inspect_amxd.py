@@ -74,7 +74,8 @@ def main():
     names = [v["parameter_longname"] for v in vo.values()]
     stored = [oid for oid, v in vo.items() if v.get("parameter_invisible") == 1]
     visible = [oid for oid in vo if oid not in stored]
-    check("parameter count", len(vo) == 162 and len(visible) == 42 and len(stored) == 120,
+    # REVERSE adds one automatable parameter (163 / 43); the 120 program slots are unchanged
+    check("parameter count", len(vo) == 163 and len(visible) == 43 and len(stored) == 120,
           f"{len(vo)} parameters: {len(visible)} automatable + {len(stored)} stored-only (program memory)")
     check("parameter names unique", len(set(names)) == len(names), f"{len(set(names))} unique long names")
     pdict = {k: v for k, v in p["parameters"].items() if k.startswith("obj-")}
@@ -122,7 +123,7 @@ def main():
         elif abs(lo - glo) > 1e-9 or abs(hi - ghi) > 1e-9:
             problems.append(f"{v['parameter_longname']} range {lo}..{hi} != gen {glo}..{ghi}")
         rows.append(gp)
-    check("controls -> gen~ Params (name, connection, range)", not problems and len(rows) == 36,
+    check("controls -> gen~ Params (name, connection, range)", not problems and len(rows) == 37,   # + REVERSE
           f"{len(rows)} controls verified" + ("; " + "; ".join(problems) if problems else ""))
     unfed = sorted(set(params_gen) - reached)
     check("gen~ Params without a panel control", unfed == ["p_cal", "p_hf_comp", "p_tempo"],

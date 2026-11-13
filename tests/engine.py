@@ -16,6 +16,9 @@ REF3_SO = os.path.join(BUILD_DIR, "engine_v1.0.2-rc3.so")
 # v1.0.2-rc5: reference build of the rc4 DSP for the LOOP COMP / CAL / triplet A/B test
 REF4_GEN = os.path.join(ROOT, "tests", "reference", "echolivity_core_v1.0.2-rc4.genexpr")
 REF4_SO = os.path.join(BUILD_DIR, "engine_v1.0.2-rc4.so")
+# REVERSE: reference build of the rc6 DSP (= rc5) for the REVERSE OFF bit-identity test
+REF6_GEN = os.path.join(ROOT, "tests", "reference", "echolivity_core_v1.0.2-rc6.genexpr")
+REF6_SO = os.path.join(BUILD_DIR, "engine_v1.0.2-rc6.so")
 
 
 def build():
@@ -39,6 +42,10 @@ def build():
         ref_c = os.path.join(BUILD_DIR, "engine_v1.0.2-rc4.c")
         subprocess.check_call([py, os.path.join(ROOT, "tools", "gen2c.py"), REF4_GEN, ref_c])
         subprocess.check_call([cc, "-O2", "-shared", "-fPIC", "-o", REF4_SO, ref_c, "-lm"])
+    if os.path.exists(REF6_GEN):
+        ref_c = os.path.join(BUILD_DIR, "engine_v1.0.2-rc6.c")
+        subprocess.check_call([py, os.path.join(ROOT, "tools", "gen2c.py"), REF6_GEN, ref_c])
+        subprocess.check_call([cc, "-O2", "-shared", "-fPIC", "-o", REF6_SO, ref_c, "-lm"])
 
 
 class Engine:

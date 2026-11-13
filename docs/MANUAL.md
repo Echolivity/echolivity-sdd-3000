@@ -76,6 +76,7 @@ The original sweeps the **memory clock**, so the whole delay line changes speed.
 | 3dB / 6dB *(EXT)* | LOW cut slope. Use 6 dB if you prefer a conventional slope. |
 | FB ROUTE *(EXT, rc4)* | **INT**: normal internal loop. **EXT**: the loop runs through another Live track (see below) and the internal loop is off. **BOTH**: internal loop plus the external one. |
 | RETURN *(EXT, rc4)* | 0–10. Level of the external loop coming back, same law as FEEDBACK (each pass × RETURN/7). Default 5. Ignored in INT. Accepts Live's LFO in Mod mode. |
+| REVERSE *(EXT, feature branch)* | **OFF**: normal. **REV**: every repeat plays backwards. **ALT**: first echo forwards, then backwards, forwards… on each pass. **ALT R**: first echo backwards, then alternating. The sound is cut into slices one delay time long and each slice is played backwards, so a reversed echo arrives between half and one and a half delay times after the note, loudest when it lands exactly on TIME. Long TIME settings (300 ms and up) give the classic swelling reverse sound; very short ones turn into a grainy texture. HOLD always plays forwards. Works with FB ROUTE EXT/BOTH (the send carries the regeneration path, so ALT keeps alternating through the other track). Not stored in programs. |
 
 ### External regeneration loop (v1.0.2-rc4)
 
