@@ -16,6 +16,17 @@ ROOT = os.path.abspath(os.path.join(HERE, ".."))
 GEN = os.path.join(ROOT, "src", "gen", "echolivity_core.genexpr")
 PRESETS = os.path.join(ROOT, "presets", "factory_programs.json")
 OUT_AMXD = os.path.join(ROOT, "dist", "ECHOLIVITY SDD-3000.amxd")
+# LFO pointer overlay geometry (device px), measured from the owner's Live 12.4.6 screenshot (2026-11-14):
+# live.dial (name + number shown) draws a fixed-size knob, ring radius ~12.1 px, centred horizontally,
+# centre 28.0 px below the top for 50-52 px tall dials and 29.2 px for 56-66 px; needle sweep 300 deg
+# starting at 7 o'clock. The Max dial (Needle mode) draws its needle out to ~0.75 of its half-size and
+# sweeps symmetrically about 12 o'clock, so degrees = 300 lines the two needles up.
+PTR_DEG = 300
+PTR_HALF = 15.5      # half-size of the overlay box -> blue needle ends just inside the ring
+
+
+def ptr_centre_dy(h):
+    return 28.0 if h <= 52 else 29.2
 OUT_PAT = os.path.join(ROOT, "src", "max", "ECHOLIVITY_SDD-3000.maxpat")
 
 DEVICE_H = 169
@@ -34,6 +45,7 @@ C_KNOB = [0.24, 0.24, 0.25, 1.0]
 C_ARC = [0.80, 0.79, 0.74, 1.0]
 C_ARC_M = [0.45, 0.66, 0.86, 1.0]
 C_NEEDLE = [0.97, 0.96, 0.92, 1.0]
+C_PTR = [0.40, 0.85, 1.00, 1.0]          # LFO pointer (Live's modulation blue)
 C_LED_ON = [1.0, 0.13, 0.08, 1.0]
 C_LED_OFF = [0.20, 0.035, 0.03, 1.0]
 C_GRN_ON = [0.25, 0.95, 0.30, 1.0]
@@ -440,6 +452,30 @@ def build():
         pp = P.obj(f"prepend {c['gp']}", 2, 1)
         P.link(src, 0, pp, 0)
         P.link(pp, 0, gen, 0)
+
+    # ------------------------------------- LFO pointers (modulation display)
+    # Live draws Additive (Mod-mode) modulation as a ring only: the live.dial keeps the user's base
+    # setting. Each dial's outlet carries the modulated value (it is what drives gen~), so a
+    # click-through Max dial in Needle mode is laid over every knob and follows that value. With no
+    # modulation it sits on the knob's own needle.
+    for key, (oid, c) in list(ctrl_ids.items()):
+        if c["kind"] != "dial":
+            continue
+        x, y, w, h = c["rect"]
+        r = PTR_HALF
+        cx, cy = x + w / 2, y + ptr_centre_dy(h)
+        ptr = P.add({"maxclass": "dial", "numinlets": 1, "numoutlets": 1, "outlettype": ["int"],
+                     "presentation": 1, "presentation_rect": [round(cx - r, 1), round(cy - r, 1),
+                                                              round(2 * r, 1), round(2 * r, 1)],
+                     "ignoreclick": 1, "parameter_enable": 0, "mode": 4, "degrees": PTR_DEG,
+                     "size": 1001.0, "bgcolor": [0, 0, 0, 0], "outlinecolor": [0, 0, 0, 0],
+                     "needlecolor": C_PTR, "background": 0, "varname": f"ptr_{key}"})
+        lo, hi, ex = c["lo"], c["hi"], c["exp"]
+        norm = P.obj(f"expr int(pow(min(max(($f1 - ({lo})) / ({hi - lo}), 0), 1), {1.0 / ex:.6f}) * 1000 + 0.5)", 1, 1)
+        st = P.obj("prepend set", 2, 1)
+        P.link(oid, 0, norm, 0)
+        P.link(norm, 0, st, 0)
+        P.link(st, 0, ptr, 0)
 
     # -------------------------------------------------- tempo (host sync)
     td = P.obj("live.thisdevice", 1, 3, ["bang", "int", "int"])

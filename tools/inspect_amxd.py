@@ -239,7 +239,19 @@ def main():
           (f"; wrong: {bad_l[:6]}" if bad_l else "") + " -- confirmed visually in Live 12 by the owner")
 
     # presentation geometry
-    ui = [b for b in boxes.values() if b.get("presentation") and b["maxclass"] not in ("panel", "comment")]
+    # LFO pointers are click-through overlays that must sit inside their own knob; checked separately
+    ptrs = [b for b in boxes.values() if str(b.get("varname", "")).startswith("ptr_")]
+    ui = [b for b in boxes.values() if b.get("presentation") and b["maxclass"] not in ("panel", "comment")
+          and b not in ptrs]
+    byvar = {b.get("varname"): b for b in boxes.values()}
+    bad_p = []
+    for pb in ptrs:
+        kb = byvar.get(pb["varname"][4:])
+        px, py, pw, ph = pb["presentation_rect"]
+        kx, ky, kw, kh = kb["presentation_rect"] if kb else (0, 0, 0, 0)
+        if not (kb and pb.get("ignoreclick") == 1 and kx <= px and ky <= py and px + pw <= kx + kw + 0.01
+                and py + ph <= ky + kh + 0.01):
+            bad_p.append(pb["varname"])
     outside = [text(b) for b in boxes.values() if b.get("presentation") and
                (b["presentation_rect"][1] + b["presentation_rect"][3] > DEVICE_H + 0.01)]
     ov = []
@@ -249,8 +261,10 @@ def main():
             bx, by, bw, bh = b["presentation_rect"]
             if ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah:
                 ov.append(f"{a.get('varname')}/{b.get('varname')}")
-    check("presentation layout", not outside and not ov,
-          f"{len(ui)} controls inside {DEVICE_H} px, no overlapping controls")
+    check("presentation layout", not outside and not ov and not bad_p,
+          f"{len(ui)} controls inside {DEVICE_H} px, no overlapping controls; {len(ptrs)} LFO pointers "
+          f"click-through and inside their own knob" + (f"; bad: {bad_p}" if bad_p else "")
+          + (f"; overlaps: {ov[:4]}" if ov else ""))
 
     # deterministic rebuild from source
     tmp = tempfile.mkdtemp()
