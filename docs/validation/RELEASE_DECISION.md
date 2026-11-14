@@ -5,7 +5,7 @@
 No critical defect has been **reproduced**. Ableton Live validation is **partial**:
 - The owner ran selected checklist items in Live 12 Suite on Windows on rc3/rc4 (see "Owner's Live 12 results" below).
 - The rc6 SEND / RTN routing menus passed all **7** native checks in Live 12.4.6 / Max 9 (`RC6_SEND_RTN_LIVE_TEST.md`).
-- The rc7 REVERSE modes passed 3 of 13 Live checks (REV, ALT, click-free switching; Live 12.4.6, 2026-11-14). The rest are not run.
+- The rc7 REVERSE modes passed 11 of 13 Live checks (Live 12.4.6, 2026-11-14, owner-reported). Checks 1 and 2 are not run.
 - The rc8 LFO pointers passed all 6 Live checks (`LFO_POINTER_LIVE_TEST.md`).
 - Every other checklist item is still **not run**.
 
@@ -29,7 +29,7 @@ The rc6 result covers **routing only**. It is not evidence about sound quality. 
 | Item | Status | Evidence that closes it |
 |---|---|---|
 | rc8 LFO pointers | **PASS** (6/6, Live 12.4.6) | Closed: `LFO_POINTER_LIVE_TEST.md` |
-| rc7 REVERSE (OFF / REV / ALT / ALT R) | **Partial:** checks 3 (REV), 4 (ALT) and 5 (switching) PASS in Live 12.4.6. ALT R direction and checks 1–2, 6–13 not run. Offline: 6 engine tests pass; OFF bit-identical to rc6 | Remaining `REVERSE_LIVE_TEST.md` checks recorded |
+| rc7 REVERSE (OFF / REV / ALT / ALT R) | **Partial:** checks 3–13 PASS in Live 12.4.6 (owner-reported; CPU values not recorded). Not run: 1 (Max Console with the device open in Max), 2 (OFF identical to rc6 by ear). Offline: OFF bit-identical to rc6 | Checks 1 and 2 recorded |
 | rc6 SEND / RTN routing menus | **PASS** (7/7, Live 12.4.6 / Max 9, device at `c03aabb`) | Closed: `RC6_SEND_RTN_LIVE_TEST.md` |
 | L-1 load, L-2, L-7, L-9, L-15, L-5b, L-5c, L-13 (no dropouts) | **PASS** on rc4 (owner, Windows) | Closed for rc4. rc6 changed the panel (new menus), so L-15 is worth a re-look on rc6 |
 | UI-2 console flood (fixed in rc5) | **Not formally confirmed.** rc6 test 1 reported a clean Max for Live console on load | Run the L-1 console check on rc6 with the device open in Max, and record it |
@@ -83,7 +83,7 @@ Load, panel, sound without clicks, HOLD, program memory, LFO Mod mapping, extern
 
 - **Feature (owner request):** LFO pointers. A click-through Max `dial` (Needle mode) over each of the 13 knobs follows the value the knob sends to the DSP, so Mod-mode modulation is visible on the knob. Geometry measured from the owner's Live screenshot.
 - **Unchanged:** DSP, all 163 parameters, Push banks and factory programs identical to rc7.
-- **Validation:** static checks 20/20; Live 12.4.6 6/6 PASS. REVERSE: 3 of 13 Live checks PASS.
+- **Validation:** static checks 20/20; Live 12.4.6 6/6 PASS. REVERSE: 11 of 13 Live checks PASS.
 
 ## What changed in rc7
 

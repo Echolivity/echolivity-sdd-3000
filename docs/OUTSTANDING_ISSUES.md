@@ -1,6 +1,6 @@
 # ECHOLIVITY SDD-3000 v1.0.2-rc8 — Outstanding issues
 
-rc8: LFO pointers added (display only), 6/6 PASS in Live. rc7 REVERSE: 3 of 13 Live checks PASS; the rest open (`docs/validation/REVERSE_LIVE_TEST.md`).
+rc8: LFO pointers added (display only), 6/6 PASS in Live. rc7 REVERSE: 11 of 13 Live checks PASS; checks 1–2 open (`docs/validation/REVERSE_LIVE_TEST.md`).
 
 rc6: SEND / RTN routing menus added and passed 7/7 native checks in Live 12.4.6 (`docs/validation/RC6_SEND_RTN_LIVE_TEST.md`). DSP unchanged from rc5; none of the issues below is closed by rc6.
 

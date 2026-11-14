@@ -12,7 +12,7 @@
 ### Validation
 - Static checks 20/20 (the layout check now also verifies each pointer is click-through and inside its own knob). Pointer value mapping checked for all 13 knobs.
 - **Live 12.4.6 (owner, 2026-11-14): 6/6 PASS** (`docs/validation/LFO_POINTER_LIVE_TEST.md`). Test build 1 had the pointers slightly high and too large with a 270° sweep; geometry re-measured from the owner's screenshot (live.dial sweeps 300°) and corrected in build 2.
-- **REVERSE (rc7) in Live 12.4.6:** REV, ALT and click-free switching PASS (`REVERSE_LIVE_TEST.md` checks 3, 4 (ALT), 5). ALT R direction and checks 1–2, 6–13 not yet run.
+- **REVERSE (rc7) in Live 12.4.6:** checks 3–13 PASS, owner-reported (`REVERSE_LIVE_TEST.md`; CPU values not recorded). Checks 1 (Max Console with the device open in Max) and 2 (OFF identical to rc6 by ear) not run.
 
 ## 1.0.2-rc7 — 2026-11-13 — REVERSE (owner request)
 

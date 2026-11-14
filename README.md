@@ -10,7 +10,7 @@
 
 > **v1.0.2-rc8 · CONDITIONAL PASS**
 >
-> This is a release candidate, **not a production-ready release**. Automated DSP and static checks pass (one known minor limitation). The owner has tested selected workflows in Live 12 Suite on Windows (rc3/rc4), and the rc6 SEND / RTN routing menus passed all seven native checks in Live 12.4.6 / Max 9. The rc7 **REVERSE** modes passed the first Live checks (REV, ALT, click-free switching); the rest of their checklist is still open. The rc8 **LFO pointers** passed all six Live checks. The DSP findings, including the HW-1 alias images, are still open, as are the remaining Live checklist items and the rc5 controls. Read the [release decision](docs/validation/RELEASE_DECISION.md) before relying on this build in a critical session.
+> This is a release candidate, **not a production-ready release**. Automated DSP and static checks pass (one known minor limitation). The owner has tested selected workflows in Live 12 Suite on Windows (rc3/rc4), and the rc6 SEND / RTN routing menus passed all seven native checks in Live 12.4.6 / Max 9. The rc7 **REVERSE** modes passed 11 of 13 Live checks (owner-reported); the Max Console check and the OFF-versus-rc6 listening check are still open. The rc8 **LFO pointers** passed all six Live checks. The DSP findings, including the HW-1 alias images, are still open, as are the remaining Live checklist items and the rc5 controls. Read the [release decision](docs/validation/RELEASE_DECISION.md) before relying on this build in a critical session.
 
 ## The instrument
 
@@ -88,7 +88,7 @@ This is an independent homage, **not** a component-level replica or an official 
 ## Current release: rc8
 
 - **LFO pointers** (owner request): a thin blue pointer on each of the 13 knobs follows the value the device actually uses, so a Live LFO in **Mod** mode is visible on the knob while the knob keeps your setting. At rest the pointer hides under the knob's own needle. Display only: DSP, parameters and programs are identical to rc7. **Passed 6/6 checks in Live 12.4.6** ([test record](docs/validation/LFO_POINTER_LIVE_TEST.md)).
-- **REVERSE in Live:** REV, ALT and click-free switching passed; the remaining REVERSE checks are open.
+- **REVERSE in Live:** 11 of 13 checks passed (all modes, HOLD, short/long TIME, FEEDBACK 10, EXT loop, automation, Set reopen, program recall, CPU); checks 1–2 open.
 - **Not changed by rc8:** HW-1 is not fixed, and the other release blockers remain open.
 
 ### Previous release: rc7
@@ -147,7 +147,7 @@ These renders are demonstrations, not a substitute for testing the device in you
 | Static device checks | 20/20 PASS (static inspection) |
 | Reproducibility | 6/7 PASS: rebuild, determinism, tests and renders reproduce; 1 FAIL for a stray experiment file in the tree (`docs/REPRODUCIBILITY.json`) |
 | Hardware-reference suite (against the 1982 Korg documentation, not an original unit) | 28 consistent · 5 inconsistent · 9 without a documented reference — see [hardware reference](docs/validation/HARDWARE_REFERENCE.md) |
-| Ableton Live / Max runtime | Selected owner checks PASS (rc3/rc4, Windows); rc6 SEND / RTN routing 7/7 PASS (Live 12.4.6); rc7 REVERSE 3 of 13 checks PASS; rc8 LFO pointers 6/6 PASS; remaining items outstanding |
+| Ableton Live / Max runtime | Selected owner checks PASS (rc3/rc4, Windows); rc6 SEND / RTN routing 7/7 PASS (Live 12.4.6); rc7 REVERSE 11 of 13 checks PASS; rc8 LFO pointers 6/6 PASS; remaining items outstanding |
 | Release decision | **Conditional pass — not production-ready** |
 
 The test report distinguishes automated evidence from host-runtime checks. CPU figures from the C test build are not measurements of Live or Max performance. See [TEST_REPORT.md](docs/TEST_REPORT.md) for detail.

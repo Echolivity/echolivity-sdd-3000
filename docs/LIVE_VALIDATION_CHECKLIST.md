@@ -26,5 +26,5 @@ Some of these checks have since been run by the owner: see `docs/validation/LIVE
 | L-12 | Invalid input recovery | Put a device that can output NaN before ECHOLIVITY (or a Max for Live test device sending `nan`). | ECHOLIVITY keeps working once valid audio returns; no reload needed | |
 | L-13 | CPU | 1 and 8 instances (TRUE ST, modulation on) at 44.1 / 48 / 88.2 / 96 kHz × buffer 64 / 128 / 256 / 512 / 1024: static, while automating TIME/FEEDBACK/BALANCE, and with HOLD + FEEDBACK 10. Read Live's CPU meter; watch for dropouts. | Record the values; no dropouts; compare the trend with `docs/validation/PERFORMANCE_REPORT.md` | |
 | L-14 | Latency | Read the device's reported latency (PDC; *not* the audio buffer latency). Null-test the dry path (BALANCE 0, PRE off) against the source on a parallel track. | Reported latency 0 samples; dry path nulls | |
-| L-16 | **REVERSE (rc7)** | Run `docs/validation/REVERSE_LIVE_TEST.md` checks 1–13. | All 13 pass | 3 PASS, 10 open (see record) |
+| L-16 | **REVERSE (rc7)** | Run `docs/validation/REVERSE_LIVE_TEST.md` checks 1–13. | All 13 pass | 11 PASS, checks 1–2 open (see record) |
 | L-15 | Interface | Compare with `docs/ui_preview.png`. | Layout readable; no overlapping controls | |
