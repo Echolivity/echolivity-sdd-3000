@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.2-rc8 — 2026-11-14 — LFO pointers (owner request)
+
+### Added
+- **LFO pointers:** a thin blue pointer on each of the 13 knobs follows the value the device actually receives. With Live's LFO (or another modulator) in **Mod** mode, the pointer swings while the knob keeps your setting; with no modulation it sits on the knob's own needle. The pointers are click-through, so the knobs work exactly as before.
+- How: each knob's output already carries the modulated value (owner confirmed in Live 12.4.6 that BALANCE audibly follows an LFO in Mod mode while the knob stays still). A Max `dial` in Needle mode, with transparent background and outline, is laid over each knob and set from that output, with the knob's exponent applied (TIME, ENV REL).
+
+### Unchanged
+- DSP, all 163 parameters, Push banks and factory programs are identical to rc7. RETURN (a number box) has no pointer.
+
+### Validation
+- Static checks 20/20 (the layout check now also verifies each pointer is click-through and inside its own knob). Pointer value mapping checked for all 13 knobs.
+- **Live 12.4.6 (owner, 2026-11-14): 6/6 PASS** (`docs/validation/LFO_POINTER_LIVE_TEST.md`). Test build 1 had the pointers slightly high and too large with a 270° sweep; geometry re-measured from the owner's screenshot (live.dial sweeps 300°) and corrected in build 2.
+- **REVERSE (rc7) in Live 12.4.6:** REV, ALT and click-free switching PASS (`REVERSE_LIVE_TEST.md` checks 3, 4 (ALT), 5). ALT R direction and checks 1–2, 6–13 not yet run.
+
 ## 1.0.2-rc7 — 2026-11-13 — REVERSE (owner request)
 
 ### Added

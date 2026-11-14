@@ -1,11 +1,12 @@
-# Release decision — ECHOLIVITY SDD-3000 v1.0.2-rc7
+# Release decision — ECHOLIVITY SDD-3000 v1.0.2-rc8
 
 ## Decision: CONDITIONAL PASS — **not ready for v1.0.2 production release**
 
 No critical defect has been **reproduced**. Ableton Live validation is **partial**:
 - The owner ran selected checklist items in Live 12 Suite on Windows on rc3/rc4 (see "Owner's Live 12 results" below).
 - The rc6 SEND / RTN routing menus passed all **7** native checks in Live 12.4.6 / Max 9 (`RC6_SEND_RTN_LIVE_TEST.md`).
-- The rc7 REVERSE modes have **not** been run in Live (offline engine tests only).
+- The rc7 REVERSE modes passed 3 of 13 Live checks (REV, ALT, click-free switching; Live 12.4.6, 2026-11-14). The rest are not run.
+- The rc8 LFO pointers passed all 6 Live checks (`LFO_POINTER_LIVE_TEST.md`).
 - Every other checklist item is still **not run**.
 
 One **likely high-severity** defect (D-1, `.adv` hot-load) is predicted from the shipped wiring and Cycling '74's documentation and must be confirmed or refuted in Live.
@@ -23,11 +24,12 @@ The rc6 result covers **routing only**. It is not evidence about sound quality. 
 6. **REVERSE** native checks (`REVERSE_LIVE_TEST.md`) pass.
 7. A recorded decision on **HW-1** (see "Hardware-reference validation" below), backed by a listening review.
 
-## Release-blocker status (rc7)
+## Release-blocker status (rc8)
 
 | Item | Status | Evidence that closes it |
 |---|---|---|
-| rc7 REVERSE (OFF / REV / ALT / ALT R) | **Open, not run in Live.** Offline: 6 new engine tests pass; OFF bit-identical to rc6 | `REVERSE_LIVE_TEST.md` checks 1–13 recorded |
+| rc8 LFO pointers | **PASS** (6/6, Live 12.4.6) | Closed: `LFO_POINTER_LIVE_TEST.md` |
+| rc7 REVERSE (OFF / REV / ALT / ALT R) | **Partial:** checks 3 (REV), 4 (ALT) and 5 (switching) PASS in Live 12.4.6. ALT R direction and checks 1–2, 6–13 not run. Offline: 6 engine tests pass; OFF bit-identical to rc6 | Remaining `REVERSE_LIVE_TEST.md` checks recorded |
 | rc6 SEND / RTN routing menus | **PASS** (7/7, Live 12.4.6 / Max 9, device at `c03aabb`) | Closed: `RC6_SEND_RTN_LIVE_TEST.md` |
 | L-1 load, L-2, L-7, L-9, L-15, L-5b, L-5c, L-13 (no dropouts) | **PASS** on rc4 (owner, Windows) | Closed for rc4. rc6 changed the panel (new menus), so L-15 is worth a re-look on rc6 |
 | UI-2 console flood (fixed in rc5) | **Not formally confirmed.** rc6 test 1 reported a clean Max for Live console on load | Run the L-1 console check on rc6 with the device open in Max, and record it |
@@ -36,7 +38,7 @@ The rc6 result covers **routing only**. It is not evidence about sound quality. 
 | D-3 (first 25 ms after creation) | **Open, decision pending** | Owner decision: defer to v1.0.3 or fix |
 | L-5d CAL / LOOP COMP, L-6b triplets | **Open, not run in Live** (simulation only) | L-5d and L-6b results |
 | L-3, L-4, L-5, L-6, L-8, L-10, L-11, L-12, L-14; L-13 CPU % | **Open, not run** | Checklist results. rc6 test 5 covered routing persistence only, not the full L-8 Set reopen |
-| HW-1 alias images | **Open, not fixed in rc6 / rc7** | A fix merged after its own audit, native test and listening review; or a recorded decision to ship with it documented |
+| HW-1 alias images | **Open, not fixed in rc6 / rc7 / rc8** | A fix merged after its own audit, native test and listening review; or a recorded decision to ship with it documented |
 | HW-2, HW-3 | **Open, minor** | Disposition (fix or document) |
 | Reproducibility | **6/7**: one FAIL for a stray file (`experiments/hw1/bench_hw1.c`) in the release tree | Remove or relocate the file and re-run `tools/verify_release.py` |
 
@@ -76,6 +78,12 @@ SEND / RTN menus: load with a clean console, destination and source lists, full 
 ## Owner's Live 12 results (rc3/rc4)
 
 Load, panel, sound without clicks, HOLD, program memory, LFO Mod mapping, external loop routing and 8 instances without dropouts: **PASS** (`LIVE_INTEGRATION_REPORT.md`). Found and fixed: UI-1 (blank panel, rc4), UI-2 (console flood, rc5). Still open: D-1 `.adv` hot-load (L-7a), automation, Set reopen, sample-rate change, and the new rc5 items.
+
+## What changed in rc8
+
+- **Feature (owner request):** LFO pointers. A click-through Max `dial` (Needle mode) over each of the 13 knobs follows the value the knob sends to the DSP, so Mod-mode modulation is visible on the knob. Geometry measured from the owner's Live screenshot.
+- **Unchanged:** DSP, all 163 parameters, Push banks and factory programs identical to rc7.
+- **Validation:** static checks 20/20; Live 12.4.6 6/6 PASS. REVERSE: 3 of 13 Live checks PASS.
 
 ## What changed in rc7
 

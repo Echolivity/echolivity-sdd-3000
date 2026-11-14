@@ -178,7 +178,7 @@ Stepped controls (switches, tabs, menus such as LOW/HIGH CUT, WAVEFORM, DIVISION
 
 Tips:
 - **TIME** follows the TIME CHANGE switch. In *glide* an LFO gives tape-style pitch wobble, but the delay time follows with about 120 ms of smoothing (a modern feature, not part of the hardware), so it **lags a fast LFO**. In *crossfade* it gives choppy, stepped re-timing. For a classic chorus/flange, use the device's own MODULATION section instead; it works on the memory clock, as the hardware did.
-- **What you see:** in Mod mode the knob and its number stay where you set them (e.g. "456 ms"); only the ring shows the LFO. That's how Live displays Additive modulation.
+- **What you see:** in Mod mode the knob and its number stay where you set them (e.g. "456 ms"); Live shows the LFO on the ring, and the thin **blue pointer** on the knob swings with the value the device actually uses *(rc8)*. With no modulation the blue pointer sits on the knob's own needle.
 - **INTENSITY at long delay times:** pitch movement grows with delay time. At TIME 380 ms, INTENSITY 0.5 already gives about ±23 cents, so subtle tape-style wow sits in the first ~0.2 of the knob. Use Live's fine adjustment (hold Shift while dragging) or MIDI-map it with a narrow range.
 - **FEEDBACK** with an LFO gives swelling and fading dub tails. Keep the depth moderate near 10.
 - **BALANCE** with a slow LFO fades the echoes in and out.

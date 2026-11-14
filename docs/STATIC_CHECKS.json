@@ -2,7 +2,7 @@
  {
   "check": "container",
   "pass": true,
-  "detail": "ampf/aaaa, meta, ptch length 548380 = file size - 32, NUL-terminated, JSON parses, amxdtype audio effect"
+  "detail": "ampf/aaaa, meta, ptch length 570630 = file size - 32, NUL-terminated, JSON parses, amxdtype audio effect"
  },
  {
   "check": "gen~ code == src/gen/echolivity_core.genexpr",
@@ -92,11 +92,11 @@
  {
   "check": "presentation layout",
   "pass": true,
-  "detail": "47 controls inside 169 px, no overlapping controls"
+  "detail": "47 controls inside 169 px, no overlapping controls; 13 LFO pointers click-through and inside their own knob"
  },
  {
   "check": "distributed .amxd == fresh build from source",
   "pass": true,
-  "detail": "sha256 530dccfdef1a81b05e9619b8a478798280edb43edefb3f47677b2b96af95e52a"
+  "detail": "sha256 0530c728bcdfd46720792ca9976dd62627f360ccc353da674aaf85f2b48d8830"
  }
 ]

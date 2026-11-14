@@ -2,8 +2,8 @@
 
 - **Build:** 1.0.2-rc7 (merged from `feature/reverse-regen`)
 - **Device under test:** `dist/ECHOLIVITY SDD-3000.amxd` (the `(REVERSE test)` copy sent earlier is identical)
-- **Tester / date / Live and Max version:** to be filled in
-- **Results:** none yet. Offline engine results are in `docs/TEST_RESULTS.json` (REVERSE tests); they are not a substitute for these checks.
+- **Tester / date / Live and Max version:** owner, 2026-11-14, Ableton Live 12.4.6 (bundled Max 9), Windows; device = `LFO pointer test 2` build (rc7 DSP + LFO pointers)
+- **Results:** checks 3, 4 (ALT) and 5 run, below. Offline engine results are in `docs/TEST_RESULTS.json` (REVERSE tests); they are not a substitute for these checks.
 
 Setup: one audio track, a short drum loop or plucked notes, TIME 400, FEEDBACK 5, BALANCE 6.
 
@@ -11,9 +11,9 @@ Setup: one audio track, a short drum loop or plucked notes, TIME 400, FEEDBACK 5
 |---|---|---|---|
 | 1 | Load the test device; open it in Max and look at the Max Console | Loads, panel shows the REVERSE menu at OFF, no errors | |
 | 2 | REVERSE OFF | Sounds exactly like rc6 | |
-| 3 | REV | Every repeat is backwards (swelling attacks) | |
-| 4 | ALT, then ALT R, FEEDBACK 6 | ALT: 1st forwards, 2nd backwards, 3rd forwards. ALT R: the opposite | |
-| 5 | Switch OFF → REV → ALT → ALT R → OFF while repeats ring | No clicks or dropouts | |
+| 3 | REV | Every repeat is backwards (swelling attacks) | **PASS** |
+| 4 | ALT, then ALT R, FEEDBACK 6 | ALT: 1st forwards, 2nd backwards, 3rd forwards. ALT R: the opposite | ALT **PASS** (FEEDBACK 5); ALT R direction not separately confirmed |
+| 5 | Switch OFF → REV → ALT → ALT R → OFF while repeats ring | No clicks or dropouts | **PASS**: no clicks |
 | 6 | HOLD in REV, play over it, release | HOLD loop plays forwards; release is click-free | |
 | 7 | TIME 60 and TIME 1023 in REV | Short: grainy, no clicks. Long: slow reverse swells | |
 | 8 | FEEDBACK 10 in each mode | Builds up but stays bounded | |
