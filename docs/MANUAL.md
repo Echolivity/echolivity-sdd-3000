@@ -6,7 +6,7 @@
 
 ---
 
-## Quick start: set the input level first (v1.0.2-rc5)
+## Quick start: set the input level first
 
 The converter overloads exactly where the HEADROOM meter turns red (+3). At the default ATT +4 / LEVEL 5, the meter reads 0 for peaks at −17 dBFS, the calibrated studio level. A typical Live track peaking around −6 dBFS reads about +11, and the echoes are then heavily clipped.
 
@@ -15,6 +15,42 @@ The converter overloads exactly where the HEADROOM meter turns red (+3). At the 
 3. Then set FEEDBACK. The meter also shows the feedback, so recheck it at high FEEDBACK.
 
 Overdriving the converter is a sound, not a fault: the crunch is authentic. Use it on purpose.
+
+### Gain staging guide
+
+**What sets the converter level.** ATT and LEVEL, plus the feedback; nothing after the converter. The HEADROOM meter shows exactly this, so it is always the reference.
+- **ATT:** +4 is the reference; −10 adds 14 dB; −30 adds 34 dB.
+- **LEVEL:** gain = 40·log₁₀(LEVEL/5) dB. LEVEL 2 = −16 dB, 3 = −9 dB, 4 = −4 dB, 5 = 0 dB, 6 = +3 dB, 8 = +8 dB, 10 = +12 dB.
+- **PREAMP:** with **COMP** on (default), DRIVE changes the colour but doesn't push the converter harder (at DRIVE 24 the preamp's own clipping even lowers the peaks). With COMP off, DRIVE adds its dB straight to the converter level. PRE off = clean, linear.
+- **Meter reading at ATT +4** = your source's peak (dBFS) + 17 + LEVEL gain.
+
+**Choose a character by meter reading** (measured on kick/snare, dub bass and organ; error relative to a clean copy):
+
+| HEADROOM peaks | Character | Measured |
+|---|---|---|
+| 0 or below | **Clean** | no measurable clipping |
+| +3 (red flashes) | Clean in practice | error 51–57 dB down |
+| around +6 | **Saturated**: light grit on transients | error 18–28 dB down |
+| around +12 | **Driven**: heavy crunch, flattened snare echoes | error 6–12 dB down; snare crest 3 dB (source 10 dB) |
+| +17 (0 dBFS source at LEVEL 5) | Extreme | error 3–7 dB down; echoes about 5 dB quieter |
+
+**LEVEL for each character (ATT +4, PRE COMP on).** Read your source's peak on Live's track or send meter:
+
+| Source peak | Clean (meter 0) | Saturated (+6) | Driven (+12) |
+|---|---|---|---|
+| −18 dBFS | 5.3 | 7.5 | ATT −10, LEVEL 4.7 |
+| −12 dBFS | 3.7 | 5.3 | 7.5 |
+| −6 dBFS | 2.7 | 3.7 | 5.3 |
+| −3 dBFS | 2.2 | 3.2 | 4.5 |
+| 0 dBFS | 1.9 | 2.7 | 3.7 |
+
+**Send examples** (the send's peak = the track's peak + the send knob's dB):
+- **Drum bus on a send, clean dub echoes:** drums peaking −6 dBFS with the send at −6 dB → −12 dBFS into ECHOLIVITY → LEVEL **3.7**.
+- **Snare throws with grit:** snare peaking −3 dBFS, send at 0 dB → LEVEL **3.2** for saturated, **4.5** for driven.
+- **Organ / keys skank:** peaking −10 dBFS, send at 0 dB → LEVEL **3.3** for clean; it's sustained, so recheck the meter once FEEDBACK is up.
+- **Quiet source (−18 dBFS) you want driven:** LEVEL tops out at +12 dB, so switch ATT to **−10** (+14 dB) and use LEVEL 4.7.
+
+**Feedback adds to the meter.** At FEEDBACK 6–7 the repeats pile up on top of new input. If the meter climbs into the red only when FEEDBACK is high, that's the loop saturating, not the input: lower FEEDBACK or LEVEL, or keep it as a sound.
 
 ## Signal flow
 
@@ -193,5 +229,25 @@ Tips:
 - Put the device on a return track, turn WET ONLY on, and use OUT MODE STEREO A or B.
 - MIDI-map HOLD, BYPASS, FEEDBACK and HIGH to a controller. Throw a snare into the send, push FEEDBACK to 7–8, sweep HIGH, then BYPASS to clear the loop.
 - SOFT loop saturation rounds off the onset of self-oscillation; in sustained oscillation it measures very close to HARD (the authentic converter grit).
-- **Controlled "scream":** with LOW cut FLAT, self-oscillation builds on the kick's sub-bass (around 50 Hz) and turns to rumble. Use LOW 250–500 with HIGH 8k or FLAT and a short-to-medium TIME. For long throws, ride FEEDBACK to 8–9 rather than 10.
+- **Controlled "scream":** see *Feedback riding and self-oscillation* below.
 - **Stereo from a mono send:** TRUE ST keeps a mono send mono, and WIDTH can't widen identical channels. Use STEREO A or B for width. STEREO B is the widest, but its echoes partly cancel when the mix is summed to mono (about −5 dB).
+
+### Feedback riding and self-oscillation
+
+Above FEEDBACK 7 the loop gains level on every pass. What it turns into depends on the **filters and TIME**, not on FEEDBACK alone. Measured by riding FEEDBACK 4 → ride value (4 s) → 5 on a kick/snare loop, HARD saturation:
+
+| Recipe | TIME | LOW / HIGH | Ride to | Result | Build-up | Back down 30 dB after FB 5 |
+|---|---|---|---|---|---|---|
+| Sub rumble (default filters) | 600 ms | FLAT / FLAT | 10 | locks onto the kick at **49 Hz**, +11 dB | ~4 s | more than 6 s |
+| Long throw, held | 600 ms | FLAT / FLAT | 8–9 | still 49 Hz, but only +4 to +8 dB: a slow swell | ~3.5–4 s | more than 6 s |
+| **Scream, mid** | **150 ms** | **250 / 8k** | 10 | a tone at about **1.5 kHz**, +13 dB | ~4 s | **1.5 s** |
+| **Scream, bright** | **100 ms** | **500 / 8k** | 10 | about **2 kHz**, +15 dB | ~4 s | **1.0 s** |
+| Whistle | 150 ms | 500 / FLAT | 10 | a high whistle (2.9–4.4 kHz, varies with the material), +15 dB | ~3.6 s | 1.5 s |
+| Won't take off | 300–600 ms | 250 / FLAT or 8k | 10 | no build-up within 4 s: the LOW cut removes more than the loop adds | — | — |
+| Service-manual check | 50 ms | 500 / 2k | 10 | sustains from a single pulse with FEEDBACK already at 10 (SM check 7), but too slow to build during a ride | — | 0.4 s |
+
+- **For a controllable scream:** use a **short TIME (100–150 ms)** with LOW 250 or 500 and HIGH 8k. Ride FEEDBACK up to 10, let it scream, and pull back to 5; it clears within about a second.
+- **For long dub throws at long TIME:** ride to 8–9 and use LOW 250 if you want to keep the sub-bass out (at FLAT, everything long ends on the kick's fundamental).
+- **HIGH 2k plus LOW 500 is the darkest loop:** it fades rather than screams unless TIME is very short.
+- The existing self-oscillation is untouched; these are settings, not modes.
+- Data and method: `docs/validation/GUIDE_MEASUREMENTS.json`, `tests/guide_measure.py` (engine measurements, not Live).

@@ -2,6 +2,11 @@
 
 ## 1.0.2-rc8 — 2026-11-14 — LFO pointers (owner request)
 
+### Documentation (2026-11-24, no device change)
+- **Manual: gain staging guide** (register #4): what sets the converter level (ATT, LEVEL law, PREAMP COMP), characters by meter reading, a LEVEL table for clean / saturated / driven by source peak, and send examples. Every table cell checked against the engine's HEADROOM meter (within 0.3 dB).
+- **Manual: feedback riding and self-oscillation** (register #7): measured recipes. Corrects the earlier tip: a controllable scream needs a **short** TIME (100–150 ms); LOW 250 at 300–600 ms doesn't take off.
+- Measurements: `tests/guide_measure.py` → `docs/validation/GUIDE_MEASUREMENTS.json` (engine, not Live). Erratum added to `MUSICAL_EVALUATION.md` (LEVEL dB values).
+
 ### Release hygiene (2026-11-24, no device change)
 - Reproducibility **7/7**: `experiments/hw1/bench_hw1.c` (hand-written HW-1 CPU benchmark source) is allowed like `tests/bench_engine.c` instead of being flagged as a build file.
 - `docs/TEST_REPORT.md` regenerated: `tools/make_report.py` now takes the version from this changelog and shows each Live checklist item's recorded owner result instead of "BLOCKED (no Live available)".

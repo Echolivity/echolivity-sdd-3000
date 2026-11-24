@@ -89,7 +89,7 @@ Snare echoes with the default converter: crest factor 9.6 dB at −17 dBFS peaks
 **Reading it:** the converter clips exactly where the meter turns red, as on the hardware. But a Live track peaking at −6 dBFS, which is normal, reads about +11 on the meter at the default ATT +4 / LEVEL 5, and the echoes are then heavily clipped. A dub engineer can use that crunch deliberately; a new user will think the device distorts.
 
 **P1 (documentation only, no device change):**
-- Add a quick-start step: "set LEVEL so the HEADROOM meter peaks at 0 with only occasional red". At typical Live levels that's LEVEL 2–3, which is −6 to −8 dB.
+- Add a quick-start step: "set LEVEL so the HEADROOM meter peaks at 0 with only occasional red". At typical Live levels that's LEVEL 2–3, which is −6 to −8 dB. *(Erratum 2026-11-24: LEVEL's gain is 40·log₁₀(LEVEL/5), so LEVEL 3 = −9 dB and LEVEL 2 = −16 dB; LEVEL 2–3 is still right for a −6 dBFS source. Measured in `docs/validation/GUIDE_MEASUREMENTS.json`.)*
 - Explain that overdriving the converter is a sound, not a fault.
 
 I don't propose changing the default calibration: that would change existing Sets, presets and the authentic +4 dBm reference.
