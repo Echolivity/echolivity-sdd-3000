@@ -1,15 +1,15 @@
-# ECHOLIVITY SDD-3000 v1.0.2-rc5 — Test and validation report
+# ECHOLIVITY SDD-3000 v1.0.2-rc8 — Test and validation report
 
-Status vocabulary: **PASS** = verified by an automated test or check. **FAIL** = the check fails (all current FAILs are known limitations of the unchanged v1.0 DSP, documented below). **NOT VERIFIED** = needs Max/Ableton Live, which was not available in the build environment. Static inspection is reported as *PASS (static)* and is never presented as runtime validation. Release-candidate status: the DSP acceptance criteria are met; Ableton Live validation is OUTSTANDING (`docs/LIVE_VALIDATION_CHECKLIST.md`).
+Status vocabulary: **PASS** = verified by an automated test or check. **FAIL** = the check fails (all current FAILs are known limitations of the unchanged v1.0 DSP, documented below). **NOT VERIFIED** = needs Max/Ableton Live, which is not available in the build environment. Static inspection is reported as *PASS (static)* and is never presented as runtime validation. Live results are the owner's, as recorded in `docs/validation/LIVE_INTEGRATION_REPORT.md`. Release-candidate status: the DSP acceptance criteria are met; Ableton Live validation is PARTIAL (`docs/LIVE_VALIDATION_CHECKLIST.md`).
 
 ## Summary
 
 | Area | Result |
 |---|---|
-| Engine tests (C build of the exact gen~ code) | 50 PASS, 1 FAIL (known limitation), 0 unexpected FAIL — 51 total |
+| Engine tests (C build of the exact gen~ code) | 56 PASS, 1 FAIL (known limitation), 0 unexpected FAIL — 57 total |
 | Static device checks (`tools/inspect_amxd.py`) | 20/20 PASS (static) |
-| Reproducibility (`tools/verify_release.py`) | 8/8 PASS |
-| Runtime behaviour inside Ableton Live / Max | 15 items BLOCKED (no Live available) |
+| Reproducibility (`tools/verify_release.py`) | 7/7 PASS |
+| Runtime behaviour inside Ableton Live / Max | owner-tested: 4 PASS, 3 partial, 8 not run (section 3) |
 | Release decision | CONDITIONAL PASS, not production-ready (`docs/validation/RELEASE_DECISION.md`) |
 | Hardware-reference suite (vs 1982 documentation; not hardware) | 28 consistent, 5 inconsistent, 8 reported, 1 not comparable (section 10) |
 
@@ -43,7 +43,7 @@ Status vocabulary: **PASS** = verified by an automated test or check. **FAIL** =
 | 22 | preamp / input stage | PASS | ATT -30: 1 dB compression at -13.5 dBm (spec clip -13 dBm); ATT -10: 1 dB compression at +6.5 dBm (spec clip +7 dBm); ATT +4: 1 dB compression at +20.5 dBm (spec clip +21 dBm); delay BYPASS + drive: 3rd harmonic 10 dB (preamp active); character OFF at 0 dBFS: highest harmonic -125 dB | SM spec: max input -13/+7/+21 dBm @ LEVEL 5 |
 | 23 | 13-bit gain-ranged converter | PASS | 13-bit vs clean at nominal: noise 77.1 dB below signal; -26 dB signal: noise 62.3 dB below signal (gain-ranged 13-bit) | 12-bit DAC + 1 range bit; effect S/N 88 dB(A) spec incl. emphasis |
 | 24 | random automation fuzz (90 s, 1800 changes) | PASS | finite=True, peak 12.0 dBFS (out gain up to +12 dB), memory bounds errors 0 | stability, no buffer overruns |
-| 25 | CPU (C build of the gen~ code, 48 kHz stereo) | PASS | 16x real-time on this machine's single core (~6.13% of one core; includes Python block overhead) | efficient; gen~ in Live must be measured separately |
+| 25 | CPU (C build of the gen~ code, 48 kHz stereo) | PASS | 15x real-time on this machine's single core (~6.80% of one core; includes Python block overhead) | efficient; gen~ in Live must be measured separately |
 | 26 | feedback 10 stability across all loop options | PASS | flat: peak -13.8 dBFS, tail DC 8.1e-05; {'fb_inv': 1}: peak -13.8 dBFS, tail DC 1.8e-04; {'lowcut': 3, 'highcut': 3}: peak -15.6 dBFS, tail DC 9.2e-05; {'lowcut': 0, 'highcut': 0, 'lc_slope': 1}: peak -13.7 dBFS, tail DC 5.2e-04; {'loop_sat': 1}: peak -14.1 dBFS, tail DC 2.4e-04; {'converter': 1}: peak -13.8 dBFS, tail DC 4.4e-05; {'waveform': 1, 'intensity': 10, 'frequency': 10}: peak -13.8 dBFS, tail DC 2.6e-04; {'out_mode': 3, 'waveform': 2, 'intensity': 10, 'frequency': 8}: peak -13.8 dBFS, tail DC 2.7e-03 | bounded (wet <= -13 dBFS at unity output), finite, no DC build-up |
 | 27 | parameter changes during active playback | PASS | per-vector random automation 20 s: finite=True, peak -5.2 dBFS, bounds errors 0; ramp feedback 0->9: 0.15x; ramp balance 0->10: 1.01x; ramp intensity 0->10: 1.10x; ramp in_level 2->8: 0.55x; ramp drive 0->24: 1.09x; ramp width 0->2: 0.99x; ramp out_gain -24->12: 0.92x | stable under per-vector automation; smoothed ramps click-free |
 | 28 | TRUE STEREO channel isolation | PASS | WAVE TRI: R->L -240 dB (rounding only), L->R with silent R: -240 dB (rounding only); WAVE SQR: R->L -240 dB (rounding only), L->R with silent R: -240 dB (rounding only); WAVE RND: R->L -240 dB (rounding only), L->R with silent R: -240 dB (rounding only); WAVE ENV: L and R share one envelope/clock by design (coupled only when INTENSITY > 0) | independent L/R audio paths; one shared memory clock (as one hardware unit) |
@@ -59,7 +59,7 @@ Status vocabulary: **PASS** = verified by an automated test or check. **FAIL** =
 | 38 | HOLD re-engaged shortly after a completed release | PASS | T=5 gap 50 ms: step 1.03x / spike 11.9 dB (first-ever HOLD 1.01x / 12.9 dB; v1.0.1 4.50x / 37.7 dB); T=16 gap 100 ms: step 1.13x / spike 12.9 dB (first-ever HOLD 1.19x / 13.3 dB; v1.0.1 2.84x / 37.0 dB); T=50 gap 50 ms: step 1.00x / spike 11.5 dB (first-ever HOLD 1.01x / 9.4 dB; v1.0.1 4.13x / 37.5 dB); T=120 gap 200 ms: step 1.03x / spike 6.3 dB (first-ever HOLD 1.00x / 7.7 dB; v1.0.1 3.28x / 38.2 dB); T=250 gap 600 ms: step 1.02x / spike 17.4 dB (first-ever HOLD 1.41x / 19.1 dB; v1.0.1 4.17x / 38.3 dB); T=380 gap 400 ms: step 1.01x / spike 5.2 dB (first-ever HOLD 1.02x / 11.6 dB; v1.0.1 2.49x / 34.1 dB); T=700 gap 300 ms: step 1.05x / spike 5.2 dB (first-ever HOLD 1.00x / 3.0 dB; v1.0.1 4.12x / 38.4 dB); T=900 gap 100 ms: step 1.07x / spike 7.0 dB (first-ever HOLD 1.01x / 3.3 dB; v1.0.1 4.20x / 39.8 dB); T=1023 gap 200 ms: step 1.11x / spike 13.6 dB (first-ever HOLD 1.14x / 14.4 dB; v1.0.1 2.41x / 34.6 dB) | re-captured loop as clean as a first-ever HOLD: worst step <= max(1.5x, 1.2x reference), recurring >5 kHz spike <= reference + 6 dB |
 | 39 | A/B regression v1.0.2 vs v1.0.1 (identical input and settings) | PASS | 47 scenarios (9 programs x 4 output modes, 5 host rates, PRE on/off, clean/13-bit, extremes, HOLD engage, BYPASS, random automation): 47 bit-identical (all 5 outputs incl. meters/display) / intentional difference 1 (HOLD release): T=120: v1.0.1 worst step 10.1x -> v1.0.2 1.37x; T=1008: v1.0.1 worst step 21.3x -> v1.0.2 1.00x / intentional difference 2 (invalid input): v1.0.1 output finite=False, v1.0.2 output finite=True | bit-identical everywhere except HOLD release and invalid-input handling |
 | 40 | processing latency | PASS | 44100 Hz: direct path 0 samples; effect path at TIME 0 = 0.022 ms (1.0 samples, filter group delay); 48000 Hz: direct path 0 samples; effect path at TIME 0 = 0.022 ms (1.0 samples, filter group delay); 96000 Hz: direct path 0 samples; effect path at TIME 0 = 0.030 ms (2.9 samples, filter group delay). No look-ahead or internal buffering; the device reports 0 latency to Live (patcher 'latency': 0). | direct path 0 samples |
-| 41 | CPU of the C build per host rate (stereo, modulation on) | PASS | 44100 Hz: 20x real-time (5.03% of one core); 48000 Hz: 18x real-time (5.70% of one core); 88200 Hz: 9x real-time (10.77% of one core); 96000 Hz: 9x real-time (11.06% of one core); 192000 Hz: 4x real-time (23.54% of one core). Standalone benchmark of the translated gen~ code incl. Python block overhead; NOT a measurement inside Ableton Live. | informational |
+| 41 | CPU of the C build per host rate (stereo, modulation on) | PASS | 44100 Hz: 17x real-time (6.00% of one core); 48000 Hz: 19x real-time (5.34% of one core); 88200 Hz: 13x real-time (7.70% of one core); 96000 Hz: 11x real-time (9.31% of one core); 192000 Hz: 5x real-time (20.87% of one core). Standalone benchmark of the translated gen~ code incl. Python block overhead; NOT a measurement inside Ableton Live. | informational |
 | 42 | dry/wet balance law | PASS | BALANCE 0: dry 1.000 (exp 1.00), wet 0.000 (exp 0.00); BALANCE 2.5: dry 1.000 (exp 1.00), wet 0.495 (exp 0.50); BALANCE 5: dry 1.000 (exp 1.00), wet 0.990 (exp 1.00); BALANCE 7.5: dry 0.500 (exp 0.50), wet 0.990 (exp 1.00); BALANCE 10: dry 0.000 (exp 0.00), wet 0.990 (exp 1.00); WET ONLY: dry -240 dB | 0 = direct, 5 = 1:1, 10 = effect |
 | 43 | start-up: no undelayed wet signal after instantiation | **FAIL** (known limitation) | fresh engine, effect only: output during the first 50 ms is -10.9 dB re input (identical in v1.0.1); exactly silent after 50 ms of settling |  |
 | 44 | block-size independence (C harness) | PASS | block sizes 32: identical, 64: identical, 128: identical, 256: identical, 512: identical, 1024: identical, 2048: identical (parameter changes at block-aligned times, incl. HOLD) | no dependence on vector size |
@@ -70,6 +70,12 @@ Status vocabulary: **PASS** = verified by an automated test or check. **FAIL** =
 | 49 | rc5: triplet divisions (1/16T, 1/32T appended; 1/8T unchanged) | PASS | 120 BPM div 11: 83.33 ms (expected 83.33); 120 BPM div 12: 41.67 ms (expected 41.67); 90 BPM div 11: 111.11 ms (expected 111.11); 120 BPM div 2: 166.67 ms (expected 166.67) | exact triplet times |
 | 50 | rc5: CAL measures the external loop's round trip | PASS | loop 256 smp (5.33 ms): CAL 5.33 ms; loop 2048 smp (42.67 ms): CAL 42.67 ms; loop busy, return -6 dB: CAL 10.67 ms (expected 10.67); nothing patched: result -1.0; main output during CAL: max step 0.0e+00 (click stays on outputs 3/4); INT: CAL ignored | exact to the sample; robust to loop audio and fader; no click on the main output |
 | 51 | rc5: LOOP COMP puts external repeats back on time | PASS | LOOP COMP 0.00: repeat period 210.71 ms; LOOP COMP 10.67: repeat period 200.00 ms; INT with LOOP COMP 20: identical (not applied) | period = TIME |
+| 52 | REVERSE OFF: all outputs bit-identical to rc6 | PASS | defaults: 0e+00; FB 10 + mod + filters: 0e+00; EXT RETURN 6, loop 256: 0e+00; BOTH FB 4, LOOP COMP 5: 0e+00; TRUE ST, HOLD engage/release: 0e+00; glide + SYNC: 0e+00 | the new control changes nothing until it is used |
+| 53 | REVERSE: direction of echoes 1-3 per mode (oct/s) | PASS | OFF: +37 +37 +37 ok; REV: -37 -37 -37 ok; ALT: +37 -37 +37 ok; ALT R: -37 +37 -37 ok | REV all backwards; ALT forwards first then alternating; ALT R backwards first |
+| 54 | REVERSE: echo level and timing | PASS | echo 1: REV vs OFF level -0.17 dB; echo 2: REV vs OFF level -0.16 dB; REV echo arrives 158-452 ms after the input depending on its phase, loudest at 302.5 ms (TIME 300); OFF 300 ms always | same level as forward; reversed echoes centred on TIME, within 0.5-1.5 TIME |
+| 55 | REVERSE: click-free switching OFF/REV/ALT/ALT R while playing | PASS | TIME 60: worst step 1.88x steady; TIME 400: worst step 1.01x steady; TIME 1023: worst step 0.81x steady | 25 ms smoothstep crossfade between the forward and reversed taps |
+| 56 | REVERSE: runaway bound, HOLD, invalid values | PASS | mode 1 FB 10: peak -6.1 dBFS; mode 2 FB 10: peak -6.1 dBFS; mode 3 FB 10: peak -6.1 dBFS; HOLD steady loop REV vs OFF: -240 dB; HOLD release in REV: worst step 0.57x steady; NaN/inf input and NaN TIME (ALT): recovers, output finite=True | bounded; HOLD forwards; NaN-safe |
+| 57 | REVERSE: CPU (C build, 48 kHz stereo) | PASS | OFF 19x, REV 19x, ALT R 15x real-time; ALT R costs 1.24x OFF | reverse path only computed while a mode is on |
 
 ## 2. Static device checks — PASS (static)
 
@@ -77,50 +83,48 @@ Inspection of `dist/ECHOLIVITY SDD-3000.amxd`; nothing was executed in Max or Li
 
 | Check | Status | Detail |
 |---|---|---|
-| container | PASS (static) | ampf/aaaa, meta, ptch length 523654 = file size - 32, NUL-terminated, JSON parses, amxdtype audio effect |
-| gen~ code == src/gen/echolivity_core.genexpr | PASS (static) | 39477 chars, sha256 673f01ac1b240de3... |
-| GenExpr subset rules (tools/gen2c.py) | PASS (static) | gen2c: 39 params, 119 histories, 320 locals, 8 outs -> /tmp/echolivity_check.c -- gen~ compilation itself NOT VERIFIED |
-| parameter count | PASS (static) | 162 parameters: 42 automatable + 120 stored-only (program memory) |
-| parameter names unique | PASS (static) | 162 unique long names |
-| 'parameters' table matches objects | PASS (static) | 162 entries |
+| container | PASS (static) | ampf/aaaa, meta, ptch length 570630 = file size - 32, NUL-terminated, JSON parses, amxdtype audio effect |
+| gen~ code == src/gen/echolivity_core.genexpr | PASS (static) | 49149 chars, sha256 bd63b587df93cbb8... |
+| GenExpr subset rules (tools/gen2c.py) | PASS (static) | gen2c: 40 params, 148 histories, 409 locals, 8 outs -> /tmp/echolivity_check.c -- gen~ compilation itself NOT VERIFIED |
+| parameter count | PASS (static) | 163 parameters: 43 automatable + 120 stored-only (program memory) |
+| parameter names unique | PASS (static) | 163 unique long names |
+| 'parameters' table matches objects | PASS (static) | 163 entries |
 | initial values inside ranges / enum sizes | PASS (static) | all 158 OK |
-| Push / Configure banks | PASS (static) | 4 banks of 8 slots, all names resolve or are '-' |
-| controls -> gen~ Params (name, connection, range) | PASS (static) | 36 controls verified |
+| Push / Configure banks | PASS (static) | 5 banks of 8 slots, all names resolve or are '-' |
+| controls -> gen~ Params (name, connection, range) | PASS (static) | 37 controls verified |
 | gen~ Params without a panel control | PASS (static) | ['p_cal', 'p_hf_comp', 'p_tempo']: p_cal is sent by the CAL button (rc5), p_tempo is fed by live.observer, p_hf_comp is an internal engineering switch (default on) |
 | tempo sync chain | PASS (static) | live.thisdevice -> 'path live_set' -> live.path -> live.observer('property tempo') -> p_tempo -> gen~ |
 | audio routing incl. EXT loop (rc4) | PASS (static) | plugin~ 1 2 3 4 -> gen~ in1-4 (3/4 = EXT return); gen~ out1/2 -> plugout~ 1/2, out6/7 -> plugout~ 3/4 (EXT send) -- Live routing NOT VERIFIED |
 | program memory: 10 slots x 12 fields, factory values, write & recall wiring | PASS (static) | 120 stored-only slots match presets/factory_programs.json; every slot is written by its gate outlet and recalls into its control |
 | send/receive pairs | PASS (static) | ['---edit', '---editclr', '---recall', '---ropen', '---wbang', '---write', '---wslot'] |
-| initialisation pushes every stored control value to gen~ | PASS (static) | live.thisdevice -> [t b b b b b]: outlet 2 bangs 38 objects; momentary buttons deliberately excluded |
+| initialisation pushes every stored control value to gen~ | PASS (static) | live.thisdevice -> [t b b b b b]: outlet 2 bangs 39 objects; momentary buttons deliberately excluded |
 | LFO Mod mapping: Modulation Mode Additive on all continuous dials only | PASS (static) | 14 continuous controls (13 dials + RETURN) with parameter_modmode 3; enum/stored-only: none -- Live behaviour NOT VERIFIED |
-| D-1: program logic closed during the start-up sequence; Program recalled first | PASS (static) | [t b b b b b] outlet 3 -> '0' -> [gate 1] (before outlet 2 re-outputs Program), outlet 0 -> '1'; Program parameter_order 0, other 161 parameters order 1 -- Live behaviour NOT VERIFIED |
+| D-1: program logic closed during the start-up sequence; Program recalled first | PASS (static) | [t b b b b b] outlet 3 -> '0' -> [gate 1] (before outlet 2 re-outputs Program), outlet 0 -> '1'; Program parameter_order 0, other 162 parameters order 1 -- Live behaviour NOT VERIFIED |
 | UI-1: backing panels in the background layer, LEDs/segments in front | PASS (static) | 20 static panels background 1; 43 driven panels foreground -- confirmed visually in Live 12 by the owner |
-| presentation layout | PASS (static) | 42 controls inside 169 px, no overlapping controls |
-| distributed .amxd == fresh build from source | PASS (static) | sha256 6129b1d209dea14464481a01885471dd63dff62bc7ffd2d6671b9b1952b9f65b |
+| presentation layout | PASS (static) | 47 controls inside 169 px, no overlapping controls; 13 LFO pointers click-through and inside their own knob |
+| distributed .amxd == fresh build from source | PASS (static) | sha256 0530c728bcdfd46720792ca9976dd62627f360ccc353da674aaf85f2b48d8830 |
 
-## 3. Runtime integration in Ableton Live — BLOCKED (not executed)
+## 3. Runtime integration in Ableton Live — PARTIAL (owner-tested)
 
-Step-by-step procedures and pass criteria: `docs/LIVE_VALIDATION_CHECKLIST.md`.
+Step-by-step procedures and pass criteria: `docs/LIVE_VALIDATION_CHECKLIST.md`. Results are the owner's (Live 12 Suite on Windows, rc3/rc4; Live 12.4.6 for rc6–rc8), recorded in `docs/validation/LIVE_INTEGRATION_REPORT.md`, `RC6_SEND_RTN_LIVE_TEST.md`, `REVERSE_LIVE_TEST.md` and `LFO_POINTER_LIVE_TEST.md`. Nothing here was run in the build environment.
 
-No Max or Live installation was available, so none of the following has been observed running. The right-hand column shows only the static evidence that exists.
-
-| Item | Status | Static evidence only |
-|---|---|---|
-| L-1 Device loading and gen~ compilation | BLOCKED | container/JSON checked; GenExpr subset rules; code identical to tested source |
-| L-2 Audio input/output and stereo routing | BLOCKED | plugin~/gen~/plugout~ routing checked; engine output modes tested |
-| L-3 Engine in Live matches the renders | BLOCKED | renders made by the tested engine |
-| L-4 Parameter automation | BLOCKED | 158 definitions checked; engine automation and click tests PASS |
-| L-5 MIDI mapping | BLOCKED | all 38 panel parameters are live.* parameters (mappable by design) |
-| L-6 Tempo synchronisation and tempo automation | BLOCKED | live.observer chain checked; engine sync maths tested |
-| L-7 Preset saving and recall, .adv persistence, programs / WRITE | BLOCKED | 120 stored-only slots + write/recall wiring checked |
-| L-8 Project save / reopen | BLOCKED | init sequence wiring checked; engine starts without ramps |
-| L-9 HOLD in Live | BLOCKED | engine HOLD tests PASS (engage, 108-case release matrix, re-engage) |
-| L-10 BYPASS in Live | BLOCKED | engine BYPASS tests PASS |
-| L-11 Sample-rate changes in Live | BLOCKED | engine rate-change test PASS (state kept) |
-| L-12 Invalid-input recovery in Live (gen~ fixnan) | BLOCKED | engine NaN/Inf tests PASS in the C model |
-| L-13 CPU in Live at 44.1-192 kHz | BLOCKED | C-build benchmark only (section 4) |
-| L-14 Latency reported to Live / PDC | BLOCKED | patcher latency 0; engine direct path 0 samples |
-| L-15 Interface appearance | BLOCKED | preview rendered from the same geometry, not by Max |
+| Item | Live status | Live result | Static evidence |
+|---|---|---|---|
+| L-1 Device loading and gen~ compilation | **PASS** | rc4 loads; Max Console clean in rc3. UI-2 console check (fixed in rc5) not yet recorded | container/JSON checked; GenExpr subset rules; code identical to tested source |
+| L-2 Audio input/output and stereo routing | **PASS** | rc4: sound, no clicks when moving controls | plugin~/gen~/plugout~ routing checked; engine output modes tested |
+| L-3 Engine in Live matches the renders | NOT RUN |  | renders made by the tested engine |
+| L-4 Parameter automation | NOT RUN | partial: REVERSE automation / MIDI map PASS (rc7) | 158 definitions checked; engine automation and click tests PASS |
+| L-5 MIDI mapping | PARTIAL | L-5b LFO Mod mapping PASS (rc4); L-5c EXT routing PASS (rc4); L-5d CAL / LOOP COMP not run | all 38 panel parameters are live.* parameters (mappable by design) |
+| L-6 Tempo synchronisation and tempo automation | NOT RUN | L-6b triplets not run | live.observer chain checked; engine sync maths tested |
+| L-7 Preset saving and recall, .adv persistence, programs / WRITE | PARTIAL | program WRITE / recall PASS (rc4); L-7a .adv hot-load and L-7b re-select not run | 120 stored-only slots + write/recall wiring checked |
+| L-8 Project save / reopen | NOT RUN | partial: SEND / RTN routing (rc6) and REVERSE setting (rc7) survive Set reopen | init sequence wiring checked; engine starts without ramps |
+| L-9 HOLD in Live | **PASS** | rc4: engage, release, fast re-engage | engine HOLD tests PASS (engage, 108-case release matrix, re-engage) |
+| L-10 BYPASS in Live | NOT RUN |  | engine BYPASS tests PASS |
+| L-11 Sample-rate changes in Live | NOT RUN |  | engine rate-change test PASS (state kept) |
+| L-12 Invalid-input recovery in Live (gen~ fixnan) | NOT RUN |  | engine NaN/Inf tests PASS in the C model |
+| L-13 CPU in Live at 44.1-192 kHz | PARTIAL | rc4, 8 instances: no dropouts; CPU % not recorded | C-build benchmark only (section 4) |
+| L-14 Latency reported to Live / PDC | NOT RUN |  | patcher latency 0; engine direct path 0 samples |
+| L-15 Interface appearance | **PASS** | rc4 (UI-1 fixed); rc8 LFO pointers 6/6 PASS | preview rendered from the same geometry, not by Max |
 
 Suggested manual check: drag `audio_examples/00_dry_source.wav` onto a track, insert the device, step through programs 1–9 comparing with the matching renders, automate Delay Time / Feedback / High Cut / Hold, save and reopen the Set, save and load an .adv preset, and watch Live's CPU meter with 8 instances.
 
@@ -174,14 +178,13 @@ See `docs/OUTSTANDING_ISSUES.md`.
 
 | Check | Status | Detail |
 |---|---|---|
-| no temporary or build files in the release tree | PASS | 117 files scanned; stray: none; local-only dirs excluded from the release: ['build'] |
-| clean checkout prepared | PASS | 117 files copied to an empty directory, no build/ directory |
-| clean rebuild reproduces the shipped artefacts | PASS | src/gen/echolivity_core.genexpr: 673f01ac1b240de3...; src/max/ECHOLIVITY_SDD-3000.maxpat: d0ce9bb4090537ce...; dist/ECHOLIVITY SDD-3000.amxd: 6129b1d209dea144...; docs/ui_preview.png: 8be4e65ebd0ba6de... |
+| no temporary or build files in the release tree | PASS | 220 files scanned; stray: none; local-only dirs excluded from the release: ['.git', 'build'] |
+| clean checkout prepared | PASS | 220 files copied to an empty directory, no build/ directory |
+| clean rebuild reproduces the shipped artefacts | PASS | src/gen/echolivity_core.genexpr: bd63b587df93cbb8...; src/max/ECHOLIVITY_SDD-3000.maxpat: b0d4da6503dcc349...; dist/ECHOLIVITY SDD-3000.amxd: 0530c728bcdfd467...; docs/ui_preview.png: 32f382bf9ca37367... |
 | deterministic build (two consecutive builds identical) | PASS | 4 artefacts compared |
-| engine tests pass from the clean checkout | PASS | exit 0; 50/51 PASS, 1 known-limitation FAIL; results identical to the release tree: True |
+| engine tests pass from the clean checkout | PASS | exit 0; 56/57 PASS, 1 known-limitation FAIL; results identical to the release tree: True |
 | static device checks pass from the clean checkout | PASS | 20/20 |
 | audio examples re-render identically from the current DSP | PASS | 27 WAV files (1 dry source + 26 renders) |
-| unchanged versus baseline rc4_unchanged_in_rc5.sha256 | PASS | presets/factory_programs.json: identical; tools/hfcomp_table.json: identical; audio_examples/00_dry_source.wav: identical; audio_examples/01_classic_echo.wav: identical; audio_examples/02_short_slap.wav: identical; audio_examples/03_dub_regeneration_sync.wav: identical; audio_examples/04_metallic_flange.wav: identical; audio_examples/05_wide_doubling_stereoA.wav: identical; audio_examples/06_vibrato.wav: identical; audio_examples/07_random_drift.wav: identical; audio_examples/08_infinite_hold_then_play_over.wav: identical; audio_examples/09_rhythmic_modulation_square.wav: identical; audio_examples/10_filters_in_loop_LOW500_HIGH2k.wav: identical; audio_examples/11_regen_invert_flange_compare.wav: identical; audio_examples/12_envelope_doppler.wav: identical; audio_examples/13_preamp_crunch_minus10_delay_bypassed.wav: identical; audio_examples/14a_converter_13bit_quiet_tail.wav: identical; audio_examples/14b_converter_clean_quiet_tail.wav: identical; audio_examples/15_stereoB_plus_minus_mix.wav: identical; audio_examples/16_self_oscillation_bounded.wav: identical; audio_examples/17_time_change_glide.wav: identical; audio_examples/regression/hold_release_T1008_v1.0.1.wav: identical; audio_examples/regression/hold_release_T1008_v1.0.2.wav: identical; audio_examples/regression/hold_release_T380_v1.0.1.wav: identical; audio_examples/regression/hold_release_T380_v1.0.2.wav: identical; audio_examples/regression/hold_release_then_reengage_v1.0.1.wav: identical; audio_examples/regression/hold_release_then_reengage_v1.0.2.wav: identical; audio_examples/regression/invalid_input_nan_at_2s_v1.0.1.wav: identical; audio_examples/regression/invalid_input_nan_at_2s_v1.0.2.wav: identical; audio_examples/musical_eval/10_ext_loop_rimshot_latency256.flac: identical; audio_examples/musical_eval/10_int_loop_rimshot_reference.flac: identical; audio_examples/musical_eval/1_rimshot__conservative.flac: identical; audio_examples/musical_eval/1_rimshot__dark_long.flac: identical; audio_examples/musical_eval/1_rimshot__dry.flac: identical; audio_examples/musical_eval/1_rimshot__dub_throw.flac: identical; audio_examples/musical_eval/2_kick_snare__conservative.flac: identical; audio_examples/musical_eval/2_kick_snare__dry.flac: identical; audio_examples/musical_eval/2_kick_snare__dub_throw.flac: identical; audio_examples/musical_eval/3_dub_bass__conservative.flac: identical; audio_examples/musical_eval/3_dub_bass__dry.flac: identical; audio_examples/musical_eval/3_dub_bass__dub_throw.flac: identical; audio_examples/musical_eval/4_organ_skank__conservative.flac: identical; audio_examples/musical_eval/4_organ_skank__dark_long.flac: identical; audio_examples/musical_eval/4_organ_skank__dry.flac: identical; audio_examples/musical_eval/4_organ_skank__dub_throw.flac: identical; audio_examples/musical_eval/5a_spring_send__conservative.flac: identical; audio_examples/musical_eval/5a_spring_send__dark_long.flac: identical; audio_examples/musical_eval/5a_spring_send__dry.flac: identical; audio_examples/musical_eval/5a_spring_send__dub_throw.flac: identical; audio_examples/musical_eval/5b_plate_send__conservative.flac: identical; audio_examples/musical_eval/5b_plate_send__dry.flac: identical; audio_examples/musical_eval/5b_plate_send__dub_throw.flac: identical; audio_examples/musical_eval/6_dense_mix__conservative.flac: identical; audio_examples/musical_eval/6_dense_mix__dry.flac: identical; audio_examples/musical_eval/6_dense_mix__dub_throw.flac: identical; audio_examples/musical_eval/6_dense_mix__extreme_soft_fb9.flac: identical; audio_examples/musical_eval/7_ride_fb_4-10-5_hard.flac: identical; audio_examples/musical_eval/7_ride_fb_4-10-5_hard_filtered.flac: identical; audio_examples/musical_eval/7_ride_fb_4-10-5_soft.flac: identical; audio_examples/musical_eval/7_ride_fb_4-10-5_soft_filtered.flac: identical; audio_examples/musical_eval/8_long_evolving_fb8_soft_rnd_highsweep.flac: identical; audio_examples/musical_eval/9_desk_drive_snare_+4dBFS.flac: identical; audio_examples/musical_eval/9_desk_drive_snare_-17dBFS.flac: identical; audio_examples/musical_eval/9_desk_drive_snare_0dBFS.flac: identical |
 
 Checksums of every shipped file: `SHA256SUMS.txt`.
 

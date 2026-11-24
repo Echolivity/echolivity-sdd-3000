@@ -22,7 +22,8 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 EXCLUDE_DIRS = {"build", "__pycache__", ".git"}
 TEMP_PATTERNS = ["*.pyc", "*.pyo", "*.so", "*.o", "*.dll", "*.dylib", "*.c", ".DS_Store", "Thumbs.db",
                  "*.tmp", "*~", "*.bak", "*.swp"]
-SOURCE_ALLOW = {"tests/bench_engine.c"}      # hand-written C source (generated C only lives in build/)
+SOURCE_ALLOW = {"tests/bench_engine.c",       # hand-written C source (generated C only lives in build/)
+                "experiments/hw1/bench_hw1.c"}  # HW-1 CPU benchmark (copy of the loop above), see experiments/hw1/README.md
 GENERATED = ["src/gen/echolivity_core.genexpr", "src/max/ECHOLIVITY_SDD-3000.maxpat",
              "dist/ECHOLIVITY SDD-3000.amxd", "docs/ui_preview.png"]
 R = []

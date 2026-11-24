@@ -145,7 +145,7 @@ These renders are demonstrations, not a substitute for testing the device in you
 |---|---|
 | Engine tests (C build of the exact gen~ code; not Live) | 56 PASS · 1 known-limitation FAIL (D-3) · 57 total |
 | Static device checks | 20/20 PASS (static inspection) |
-| Reproducibility | 6/7 PASS: rebuild, determinism, tests and renders reproduce; 1 FAIL for a stray experiment file in the tree (`docs/REPRODUCIBILITY.json`) |
+| Reproducibility | 7/7 PASS (`docs/REPRODUCIBILITY.json`) |
 | Hardware-reference suite (against the 1982 Korg documentation, not an original unit) | 28 consistent · 5 inconsistent · 9 without a documented reference — see [hardware reference](docs/validation/HARDWARE_REFERENCE.md) |
 | Ableton Live / Max runtime | Selected owner checks PASS (rc3/rc4, Windows); rc6 SEND / RTN routing 7/7 PASS (Live 12.4.6); rc7 REVERSE 11 of 13 checks PASS; rc8 LFO pointers 6/6 PASS; remaining items outstanding |
 | Release decision | **Conditional pass — not production-ready** |

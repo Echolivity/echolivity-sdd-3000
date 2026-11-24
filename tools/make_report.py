@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Write docs/TEST_REPORT.md from docs/TEST_RESULTS.json, docs/STATIC_CHECKS.json and
 docs/REPRODUCIBILITY.json. Status vocabulary: PASS, FAIL, NOT VERIFIED."""
-import json, os
+import json
+import re, os
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 D = os.path.join(ROOT, "docs")
@@ -38,6 +39,35 @@ RUNTIME = [
     ("L-15 Interface appearance", "preview rendered from the same geometry, not by Max"),
 ]
 
+# Owner's results in Live, as recorded in docs/validation/LIVE_INTEGRATION_REPORT.md (keep in step with it).
+LIVE = {
+    "L-1": ("PASS", "rc4 loads; Max Console clean in rc3. UI-2 console check (fixed in rc5) not yet recorded"),
+    "L-2": ("PASS", "rc4: sound, no clicks when moving controls"),
+    "L-4": ("NOT RUN", "partial: REVERSE automation / MIDI map PASS (rc7)"),
+    "L-5": ("PARTIAL", "L-5b LFO Mod mapping PASS (rc4); L-5c EXT routing PASS (rc4); L-5d CAL / LOOP COMP not run"),
+    "L-6": ("NOT RUN", "L-6b triplets not run"),
+    "L-7": ("PARTIAL", "program WRITE / recall PASS (rc4); L-7a .adv hot-load and L-7b re-select not run"),
+    "L-8": ("NOT RUN", "partial: SEND / RTN routing (rc6) and REVERSE setting (rc7) survive Set reopen"),
+    "L-9": ("PASS", "rc4: engage, release, fast re-engage"),
+    "L-13": ("PARTIAL", "rc4, 8 instances: no dropouts; CPU % not recorded"),
+    "L-15": ("PASS", "rc4 (UI-1 fixed); rc8 LFO pointers 6/6 PASS"),
+}
+
+
+def changelog_version():
+    for line in open(os.path.join(ROOT, "CHANGELOG.md"), encoding="utf-8"):
+        m = re.match(r"^## (\d+\.\d+\.\d+[^ ]*)", line)
+        if m:
+            return m.group(1)
+    return "unknown"
+
+
+VERSION = changelog_version()
+_lr = {k: v[0] for k, v in LIVE.items()}
+LIVE_SUMMARY = (f"owner-tested: {sum(v == 'PASS' for v in _lr.values())} PASS, "
+                f"{sum(v == 'PARTIAL' for v in _lr.values())} partial, "
+                f"{len(RUNTIME) - sum(v in ('PASS', 'PARTIAL') for v in _lr.values())} not run (section 3)")
+
 _hwp = os.path.join(ROOT, "docs", "validation", "HARDWARE_VALIDATION.json")
 HW = json.load(open(_hwp)) if os.path.exists(_hwp) else None
 if HW:
@@ -46,18 +76,19 @@ if HW:
               f"{_c['INCONSISTENT']} inconsistent, {_c['REPORTED']} reported, {_c['NOT COMPARABLE']} not comparable (section 10) |")
 else:
     HW_ROW = "| Hardware-reference suite | not run |"
-L = ["# ECHOLIVITY SDD-3000 v1.0.2-rc5 — Test and validation report", "",
+L = [f"# ECHOLIVITY SDD-3000 v{VERSION} — Test and validation report", "",
      "Status vocabulary: **PASS** = verified by an automated test or check. **FAIL** = the check fails "
      "(all current FAILs are known limitations of the unchanged v1.0 DSP, documented below). **NOT VERIFIED** = "
-     "needs Max/Ableton Live, which was not available in the build environment. Static inspection is reported as "
-     "*PASS (static)* and is never presented as runtime validation. Release-candidate status: the DSP acceptance "
-     "criteria are met; Ableton Live validation is OUTSTANDING (`docs/LIVE_VALIDATION_CHECKLIST.md`).", "",
+     "needs Max/Ableton Live, which is not available in the build environment. Static inspection is reported as "
+     "*PASS (static)* and is never presented as runtime validation. Live results are the owner's, as recorded in "
+     "`docs/validation/LIVE_INTEGRATION_REPORT.md`. Release-candidate status: the DSP acceptance criteria are met; "
+     "Ableton Live validation is PARTIAL (`docs/LIVE_VALIDATION_CHECKLIST.md`).", "",
      "## Summary", "",
      "| Area | Result |", "|---|---|",
      f"| Engine tests (C build of the exact gen~ code) | {ep} PASS, {ek} FAIL (known limitation), {eu} unexpected FAIL — {len(E)} total |",
      f"| Static device checks (`tools/inspect_amxd.py`) | {sum(r['pass'] for r in S)}/{len(S)} PASS (static) |",
      f"| Reproducibility (`tools/verify_release.py`) | {sum(r['pass'] for r in P)}/{len(P)} PASS |",
-     f"| Runtime behaviour inside Ableton Live / Max | {len(RUNTIME)} items BLOCKED (no Live available) |",
+     f"| Runtime behaviour inside Ableton Live / Max | {LIVE_SUMMARY} |",
      "| Release decision | CONDITIONAL PASS, not production-ready (`docs/validation/RELEASE_DECISION.md`) |",
      HW_ROW, "",
      "## 1. Engine tests", "",
@@ -79,13 +110,15 @@ L += ["", "## 2. Static device checks — PASS (static)", "",
 for r in S:
     L.append(f"| {cell(r['check'])} | {'PASS (static)' if r['pass'] else '**FAIL**'} | {cell(r['detail'])} |")
 
-L += ["", "## 3. Runtime integration in Ableton Live — BLOCKED (not executed)", "",
-      "Step-by-step procedures and pass criteria: `docs/LIVE_VALIDATION_CHECKLIST.md`.", "",
-      "No Max or Live installation was available, so none of the following has been observed running. "
-      "The right-hand column shows only the static evidence that exists.", "",
-      "| Item | Status | Static evidence only |", "|---|---|---|"]
+L += ["", "## 3. Runtime integration in Ableton Live — PARTIAL (owner-tested)", "",
+      "Step-by-step procedures and pass criteria: `docs/LIVE_VALIDATION_CHECKLIST.md`. Results are the owner's "
+      "(Live 12 Suite on Windows, rc3/rc4; Live 12.4.6 for rc6–rc8), recorded in "
+      "`docs/validation/LIVE_INTEGRATION_REPORT.md`, `RC6_SEND_RTN_LIVE_TEST.md`, `REVERSE_LIVE_TEST.md` and "
+      "`LFO_POINTER_LIVE_TEST.md`. Nothing here was run in the build environment.", "",
+      "| Item | Live status | Live result | Static evidence |", "|---|---|---|---|"]
 for item, ev in RUNTIME:
-    L.append(f"| {item} | BLOCKED | {ev} |")
+    st, res = LIVE.get(item.split()[0], ("NOT RUN", ""))
+    L.append(f"| {item} | {st if st != 'PASS' else '**PASS**'} | {cell(res)} | {ev} |")
 L += ["", "Suggested manual check: drag `audio_examples/00_dry_source.wav` onto a track, insert the device, step "
       "through programs 1–9 comparing with the matching renders, automate Delay Time / Feedback / High Cut / Hold, "
       "save and reopen the Set, save and load an .adv preset, and watch Live's CPU meter with 8 instances.", "",
@@ -145,4 +178,4 @@ if HW:
 open(os.path.join(D, "TEST_REPORT.md"), "w").write("\n".join(L))
 print(f"TEST_REPORT.md: engine {ep}/{len(E)} PASS ({ek} known FAIL, {eu} unexpected), static "
       f"{sum(r['pass'] for r in S)}/{len(S)}, reproducibility {sum(r['pass'] for r in P)}/{len(P)}, "
-      f"{len(RUNTIME)} NOT VERIFIED")
+      f"Live {LIVE_SUMMARY}")

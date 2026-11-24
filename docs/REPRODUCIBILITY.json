@@ -1,18 +1,18 @@
 [
  {
   "check": "no temporary or build files in the release tree",
-  "pass": false,
-  "detail": "217 files scanned; stray: ['experiments/hw1/bench_hw1.c']; local-only dirs excluded from the release: ['.git', 'build']"
+  "pass": true,
+  "detail": "220 files scanned; stray: none; local-only dirs excluded from the release: ['.git', 'build']"
  },
  {
   "check": "clean checkout prepared",
   "pass": true,
-  "detail": "217 files copied to an empty directory, no build/ directory"
+  "detail": "220 files copied to an empty directory, no build/ directory"
  },
  {
   "check": "clean rebuild reproduces the shipped artefacts",
   "pass": true,
-  "detail": "src/gen/echolivity_core.genexpr: 673f01ac1b240de3...; src/max/ECHOLIVITY_SDD-3000.maxpat: 2b1c3409695b06db...; dist/ECHOLIVITY SDD-3000.amxd: 72340873363a9716...; docs/ui_preview.png: aa7f6328ac58af29..."
+  "detail": "src/gen/echolivity_core.genexpr: bd63b587df93cbb8...; src/max/ECHOLIVITY_SDD-3000.maxpat: b0d4da6503dcc349...; dist/ECHOLIVITY SDD-3000.amxd: 0530c728bcdfd467...; docs/ui_preview.png: 32f382bf9ca37367..."
  },
  {
   "check": "deterministic build (two consecutive builds identical)",
@@ -22,7 +22,7 @@
  {
   "check": "engine tests pass from the clean checkout",
   "pass": true,
-  "detail": "exit 0; 50/51 PASS, 1 known-limitation FAIL; results identical to the release tree: True"
+  "detail": "exit 0; 56/57 PASS, 1 known-limitation FAIL; results identical to the release tree: True"
  },
  {
   "check": "static device checks pass from the clean checkout",

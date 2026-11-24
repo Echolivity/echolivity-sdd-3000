@@ -2,6 +2,10 @@
 
 ## 1.0.2-rc8 — 2026-11-14 — LFO pointers (owner request)
 
+### Release hygiene (2026-11-24, no device change)
+- Reproducibility **7/7**: `experiments/hw1/bench_hw1.c` (hand-written HW-1 CPU benchmark source) is allowed like `tests/bench_engine.c` instead of being flagged as a build file.
+- `docs/TEST_REPORT.md` regenerated: `tools/make_report.py` now takes the version from this changelog and shows each Live checklist item's recorded owner result instead of "BLOCKED (no Live available)".
+
 ### Added
 - **LFO pointers:** a thin blue pointer on each of the 13 knobs follows the value the device actually receives. With Live's LFO (or another modulator) in **Mod** mode, the pointer swings while the knob keeps your setting; with no modulation it sits on the knob's own needle. The pointers are click-through, so the knobs work exactly as before.
 - How: each knob's output already carries the modulated value (owner confirmed in Live 12.4.6 that BALANCE audibly follows an LFO in Mod mode while the knob stays still). A Max `dial` in Needle mode, with transparent background and outline, is laid over each knob and set from that output, with the knob's exponent applied (TIME, ENV REL).

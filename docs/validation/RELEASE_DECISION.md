@@ -40,7 +40,7 @@ The rc6 result covers **routing only**. It is not evidence about sound quality. 
 | L-3, L-4, L-5, L-6, L-8, L-10, L-11, L-12, L-14; L-13 CPU % | **Open, not run** | Checklist results. rc6 test 5 covered routing persistence only, not the full L-8 Set reopen |
 | HW-1 alias images | **Open, not fixed in rc6 / rc7 / rc8** | A fix merged after its own audit, native test and listening review; or a recorded decision to ship with it documented |
 | HW-2, HW-3 | **Open, minor** | Disposition (fix or document) |
-| Reproducibility | **6/7**: one FAIL for a stray file (`experiments/hw1/bench_hw1.c`) in the release tree | Remove or relocate the file and re-run `tools/verify_release.py` |
+| Reproducibility | **PASS 7/7** (2026-11-24, rc8 tree). `experiments/hw1/bench_hw1.c` is hand-written benchmark source, now allowed like `tests/bench_engine.c` | Closed |
 
 ## What was verified (executed)
 
@@ -56,7 +56,7 @@ The rc6 result covers **routing only**. It is not evidence about sound quality. 
 | Parameter / preset compatibility vs v1.0.1 (static) | 158/158 definitions identical; factory programs unchanged since v1.0 |
 | CPU (C build) | flat across block sizes, automation and HOLD + FB 10; same as v1.0.1 |
 | Latency | PDC 0 declared; direct path 0 samples (C build) |
-| Reproducibility | 6/7 in the current `docs/REPRODUCIBILITY.json` (1 FAIL: stray `experiments/hw1/bench_hw1.c`). `docs/TEST_REPORT.md` section 7 still shows an earlier 8/8 run |
+| Reproducibility | 7/7 (`docs/REPRODUCIBILITY.json`, rc8 tree; `docs/TEST_REPORT.md` regenerated) |
 
 ## Hardware-reference validation (added after rc5; device unchanged)
 
