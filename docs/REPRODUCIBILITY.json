@@ -2,17 +2,17 @@
  {
   "check": "no temporary or build files in the release tree",
   "pass": true,
-  "detail": "220 files scanned; stray: none; local-only dirs excluded from the release: ['.git', 'build']"
+  "detail": "230 files scanned; stray: none; local-only dirs excluded from the release: ['.git', 'build']"
  },
  {
   "check": "clean checkout prepared",
   "pass": true,
-  "detail": "220 files copied to an empty directory, no build/ directory"
+  "detail": "230 files copied to an empty directory, no build/ directory"
  },
  {
   "check": "clean rebuild reproduces the shipped artefacts",
   "pass": true,
-  "detail": "src/gen/echolivity_core.genexpr: bd63b587df93cbb8...; src/max/ECHOLIVITY_SDD-3000.maxpat: b0d4da6503dcc349...; dist/ECHOLIVITY SDD-3000.amxd: 0530c728bcdfd467...; docs/ui_preview.png: 32f382bf9ca37367..."
+  "detail": "src/gen/echolivity_core.genexpr: bd63b587df93cbb8...; src/max/ECHOLIVITY_SDD-3000.maxpat: 4f4ae25e330fa133...; dist/ECHOLIVITY SDD-3000.amxd: 3490cb242e934b35...; docs/ui_preview.png: 5ad10c6e42e01d58..."
  },
  {
   "check": "deterministic build (two consecutive builds identical)",
@@ -27,7 +27,7 @@
  {
   "check": "static device checks pass from the clean checkout",
   "pass": true,
-  "detail": "20/20"
+  "detail": "21/21"
  },
  {
   "check": "audio examples re-render identically from the current DSP",

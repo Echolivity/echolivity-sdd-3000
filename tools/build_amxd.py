@@ -28,6 +28,13 @@ PTR_HALF = 15.5      # half-size of the overlay box -> blue needle ends just ins
 def ptr_centre_dy(h):
     return 28.0 if h <= 52 else 29.2
 OUT_PAT = os.path.join(ROOT, "src", "max", "ECHOLIVITY_SDD-3000.maxpat")
+# Hardware-replica panel (Echolivity family look): a rendered brushed-black faceplate and
+# image knobs under the transparent live.dial graphics. Rendered by tools/render_panel.py
+# into dist/ (sdd3k_*.png, 1x and @2x); the images must sit next to the .amxd.
+import sys
+sys.path.insert(0, HERE)
+import hwpanel
+PANEL_DIR = os.path.join(ROOT, "dist")
 
 DEVICE_H = 169
 DEVICE_W = 1210
@@ -243,6 +250,23 @@ FIELDS = ["time_ms", "feedback", "fb_inv", "lowcut", "highcut", "waveform", "int
 SEG = [0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, 0x00, 0x40]
 SEG_WORD = [sum(((SEG[d] >> k) & 1) << d for d in range(12)) for k in range(7)]
 
+def panel_spec():
+    """hwpanel spec: faceplate + one image knob per dial, centred on the live.dial ring
+    (and on the LFO pointer overlay), see ptr_centre_dy."""
+    knobs = {}
+    for c in controls():
+        if c["kind"] != "dial":
+            continue
+        x, y, w, h = c["rect"]
+        knobs[c["key"]] = {"cx": x + w / 2, "cy": y + ptr_centre_dy(h),
+                           "kind": "sddL" if h > 52 else "sdd", "scale": "none"}
+    return {"prefix": "sdd3k_", "W": DEVICE_W, "H": DEVICE_H, "ears": 16,
+            "finish": {"base": (24, 24, 26), "texture": "brushed", "legend": (230, 224, 209),
+                       "rule": (52, 52, 54)},
+            "sections": [(0, 152, None), (152, 404, None), (404, 564, None), (564, 768, None),
+                         (768, 1006, None), (1006, DEVICE_W, None)],
+            "knob_boxes": {"sdd": 34, "sddL": 40},
+            "knobs": knobs}
 
 def seg_rects(x, y, W=22, H=40, T=4):
     h2 = H / 2
@@ -272,16 +296,14 @@ def build():
         preview["labels"].append((rect, text, color, size, just))
         return P.label(rect, text, color, size, bold, just)
 
+    spec = panel_spec()
+    # fallback (shown only if the panel images are missing; the faceplate image covers it)
     ppanel([0, 0, DEVICE_W, DEVICE_H], C_FACE)
-    ppanel([0, 0, DEVICE_W, 3], C_RAIL)
-    ppanel([0, DEVICE_H - 3, DEVICE_W, 3], C_RAIL)
-    for x in (0, DEVICE_W - 16):
-        ppanel([x, 0, 16, DEVICE_H], C_EAR)
-        for y in (16, DEVICE_H - 26):
-            ppanel([x + 4, y, 8, 8], [0.16, 0.16, 0.17, 1.0], rounded=8)
-    seps = [152, 404, 564, 768, 1006]
-    for x in seps:
-        ppanel([x, 8, 1, DEVICE_H - 16], C_SEP)
+    plabel([180, 150, 640, 12], "Panel images not found: keep the sdd3k_*.png files next to the .amxd, "
+           "or open the device in Max and Freeze it.", [0.6, 0.6, 0.6, 1.0], 7, 0)
+    P.boxes[-1]["box"]["background"] = 1
+    P.add(hwpanel.fpic_box("x", hwpanel.image_name(spec, "faceplate"), hwpanel.rect(spec, "faceplate"),
+                           (2400, 10), background=True))
     titles = [(20, "INPUT"), (156, "DELAY"), (408, "MODULATION"), (568, "REGENERATION"),
               (772, "EFFECT / OUTPUT"), (1010, "PROGRAM")]
     for x, t in titles:
@@ -396,10 +418,14 @@ def build():
                  "parameter_enable": 1, "presentation": 1, "presentation_rect": rect,
                  "saved_attribute_attributes": sv, "varname": c["key"], "showname": 1, "shownumber": 1,
                  "fontname": "Arial Bold", "fontsize": 8.0 if rect[2] < 50 else 9.0,
-                 "textcolor": legend, "dialcolor": C_KNOB, "activedialcolor": C_ARC_M if c["modern"] else C_ARC,
-                 "needlecolor": C_NEEDLE, "activeneedlecolor": C_NEEDLE, "fgdialcolor": C_KNOB,
-                 "activefgdialcolor": C_ARC_M if c["modern"] else C_ARC, "triangle": 1,
-                 "tricolor": [0.5, 0.5, 0.5, 1], "focusbordercolor": C_TITLE, "bordercolor": [0, 0, 0, 0]}
+                 "textcolor": legend, "triangle": 0, "focusbordercolor": C_TITLE, "bordercolor": [0, 0, 0, 0]}
+            # knob graphics transparent: the image knob (drawn first, below) shows the position;
+            # the dial's own name and value text stay visible
+            for k in ("dialcolor", "activedialcolor", "needlecolor", "activeneedlecolor",
+                      "fgdialcolor", "activefgdialcolor", "tricolor"):
+                b[k] = hwpanel.CLEAR
+            kpic = P.add(hwpanel.fpic_box("x", hwpanel.image_name(spec, "knob", c["key"]),
+                                          hwpanel.rect(spec, "knob", c["key"]), (2400, 200 + 40 * len(ctrl_ids))))
         elif c["kind"] == "numbox":
             # v1.0.2-rc4: continuous value in a compact box (Float, modulatable like the dials)
             sv = P.param_attrs(c["ln"], c["sn"], 0, c["lo"], c["hi"], c["init"], unitstyle=c["unit"],
@@ -442,6 +468,11 @@ def build():
         oid = P.add(b, [600 + 110 * (len(ctrl_ids) % 12), 40 + 60 * (len(ctrl_ids) // 12), rect[2], rect[3]])
         P.register(oid, c["ln"], c["sn"])
         ctrl_ids[c["key"]] = (oid, c)
+        if c["kind"] == "dial":
+            box = hwpanel.knob_box(spec, spec["knobs"][c["key"]]["kind"])
+            fr = P.obj("expr " + hwpanel.knob_frame_expr(box, c["lo"], c["hi"], c["exp"]), 1, 1)
+            of = P.obj("prepend offset 0", 1, 1)
+            P.link(oid, 0, fr, 0); P.link(fr, 0, of, 0); P.link(of, 0, kpic, 0)
         preview["controls"].append((c, legend))
         # -> gen~
         src = oid
@@ -884,6 +915,10 @@ def build():
     # layer, which is always drawn behind the foreground layer (Cycling '74, "Foreground and
     # Background Layers"). Panels that change colour (LEDs, 7-segment digits) stay in the
     # foreground, above their static backing.
+    pics = sorted({b["box"]["pic"] for b in P.boxes if b["box"]["maxclass"] == "fpic"})
+    patcher["patcher"]["dependency_cache"] = (patcher["patcher"].get("dependency_cache") or []) + \
+        [{"name": n, "type": "PNG", "implicit": 1} for n in pics] + \
+        [{"name": n.replace(".png", "@2x.png"), "type": "PNG", "implicit": 1} for n in pics]
     driven = {l["patchline"]["destination"][0] for l in P.lines}
     for b in P.boxes:
         bx = b["box"]
@@ -1007,7 +1042,8 @@ def main():
     os.makedirs(os.path.dirname(OUT_PAT), exist_ok=True)
     json.dump(patcher, open(OUT_PAT, "w"), indent=1, ensure_ascii=False)
     size = write_amxd(patcher, OUT_AMXD)
-    render_preview(preview, os.path.join(ROOT, "docs", "ui_preview.png"))
+    # preview of the hardware panel, simulated from the built patch (approximate, not a Live capture)
+    hwpanel.simulate_patch(OUT_PAT, PANEL_DIR, os.path.join(ROOT, "docs", "ui_preview.png"))
     print(f"amxd: {size} bytes, {nb} boxes, {nl} lines, {npar} parameters -> {OUT_AMXD}")
 
 

@@ -234,14 +234,18 @@ def main():
     pan = [b for b in boxes.values() if b["maxclass"] == "panel"]
     bad_l = [b["id"] for b in pan if b.get("background", 0) != (0 if b["id"] in driven else 1)]
     nb = sum(1 for b in pan if b.get("background") == 1)
-    check("UI-1: backing panels in the background layer, LEDs/segments in front", not bad_l and nb == 20,
+    # hardware panel: rails, ears and separators are part of the faceplate image now, so 7 static
+    # panels remain (fallback backing, modern-row hairlines, meter/display backings)
+    face = [b for b in boxes.values() if b["maxclass"] == "fpic" and b.get("background") == 1]
+    check("UI-1: backing panels in the background layer, LEDs/segments in front",
+          not bad_l and nb == 7 and len(face) == 1,
           f"{nb} static panels background 1; {len(pan) - nb} driven panels foreground" +
           (f"; wrong: {bad_l[:6]}" if bad_l else "") + " -- confirmed visually in Live 12 by the owner")
 
     # presentation geometry
     # LFO pointers are click-through overlays that must sit inside their own knob; checked separately
     ptrs = [b for b in boxes.values() if str(b.get("varname", "")).startswith("ptr_")]
-    ui = [b for b in boxes.values() if b.get("presentation") and b["maxclass"] not in ("panel", "comment")
+    ui = [b for b in boxes.values() if b.get("presentation") and b["maxclass"] not in ("panel", "comment", "fpic")
           and b not in ptrs]
     byvar = {b.get("varname"): b for b in boxes.values()}
     bad_p = []
@@ -265,6 +269,34 @@ def main():
           f"{len(ui)} controls inside {DEVICE_H} px, no overlapping controls; {len(ptrs)} LFO pointers "
           f"click-through and inside their own knob" + (f"; bad: {bad_p}" if bad_p else "")
           + (f"; overlaps: {ov[:4]}" if ov else ""))
+
+    # hardware panel: each dial has an image knob centred on its ring (and on its LFO pointer),
+    # drawn before the dial, driven by the dial's output; the images exist next to the device
+    def up(oid):
+        """the single box feeding inlet 0 of oid, or None"""
+        e = in_edges.get((oid, 0), [])
+        return e[0][0] if len(e) == 1 else None
+    dials = [b for b in boxes.values() if b["maxclass"] == "live.dial"]
+    bad_k = []
+    for d in dials:
+        # dial -> [expr] -> [prepend offset 0] -> fpic
+        pics = [b for b in boxes.values() if b["maxclass"] == "fpic" and b.get("background") != 1
+                and up(b["id"]) and text(boxes[up(b["id"])]) == "prepend offset 0"
+                and up(up(b["id"])) and text(boxes[up(up(b["id"]))]).startswith("expr ")
+                and up(up(up(b["id"]))) == d["id"]]
+        ptr = byvar.get("ptr_" + str(d.get("varname")))
+        if len(pics) != 1 or not ptr:
+            bad_k.append(d.get("varname")); continue
+        kx, ky, kw, kh = pics[0]["presentation_rect"]
+        px, py, pw, ph = ptr["presentation_rect"]
+        same_centre = abs((kx + kw / 2) - (px + pw / 2)) < 0.11 and abs((ky + kh / 2) - (py + ph / 2)) < 0.11
+        drawn_first = list(boxes).index(pics[0]["id"]) < list(boxes).index(d["id"])
+        exists = all(os.path.exists(os.path.join(ROOT, "dist", n)) for n in
+                     (pics[0]["pic"], pics[0]["pic"].replace(".png", "@2x.png")))
+        if not (same_centre and drawn_first and exists):
+            bad_k.append(d.get("varname"))
+    check("hardware panel: image knob under every dial, centred on its LFO pointer, images present",
+          dials and not bad_k, f"{len(dials)} dials" + (f"; bad: {bad_k}" if bad_k else ""))
 
     # deterministic rebuild from source
     tmp = tempfile.mkdtemp()

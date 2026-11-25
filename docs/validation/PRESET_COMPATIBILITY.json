@@ -3,9 +3,9 @@
  "new": "ECHOLIVITY SDD-3000.amxd",
  "checks": [
   {
-   "check": "every old parameter still present; only the rc4/rc5 EXT-loop parameters added",
+   "check": "every old parameter still present; only the intended new parameters added",
    "pass": true,
-   "detail": "158 old, 162 new; missing: []; added: ['Ext Return', 'FB Route', 'Loop Cal', 'Loop Comp']"
+   "detail": "158 old, 163 new; missing: []; added: ['Ext Return', 'FB Route', 'Loop Cal', 'Loop Comp', 'Reverse']"
   },
   {
    "check": "identical definitions (type, range, enum, initial, visibility, units, object, scripting name)",
@@ -20,12 +20,12 @@
   {
    "check": "Push/Configure banks: the existing banks unchanged",
    "pass": true,
-   "detail": "3 old banks identical; 1 added"
+   "detail": "3 old banks identical; 2 added"
   },
   {
    "check": "automatable / stored-only split",
    "pass": true,
-   "detail": "42 automatable + 120 stored-only"
+   "detail": "43 automatable + 120 stored-only"
   },
   {
    "check": "factory programs in the device == presets/factory_programs.json",

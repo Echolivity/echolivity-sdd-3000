@@ -4,7 +4,7 @@
 
 ## Install
 
-1. Download `ECHOLIVITY SDD-3000.amxd` (from `dist/`, or unzip a release package first).
+1. Download `ECHOLIVITY SDD-3000.amxd` **and the six `sdd3k_*.png` panel images** (from `dist/`, or unzip a release package first). The images must stay in the same folder as the .amxd. Optional: open the device in Max (Edit button), click **Freeze** and save, to store the images inside the .amxd.
 2. Copy it into your User Library, for example:
    - Windows: `C:\Users\<you>\Documents\Ableton\User Library\Presets\Audio Effects\Max Audio Effect\`
    - macOS: `~/Music/Ableton/User Library/Presets/Audio Effects/Max Audio Effect/`

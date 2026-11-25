@@ -170,7 +170,7 @@
  {
   "test": "CPU (C build of the gen~ code, 48 kHz stereo)",
   "pass": true,
-  "detail": "15x real-time on this machine's single core (~6.80% of one core; includes Python block overhead)",
+  "detail": "22x real-time on this machine's single core (~4.49% of one core; includes Python block overhead)",
   "spec": "efficient; gen~ in Live must be measured separately",
   "known_limitation": ""
  },
@@ -282,7 +282,7 @@
  {
   "test": "CPU of the C build per host rate (stereo, modulation on)",
   "pass": true,
-  "detail": "44100 Hz: 17x real-time (6.00% of one core); 48000 Hz: 19x real-time (5.34% of one core); 88200 Hz: 13x real-time (7.70% of one core); 96000 Hz: 11x real-time (9.31% of one core); 192000 Hz: 5x real-time (20.87% of one core). Standalone benchmark of the translated gen~ code incl. Python block overhead; NOT a measurement inside Ableton Live.",
+  "detail": "44100 Hz: 24x real-time (4.15% of one core); 48000 Hz: 22x real-time (4.48% of one core); 88200 Hz: 11x real-time (9.08% of one core); 96000 Hz: 8x real-time (13.11% of one core); 192000 Hz: 4x real-time (23.53% of one core). Standalone benchmark of the translated gen~ code incl. Python block overhead; NOT a measurement inside Ableton Live.",
   "spec": "informational",
   "known_limitation": ""
  },
@@ -394,7 +394,7 @@
  {
   "test": "REVERSE: CPU (C build, 48 kHz stereo)",
   "pass": true,
-  "detail": "OFF 19x, REV 19x, ALT R 15x real-time; ALT R costs 1.24x OFF",
+  "detail": "OFF 22x, REV 20x, ALT R 21x real-time; ALT R costs 1.03x OFF",
   "spec": "reverse path only computed while a mode is on",
   "known_limitation": ""
  }

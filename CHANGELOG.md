@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased (branch `hw-panel`) — hardware-replica panel, Echolivity family look
+
+**Not yet tested in Live.** DSP, parameters, programs and routing unchanged.
+
+### Changed
+- The faceplate is a rendered brushed-black anodised image with rack ears, screws and section dividers. The 13 knobs are image knobs (black, spun-aluminium caps), each centred on its live.dial ring and on its blue LFO pointer. The dials' own knob graphics are transparent; their names and values still show.
+- Buttons, tabs, menus, LED meter, 7-segment display and program memory are unchanged.
+- Images: `dist/sdd3k_*.png` (1x and @2x), rendered by `tools/render_panel.py` with the shared `tools/hwpanel.py`. They must sit next to the .amxd, or be embedded with Max's Freeze. If they are missing, the panel shows a message.
+- `docs/ui_preview.png` is now simulated from the built patch.
+
+### Checks
+- UI-1 expects 7 static background panels (rails, ears and separators are in the faceplate image) plus the faceplate image in the background layer.
+- Layout overlap ignores the image underlays; new static check: an image knob under every dial, centred on its LFO pointer, drawn first, with its images present. 21/21.
+
 ## 1.0.2-rc8 — 2026-11-14 — LFO pointers (owner request)
 
 ### Documentation (2026-11-24, no device change)
