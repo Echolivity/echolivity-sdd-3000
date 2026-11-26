@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500">
+<rect width="1200" height="500" rx="20" fill="#141518"/>
+<text x="48" y="54" fill="#f0a33a" font-family="Arial,sans-serif" font-size="16" letter-spacing="4">SIGNAL FLOW / ECHOLIVITY SDD-3000</text>
+<g font-family="Arial,sans-serif">
+<g fill="#1d1f24" stroke="#5a5f68" stroke-width="2">
+<rect x="36" y="150" width="150" height="110" rx="12"/>
+<rect x="226" y="150" width="160" height="110" rx="12"/>
+<rect x="426" y="150" width="170" height="110" rx="12"/>
+<rect x="636" y="130" width="220" height="150" rx="12" stroke="#f0a33a"/>
+<rect x="896" y="150" width="270" height="110" rx="12"/>
+</g>
+<g fill="#ecebe6" font-size="18" font-weight="700" text-anchor="middle">
+<text x="111" y="192">INPUT</text><text x="306" y="192">PREAMP</text><text x="511" y="192">CONVERTER</text><text x="746" y="168">DELAY MEMORY</text><text x="1031" y="192">OUTPUT</text>
+</g>
+<g fill="#9aa0a8" font-size="13" text-anchor="middle">
+<text x="111" y="218">−30 / −10 / +4</text><text x="111" y="238">LEVEL · HEADROOM</text>
+<text x="306" y="218">DRIVE · TONE · TRIM</text><text x="306" y="238">(switchable)</text>
+<text x="511" y="218">13-bit gain-ranged</text><text x="511" y="238">or CLEAN</text>
+<text x="746" y="194">0–1023 ms · tempo sync</text><text x="746" y="214" font-size="12">TRI · SQR · RND · ENV clock mod</text><text x="746" y="234">HOLD · REVERSE</text><text x="746" y="254">crossfade or glide</text>
+<text x="1031" y="214">BALANCE · WET ONLY · INV</text><text x="1031" y="234">MONO · ST A · ST B · TRUE ST</text><text x="1031" y="252">WIDTH · GAIN · safety ceiling</text>
+</g>
+<g fill="none" stroke="#ecebe6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M186 205H218m-9 -8 9 8 -9 8M386 205H418m-9 -8 9 8 -9 8M596 205H628m-9 -8 9 8 -9 8M856 205H888m-9 -8 9 8 -9 8"/>
+</g>
+<g fill="#1d1f24" stroke="#f0a33a" stroke-width="2"><rect x="566" y="330" width="360" height="60" rx="10"/></g>
+<text x="746" y="356" fill="#ecebe6" font-size="15" font-weight="700" text-anchor="middle">REGENERATION: FEEDBACK · INV</text>
+<text x="746" y="377" fill="#f0a33a" font-size="12.5" text-anchor="middle">LOW / HIGH filters in the loop · HARD / SOFT saturation</text>
+<g fill="none" stroke="#f0a33a" stroke-width="2.5" stroke-dasharray="7 6"><path d="M786 280V330M706 330V280"/></g>
+<g fill="#1d1f24" stroke="#5fc7d6" stroke-width="2"><rect x="566" y="414" width="360" height="54" rx="10"/></g>
+<text x="746" y="437" fill="#ecebe6" font-size="14" font-weight="700" text-anchor="middle">EXTERNAL LOOP: outs 3/4 → other track → ins 3/4</text>
+<text x="746" y="456" fill="#5fc7d6" font-size="12" text-anchor="middle">INT · EXT · BOTH · RETURN · CAL · LOOP COMP</text>
+<g fill="none" stroke="#5fc7d6" stroke-width="2.5" stroke-dasharray="7 6"><path d="M926 441H950V302H836V280M566 441H542V302H656V280"/></g>
+</g>
+<text x="48" y="488" fill="#6f747c" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">CONCEPTUAL SIGNAL-FLOW OVERVIEW · NOT A CIRCUIT SCHEMATIC</text>
+</svg>
