@@ -9,6 +9,7 @@
   <img src="https://img.shields.io/badge/Max%20for%20Live-required-cb8b4b" alt="Max for Live required">
   <img src="https://img.shields.io/badge/status-rc8%20conditional-f0a33a" alt="Status: rc8, conditional pass">
   <img src="https://img.shields.io/badge/license-GPL--3.0-5fc7d6" alt="License: GPL-3.0">
+  <a href="https://github.com/Echolivity/echolivity-sdd-3000/actions/workflows/tests.yml"><img src="https://github.com/Echolivity/echolivity-sdd-3000/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
 </p>
 
 <p align="center"><img src="docs/echolivity-sdd3000-concept.jpg" alt="ECHOLIVITY SDD-3000 hardware-inspired rack delay concept render" width="900"></p>
